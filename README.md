@@ -2,7 +2,8 @@
 <p align="center">
   <img src="https://api.boot.dev/v1/users/public/c89eda0d-f616-4ed8-95fe-884cac074e92/thumbnail" >
 </p>
-Right now there is JavaScript and C.
+Right now there is JavaScript and C for base code and gold coin system.
+
 ## Motivation:
 It shall be used to create a PVP game like League of legends for k-pop demon hunters.
 
