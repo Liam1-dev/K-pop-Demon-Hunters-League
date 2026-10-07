@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-pop Demon Hunters League - Web Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff1493;
+            --secondary: #8b008b;
+            --accent: #00ffff;
+            --dark: #1a1a2e;
+            --darker: #0f0f1e;
+            --success: #00ff41;
+            --danger: #ff4444;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 20px;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px var(--primary); }
+            50% { text-shadow: 0 0 20px var(--primary), 0 0 30px var(--secondary); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            font-size: 1.1em;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Character Selection */
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .character-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .character-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .character-card h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .character-card p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 20, 147, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary) 0%, #4a0080 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #cc0000 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #00cc00 100%);
+        }
+
+        /* Hunter Profile */
+        .hunter-profile {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+            border: 2px solid var(--accent);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .hunter-name {
+            font-size: 1.8em;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background: rgba(255, 20, 147, 0.1);
+            border: 1px solid var(--primary);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: var(--accent);
+            font-size: 0.9em;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Battle Screen */
+        .battle-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .combatant {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+            border: 2px solid var(--accent);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .combatant.enemy {
+            border-color: var(--danger);
+        }
+
+        .combatant h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .hp-bar {
+            background: #333;
+            border: 2px solid var(--accent);
+            height: 30px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, var(--success) 0%, var(--danger) 100%);
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .battle-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .battle-actions button {
+            padding: 15px;
+            font-size: 0.95em;
+        }
+
+        .battle-log {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--accent);
+            padding: 15px;
+            border-radius: 5px;
+            height: 200px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 20, 147, 0.2);
+        }
+
+        .log-player {
+            color: var(--success);
+        }
+
+        .log-enemy {
+            color: var(--danger);
+        }
+
+        .log-system {
+            color: var(--accent);
+        }
+
+        /* Maps and Hub */
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .map-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .map-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px var(--primary);
+        }
+
+        .map-card h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .difficulty {
+            color: var(--primary);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        /* Shop */
+        .shop-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .shop-item {
+            background: rgba(255, 20, 147, 0.1);
+            border: 2px solid var(--primary);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .item-name {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .item-price {
+            color: var(--success);
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .item-bonus {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        /* Messages and Notifications */
+        .message-box {
+            background: rgba(255, 20, 147, 0.1);
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message-box.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .message-box.danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .message-box.info {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Input */
+        input[type="text"] {
+            background: rgba(255, 20, 147, 0.1);
+            border: 2px solid var(--primary);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .battle-container {
+                grid-template-columns: 1fr;
+            }
+
+            .character-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Equipment Display */
+        .equipment-list {
+            margin: 15px 0;
+        }
+
+        .equipment-item {
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+
+        .rarity-legendary {
+            color: #ffd700;
+        }
+
+        .rarity-epic {
+            color: #9370db;
+        }
+
+        .rarity-rare {
+            color: #0099ff;
+        }
+
+        .rarity-common {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎮 K-pop Demon Hunters League 👹</h1>
+        <p class="subtitle">Battle for glory across mystical realms</p>
+    </header>
+
+    <div class="container">
+        <!-- Character Selection Screen -->
+        <div id="character-selection" class="screen active">
+            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Choose Your Champion</h2>
+            <div class="character-grid" id="characterGrid"></div>
+            <div style="text-align: center;">
+                <input type="text" id="hunterName" placeholder="Enter your hunter name..." maxlength="20">
+                <button onclick="app.confirmHunterSelection()">Begin Your Journey</button>
+            </div>
+        </div>
+
+        <!-- Main Hub Screen -->
+        <div id="main-hub" class="screen">
+            <div class="hunter-profile" id="hunterProfile"></div>
+            <div style="text-align: center; margin: 30px 0;">
+                <button onclick="app.showMapScreen()">🗺️ Explore Maps</button>
+                <button onclick="app.showShopScreen()">🛍️ Visit Shop</button>
+                <button onclick="app.saveGame()">💾 Save Game</button>
+                <button onclick="app.showLoadScreen()">📂 Load Game</button>
+                <button class="btn-danger" onclick="app.newGame()">🔄 New Game</button>
+            </div>
+        </div>
+
+        <!-- Map Selection Screen -->
+        <div id="map-selection" class="screen">
+            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Select a Map</h2>
+            <div class="map-grid" id="mapGrid"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
+            </div>
+        </div>
+
+        <!-- Exploration Screen -->
+        <div id="exploration" class="screen">
+            <div class="hunter-profile" id="explorationProfile"></div>
+            <div style="text-align: center; margin: 30px 0;">
+                <button onclick="app.startRivalBattle()">⚔️ Fight Rival</button>
+                <button onclick="app.searchTreasure()">💰 Search for Treasure</button>
+                <button onclick="app.startBossBattle()">🔥 Challenge Boss</button>
+                <button class="btn-secondary" onclick="app.showHubScreen()">← Return to Hub</button>
+            </div>
+            <div class="message-box info" id="explorationMessage"></div>
+        </div>
+
+        <!-- Battle Screen -->
+        <div id="battle-screen" class="screen">
+            <div class="battle-container">
+                <div class="combatant">
+                    <h2 id="playerName"></h2>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="playerHPBar" style="width: 100%;">
+                            <span id="playerHPText">100/100</span>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Attack:</span>
+                        <span id="playerATK">16</span>
+                    </div>
+                    <div class="stat">
+                        <span>Defense:</span>
+                        <span id="playerDEF">5</span>
+                    </div>
+                </div>
+
+                <div class="combatant enemy">
+                    <h2 id="enemyName"></h2>
+                    <div class="hp-bar">
+                        <div class="hp-fill" id="enemyHPBar" style="width: 100%;">
+                            <span id="enemyHPText">100/100</span>
+                        </div>
+                    </div>
+                    <div class="stat">
+                        <span>Attack:</span>
+                        <span id="enemyATK">16</span>
+                    </div>
+                    <div class="stat">
+                        <span>Defense:</span>
+                        <span id="enemyDEF">5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="battle-log" id="battleLog"></div>
+
+            <div class="battle-actions" id="battleActions">
+                <button onclick="app.playerAttack(1)">Basic Attack</button>
+                <button onclick="app.playerAttack(2)">Special Attack</button>
+                <button onclick="app.playerAttack(3)">Guard</button>
+                <button class="btn-danger" onclick="app.forfeitBattle()">Forfeit</button>
+            </div>
+        </div>
+
+        <!-- Battle Result Screen -->
+        <div id="battle-result" class="screen">
+            <div class="message-box" id="resultMessage"></div>
+            <div class="hunter-profile" id="resultProfile"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="app.showHubScreen()">← Back to Hub</button>
+            </div>
+        </div>
+
+        <!-- Shop Screen -->
+        <div id="shop-screen" class="screen">
+            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Ranked Shop</h2>
+            <div class="hunter-profile" id="shopProfile"></div>
+            <div class="shop-items" id="shopItems"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
+            </div>
+        </div>
+
+        <!-- Load Screen -->
+        <div id="load-screen" class="screen">
+            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Load Game</h2>
+            <div style="text-align: center;">
+                <button class="btn-success" onclick="app.loadGame()">Load Saved Game</button>
+                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
+            </div>
+            <div class="message-box info" id="loadMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        const CHARACTERS = {
+            "nova": { name: "Nova Bloom", attack: 18, defense: 5, hp: 100 },
+            "riot": { name: "Riot Mirage", attack: 15, defense: 7, hp: 110 },
+            "velvet": { name: "Velvet Viper", attack: 20, defense: 4, hp: 95 },
+            "moonlight": { name: "Moonlight Mantis", attack: 17, defense: 6, hp: 105 }
+        };
+
+        const MAPS = {
+            "forest": {
+                name: "Whisperwood Forest",
+                description: "A mystical forest filled with whispers and ancient magic.",
+                difficulty: 1,
+                boss: { name: "Whisper Wraith", hp: 150, attack: 20, defense: 6 }
+            },
+            "volcano": {
+                name: "Scorched Volcano",
+                description: "A fiery mountain where demons emerge from molten depths.",
+                difficulty: 2,
+                boss: { name: "Inferno Overlord", hp: 250, attack: 30, defense: 8 }
+            },
+            "abyss": {
+                name: "The Abyss",
+                description: "A dark chasm where lost souls wander eternally.",
+                difficulty: 3,
+                boss: { name: "Void Leviathan", hp: 400, attack: 40, defense: 10 }
+            },
+            "celestial": {
+                name: "Celestial Realm",
+                description: "The highest plane of existence, home to the ultimate demons.",
+                difficulty: 4,
+                boss: { name: "Eternal Sovereign", hp: 600, attack: 50, defense: 12 }
+            }
+        };
+
+        const RIVAL_NAMES = ["Jin Hwa", "Sora Byte", "Aiko Hex", "Kae Prism", "Mina Fang", "Rae Circuit"];
+
+        class Hunter {
+            constructor(name, archetype, stats) {
+                this.name = name;
+                this.archetype = archetype;
+                this.level = 1;
+                this.exp = 0;
+                this.exp_to_level = 100;
+                this.hp = stats.hp;
+                this.max_hp = stats.hp;
+                this.attack = stats.attack;
+                this.defense = stats.defense;
+                this.gold = 100;
+                this.rank = 1;
+                this.wins = 0;
+                this.losses = 0;
+                this.equipment = [];
+                this.bosses_defeated = [];
+                this.current_map = "Whisperwood Forest";
+            }
+
+            addExp(amount) {
+                this.exp += amount;
+                while (this.exp >= this.exp_to_level) {
+                    this.levelUp();
+                }
+            }
+
+            levelUp() {
+                this.exp -= this.exp_to_level;
+                this.level++;
+                this.exp_to_level = Math.floor(this.exp_to_level * 1.1);
+                this.max_hp += 15;
+                this.hp = this.max_hp;
+                this.attack += 3;
+                this.defense += 1;
+            }
+
+            takeDamage(damage) {
+                const actual = Math.max(0, damage - this.defense);
+                this.hp = Math.max(0, this.hp - actual);
+            }
+
+            heal(amount) {
+                this.hp = Math.min(this.max_hp, this.hp + amount);
+            }
+
+            toJSON() {
+                return {
+                    name: this.name,
+                    archetype: this.archetype,
+                    level: this.level,
+                    exp: this.exp,
+                    exp_to_level: this.exp_to_level,
+                    hp: this.hp,
+                    max_hp: this.max_hp,
+                    attack: this.attack,
+                    defense: this.defense,
+                    gold: this.gold,
+                    rank: this.rank,
+                    wins: this.wins,
+                    losses: this.losses,
+                    equipment: this.equipment,
+                    bosses_defeated: this.bosses_defeated,
+                    current_map: this.current_map
+                };
+            }
+
+            static fromJSON(data) {
+                const hunter = new Hunter(data.name, data.archetype, { hp: data.max_hp, attack: data.attack, defense: data.defense });
+                Object.assign(hunter, data);
+                return hunter;
+            }
+        }
+
+        class KpopDemonHuntersGame {
+            constructor() {
+                this.player = null;
+                this.opponent = null;
+                this.current_map = null;
+                this.is_boss_battle = false;
+                this.selected_character = null;
+                this.battle_active = false;
+                this.init();
+            }
+
+            init() {
+                this.populateCharacterGrid();
+                this.loadGame();
+            }
+
+            populateCharacterGrid() {
+                const grid = document.getElementById("characterGrid");
+                grid.innerHTML = "";
+                Object.entries(CHARACTERS).forEach(([key, char]) => {
+                    const card = document.createElement("div");
+                    card.className = "character-card";
+                    card.onclick = () => this.selectCharacter(key);
+                    card.innerHTML = `
+                        <h3>${char.name}</h3>
+                        <div class="stat">
+                            <span>Attack:</span>
+                            <span>${char.attack}</span>
+                        </div>
+                        <div class="stat">
+                            <span>Defense:</span>
+                            <span>${char.defense}</span>
+                        </div>
+                        <div class="stat">
+                            <span>Health:</span>
+                            <span>${char.hp}</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            selectCharacter(key) {
+                this.selected_character = key;
+                document.querySelectorAll(".character-card").forEach(card => {
+                    card.style.borderColor = "var(--primary)";
+                });
+                document.querySelectorAll(".character-card")[Object.keys(CHARACTERS).indexOf(key)].style.borderColor = "var(--accent)";
+            }
+
+            confirmHunterSelection() {
+                if (!this.selected_character) {
+                    alert("Please select a character!");
+                    return;
+                }
+                const name = document.getElementById("hunterName").value || "Player One";
+                const charData = CHARACTERS[this.selected_character];
+                this.player = new Hunter(name, charData.name, {
+                    hp: charData.hp,
+                    attack: charData.attack,
+                    defense: charData.defense
+                });
+                this.showHubScreen();
+            }
+
+            showScreen(screenId) {
+                document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+                document.getElementById(screenId).classList.add("active");
+            }
+
+            showHubScreen() {
+                this.updateHunterProfile();
+                this.showScreen("main-hub");
+            }
+
+            showMapScreen() {
+                const grid = document.getElementById("mapGrid");
+                grid.innerHTML = "";
+                Object.entries(MAPS).forEach(([key, map]) => {
+                    const card = document.createElement("div");
+                    card.className = "map-card";
+                    card.onclick = () => this.selectMap(key);
+                    card.innerHTML = `
+                        <h3>${map.name}</h3>
+                        <p>${map.description}</p>
+                        <div class="difficulty">${"⭐".repeat(map.difficulty)}</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                this.showScreen("map-selection");
+            }
+
+            selectMap(key) {
+                this.current_map = key;
+                const map = MAPS[key];
+                this.player.current_map = map.name;
+                this.updateExplorationProfile();
+                document.getElementById("explorationMessage").innerHTML = `📍 ${map.description}`;
+                this.showScreen("exploration");
+            }
+
+            showShopScreen() {
+                this.updateShopProfile();
+                this.populateShop();
+                this.showScreen("shop-screen");
+            }
+
+            showLoadScreen() {
+                this.showScreen("load-screen");
+            }
+
+            populateShop() {
+                const items = [
+                    { name: "Attack Upgrade +4", price: 25, bonus: "ATK +4" },
+                    { name: "Defense Upgrade +4", price: 25, bonus: "DEF +4" },
+                    { name: "Health Potion", price: 20, bonus: "HP +50" }
+                ];
+                const shop = document.getElementById("shopItems");
+                shop.innerHTML = "";
+                items.forEach((item, idx) => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "shop-item";
+                    itemDiv.innerHTML = `
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-bonus">${item.bonus}</div>
+                        <div class="item-price">💰 ${item.price}</div>
+                        <button onclick="app.buyItem(${idx})">Purchase</button>
+                    `;
+                    shop.appendChild(itemDiv);
+                });
+            }
+
+            buyItem(idx) {
+                const items = [
+                    { price: 25, type: "attack" },
+                    { price: 25, type: "defense" },
+                    { price: 20, type: "heal" }
+                ];
+                const item = items[idx];
+                if (this.player.gold < item.price) {
+                    alert("Not enough gold!");
+                    return;
+                }
+                this.player.gold -= item.price;
+                if (item.type === "attack") this.player.attack += 4;
+                if (item.type === "defense") this.player.defense += 4;
+                if (item.type === "heal") this.player.heal(50);
+                alert(`Purchased! ${item.type}`);
+                this.updateShopProfile();
+            }
+
+            startRivalBattle() {
+                this.is_boss_battle = false;
+                const rival_name = RIVAL_NAMES[Math.floor(Math.random() * RIVAL_NAMES.length)];
+                const base_attack = 10 + this.player.rank * 3;
+                const base_defense = 3 + this.player.rank;
+                const rival_hp = 80 + this.player.rank * 12;
+                this.opponent = new Hunter(rival_name, "Rival", {
+                    hp: rival_hp,
+                    attack: base_attack,
+                    defense: base_defense
+                });
+                this.startBattle();
+            }
+
+            startBossBattle() {
+                const map = MAPS[this.current_map];
+                const boss_data = map.boss;
+                this.is_boss_battle = true;
+                this.opponent = new Hunter(boss_data.name, "Boss", {
+                    hp: boss_data.hp,
+                    attack: boss_data.attack,
+                    defense: boss_data.defense
+                });
+                this.opponent.max_hp = boss_data.hp;
+                this.startBattle();
+            }
+
+            startBattle() {
+                this.battle_active = true;
+                this.opponent.hp = this.opponent.max_hp;
+                document.getElementById("playerName").textContent = this.player.name;
+                document.getElementById("enemyName").textContent = this.opponent.name;
+                this.updateBattleUI();
+                document.getElementById("battleLog").innerHTML = "";
+                this.showScreen("battle-screen");
+            }
+
+            playerAttack(moveType) {
+                if (!this.battle_active) return;
+
+                let damage = 0;
+                let action = "";
+
+                if (moveType === 1) {
+                    damage = this.player.attack + Math.floor(Math.random() * 9) + 4;
+                    action = `${this.player.name} strikes for ${Math.floor(damage)} damage!`;
+                } else if (moveType === 2) {
+                    damage = this.player.attack + Math.floor(Math.random() * 11) + 8;
+                    action = `${this.player.name} uses Special Attack for ${Math.floor(damage)} damage!`;
+                } else if (moveType === 3) {
+                    this.player.defense += 6;
+                    action = `${this.player.name} guards (Defense +6)`;
+                }
+
+                if (moveType !== 3) {
+                    this.opponent.takeDamage(damage);
+                }
+
+                this.addLogEntry(action, "log-player");
+
+                if (this.opponent.hp <= 0) {
+                    this.endBattle(true);
+                    return;
+                }
+
+                this.enemyTurn();
+            }
+
+            enemyTurn() {
+                const actions = ["attack", "attack", "special", "guard"];
+                const action = actions[Math.floor(Math.random() * actions.length)];
+                let damage = 0;
+                let logText = "";
+
+                if (action === "attack") {
+                    damage = this.opponent.attack + Math.floor(Math.random() * 9) + 4;
+                    logText = `${this.opponent.name} strikes for ${Math.floor(damage)} damage!`;
+                } else if (action === "special") {
+                    damage = this.opponent.attack * 1.3 + Math.floor(Math.random() * 11) + 8;
+                    logText = `${this.opponent.name} uses Special Attack for ${Math.floor(damage)} damage!`;
+                } else if (action === "guard") {
+                    this.opponent.defense += 4;
+                    logText = `${this.opponent.name} guards (Defense +4)`;
+                }
+
+                if (action !== "guard") {
+                    this.player.takeDamage(damage);
+                }
+
+                this.addLogEntry(logText, "log-enemy");
+
+                if (this.player.hp <= 0) {
+                    this.endBattle(false);
+                    return;
+                }
+
+                this.updateBattleUI();
+            }
+
+            forfeitBattle() {
+                this.addLogEntry(`${this.player.name} forfeits the battle!`, "log-system");
+                this.endBattle(false);
+            }
+
+            updateBattleUI() {
+                const playerHPPercent = Math.max(0, (this.player.hp / this.player.max_hp) * 100);
+                const enemyHPPercent = Math.max(0, (this.opponent.hp / this.opponent.max_hp) * 100);
+
+                document.getElementById("playerHPBar").style.width = playerHPPercent + "%";
+                document.getElementById("playerHPText").textContent = `${Math.max(0, this.player.hp)}/${this.player.max_hp}`;
+
+                document.getElementById("enemyHPBar").style.width = enemyHPPercent + "%";
+                document.getElementById("enemyHPText").textContent = `${Math.max(0, this.opponent.hp)}/${this.opponent.max_hp}`;
+
+                document.getElementById("playerATK").textContent = this.player.attack;
+                document.getElementById("playerDEF").textContent = this.player.defense;
+                document.getElementById("enemyATK").textContent = this.opponent.attack;
+                document.getElementById("enemyDEF").textContent = this.opponent.defense;
+            }
+
+            addLogEntry(text, className) {
+                const log = document.getElementById("battleLog");
+                const entry = document.createElement("div");
+                entry.className = "log-entry " + className;
+                entry.textContent = text;
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+            }
+
+            endBattle(playerWon) {
+                this.battle_active = false;
+                let resultHTML = "";
+
+                if (playerWon) {
+                    this.player.wins++;
+                    const goldReward = 30 + this.player.rank * 5;
+                    const expReward = 50 + this.player.rank * 10;
+                    this.player.gold += goldReward;
+                    this.player.addExp(expReward);
+
+                    if (this.is_boss_battle) {
+                        this.player.bosses_defeated.push(this.opponent.name);
+                        this.player.gold += 200;
+                        resultHTML = `
+                            <div class="message-box success">
+                                <h2>🎉 VICTORY! You defeated ${this.opponent.name}!</h2>
+                                <p>Gained ${goldReward + 200} gold and ${expReward} EXP</p>
+                            </div>
+                        `;
+                    } else {
+                        resultHTML = `
+                            <div class="message-box success">
+                                <h2>✅ Victory!</h2>
+                                <p>Gained ${goldReward} gold and ${expReward} EXP</p>
+                            </div>
+                        `;
+                    }
+                } else {
+                    this.player.losses++;
+                    this.player.gold = Math.max(0, this.player.gold - 10);
+                    this.player.hp = Math.max(20, this.player.hp);
+                    resultHTML = `
+                        <div class="message-box danger">
+                            <h2>❌ Defeat</h2>
+                            <p>You lost 10 gold</p>
+                        </div>
+                    `;
+                }
+
+                document.getElementById("resultMessage").innerHTML = resultHTML;
+                this.updateResultProfile();
+                this.showScreen("battle-result");
+            }
+
+            searchTreasure() {
+                const goldFound = Math.floor(Math.random() * 31) + 20;
+                this.player.gold += goldFound;
+                document.getElementById("explorationMessage").innerHTML = `💰 Found ${goldFound} gold!`;
+            }
+
+            updateHunterProfile() {
+                document.getElementById("hunterProfile").innerHTML = `
+                    <div class="hunter-name">${this.player.name} - ${this.player.archetype}</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Level</div>
+                            <div class="stat-value">${this.player.level}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">HP</div>
+                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Attack</div>
+                            <div class="stat-value">${this.player.attack}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Defense</div>
+                            <div class="stat-value">${this.player.defense}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Gold</div>
+                            <div class="stat-value">${this.player.gold}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Rank</div>
+                            <div class="stat-value">${this.player.rank}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <strong>Record:</strong> ${this.player.wins}W - ${this.player.losses}L
+                    </div>
+                `;
+            }
+
+            updateExplorationProfile() {
+                document.getElementById("explorationProfile").innerHTML = `
+                    <div class="hunter-name">${this.player.name}</div>
+                    <div style="text-align: center; margin: 10px 0;">📍 ${this.player.current_map}</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Level</div>
+                            <div class="stat-value">${this.player.level}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">HP</div>
+                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Gold</div>
+                            <div class="stat-value">${this.player.gold}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateResultProfile() {
+                document.getElementById("resultProfile").innerHTML = `
+                    <div class="hunter-name">${this.player.name}</div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-label">Level</div>
+                            <div class="stat-value">${this.player.level}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">HP</div>
+                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Gold</div>
+                            <div class="stat-value">${this.player.gold}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Record</div>
+                            <div class="stat-value">${this.player.wins}W</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            updateShopProfile() {
+                document.getElementById("shopProfile").innerHTML = `
+                    <div class="hunter-name">${this.player.name}</div>
+                    <div style="text-align: center;">
+                        <strong>Gold:</strong> 💰 ${this.player.gold}
+                    </div>
+                `;
+            }
+
+            saveGame() {
+                localStorage.setItem("kpop_hunter_save", JSON.stringify(this.player.toJSON()));
+                alert("✅ Game saved successfully!");
+            }
+
+            loadGame() {
+                const saved = localStorage.getItem("kpop_hunter_save");
+                if (saved) {
+                    this.player = Hunter.fromJSON(JSON.parse(saved));
+                    this.showHubScreen();
+                    document.getElementById("loadMessage").innerHTML = `<p style="color: var(--success);">✅ Loaded ${this.player.name}!</p>`;
+                } else {
+                    document.getElementById("loadMessage").innerHTML = `<p style="color: var(--accent);">No save file found. Start a new game.</p>`;
+                }
+            }
+
+            newGame() {
+                if (confirm("Start a new game? This will erase your current progress.")) {
+                    localStorage.removeItem("kpop_hunter_save");
+                    this.player = null;
+                    this.populateCharacterGrid();
+                    this.showScreen("character-selection");
+                }
+            }
+        }
+
+        const app = new KpopDemonHuntersGame();
+    </script>
+</body>
+</html>
