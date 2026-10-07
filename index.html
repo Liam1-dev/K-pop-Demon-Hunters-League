@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K-pop Demon Hunters League Web Edition</title>
+  <title>K-pop Demon Hunters League - Cinematic Arcade RPG</title>
   <style>
     :root {
-      --bg-1: #090d1b;
-      --bg-2: #1a1231;
-      --panel: rgba(17, 24, 39, 0.8);
-      --panel-2: rgba(31, 41, 55, 0.82);
+      --bg-1: #080d1b;
+      --bg-2: #1a122d;
+      --panel: rgba(14, 20, 35, 0.8);
+      --panel2: rgba(21, 29, 44, 0.82);
       --primary: #ff4fd8;
-      --primary-2: #ff74d4;
+      --primary-2: #ff8ae6;
       --secondary: #7c3aed;
       --secondary-2: #5b21b6;
       --gold: #fbbf24;
       --success: #34d399;
       --danger: #fb7185;
       --info: #67e8f9;
-      --text: #edf6ff;
+      --text: #edf7ff;
       --muted: #cbd5e1;
       --shadow: rgba(0, 0, 0, 0.35);
     }
@@ -27,12 +27,10 @@
 
     html, body {
       margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
+      height: 100%;
       font-family: Inter, Segoe UI, Arial, sans-serif;
       background:
-        radial-gradient(circle at top, rgba(124, 58, 237, 0.28), transparent 35%),
+        radial-gradient(circle at top, rgba(124,58,237,0.22), transparent 33%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
       color: var(--text);
       overflow-x: hidden;
@@ -47,42 +45,42 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1260px;
       margin: 0 auto;
-      padding: 24px 18px 50px;
+      padding: 22px 18px 48px;
       position: relative;
       z-index: 1;
     }
 
     header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       padding-bottom: 18px;
-      border-bottom: 2px solid rgba(255, 79, 216, 0.6);
+      border-bottom: 2px solid rgba(255,79,216,0.5);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(2rem, 4vw, 3.2rem);
       text-transform: uppercase;
+      letter-spacing: 0.1em;
       color: var(--primary);
-      text-shadow: 0 0 20px rgba(255, 79, 216, 0.9), 0 0 40px rgba(124, 58, 237, 0.8);
-      animation: pulseGlow 2.5s infinite alternate;
+      text-shadow: 0 0 18px rgba(255, 79, 216, 0.9), 0 0 36px rgba(124,58,237,0.8);
+      animation: pulseGlow 2.2s ease-in-out infinite alternate;
     }
 
     .subtitle {
       margin-top: 10px;
-      color: var(--info);
-      font-size: 1rem;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.82rem;
+      color: var(--info);
     }
 
     .screen {
       display: none;
       opacity: 0;
-      transform: translateY(16px);
+      transform: translateY(18px);
       transition: opacity 0.35s ease, transform 0.35s ease;
     }
 
@@ -93,121 +91,89 @@
     }
 
     .panel {
-      background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(30, 41, 59, 0.7));
-      border: 1px solid rgba(103, 232, 249, 0.38);
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(25, 36, 55, 0.75));
+      border: 1px solid rgba(103, 232, 249, 0.34);
       border-radius: 18px;
-      box-shadow: 0 16px 30px var(--shadow);
+      box-shadow: 0 20px 30px rgba(0,0,0,0.28);
       padding: 20px;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
     }
 
-    .grid {
-      display: grid;
-      gap: 18px;
-    }
-
+    .grid { display: grid; gap: 18px; }
     .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-    .character-grid, .map-grid, .shop-grid {
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 11px 18px;
+      cursor: pointer;
+      box-shadow: 0 12px 20px rgba(124, 58, 237, 0.28);
+      transition: transform 0.2s ease, filter 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px) scale(1.015); filter: brightness(1.08); }
+    .btn:active { transform: none; }
+    .btn.secondary { background: linear-gradient(135deg, #475569, #1e293b); }
+    .btn.success { background: linear-gradient(135deg, var(--success), #0f766e); }
+    .btn.danger { background: linear-gradient(135deg, var(--danger), #b91c1c); }
+    .btn.info { background: linear-gradient(135deg, var(--info), #0ea5e9); color: #04151d; }
+
+    .character-grid, .map-grid, .shop-grid, .story-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 18px;
     }
 
-    .character-card, .map-card, .shop-item, .leaderboard-item {
-      background: linear-gradient(160deg, rgba(124, 58, 237, 0.18), rgba(17, 24, 39, 0.7));
-      border: 1px solid rgba(255, 79, 216, 0.45);
+    .character-card, .map-card, .shop-item, .story-card, .leaderboard-item {
+      background: linear-gradient(155deg, rgba(124,58,237,0.18), rgba(15, 23, 42, 0.74));
+      border: 1px solid rgba(255, 79, 216, 0.5);
       border-radius: 16px;
-      transform: translateY(0);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      box-shadow: 0 12px 22px rgba(0,0,0,0.18);
       cursor: pointer;
       overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .character-card:hover, .map-card:hover, .shop-item:hover, .leaderboard-item:hover {
+    .character-card:hover, .map-card:hover, .shop-item:hover, .story-card:hover, .leaderboard-item:hover {
       transform: translateY(-4px);
       border-color: var(--info);
-      box-shadow: 0 14px 30px rgba(103, 232, 249, 0.15);
+      box-shadow: 0 16px 30px rgba(103,232,249,0.12);
     }
 
     .character-card.selected {
       border-color: var(--info);
-      box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.35), 0 18px 28px rgba(103, 232, 249, 0.18);
+      box-shadow: 0 0 0 2px rgba(103,232,249,0.35), 0 18px 26px rgba(103,232,249,0.12);
     }
 
     .card-head {
-      background: linear-gradient(135deg, rgba(255,79,216,0.15), rgba(124,58,237,0.2));
       padding: 16px 18px 10px;
+      background: linear-gradient(135deg, rgba(255,79,216,0.1), rgba(124,58,237,0.12));
     }
 
     .card-head h3 {
       margin: 0;
       color: var(--info);
       font-size: 1.2rem;
-      letter-spacing: 0.02em;
+-      letter-spacing: 0.04em;
     }
 
-    .card-body {
-      padding: 12px 18px 18px;
-      color: var(--muted);
-    }
+    .card-body { padding: 12px 18px 18px; color: var(--muted); }
 
     .stats-row {
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      padding: 5px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
-    .stats-row:last-child {
-      border-bottom: none;
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 12px 18px;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-      box-shadow: 0 10px 22px rgba(124, 58, 237, 0.3);
-    }
-
-    button:hover {
-      transform: translateY(-2px) scale(1.01);
-      filter: brightness(1.08);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    .btn-secondary {
-      background: linear-gradient(135deg, #2d3748, #475569);
-      box-shadow: none;
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, var(--success), #0f766e);
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, var(--danger), #b91c1c);
-    }
-
-    .btn-info {
-      background: linear-gradient(135deg, var(--info), #0ea5e9);
-      color: #07141a;
-    }
+    .stats-row:last-child { border-bottom: none; }
 
     .form-row {
       display: flex;
@@ -215,14 +181,14 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 20px;
     }
 
     input[type="text"] {
-      width: min(90%, 360px);
+      width: min(92%, 360px);
       border-radius: 12px;
-      border: 1px solid rgba(255, 79, 216, 0.6);
       background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255,79,216,0.55);
       color: var(--text);
       padding: 12px 14px;
       font-size: 1rem;
@@ -230,20 +196,20 @@
     }
 
     .hero-card {
-      position: relative;
       display: grid;
-      gap: 16px;
-      padding: 18px;
+      gap: 18px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.18), rgba(17,24,39,0.78));
+      border: 1px solid rgba(255,79,216,0.42);
       border-radius: 18px;
-      background: linear-gradient(180deg, rgba(124,58,237,0.2), rgba(17,24,39,0.7));
-      border: 1px solid rgba(255, 79, 216, 0.5);
+      padding: 18px;
+      box-shadow: 0 16px 28px rgba(0,0,0,0.18);
     }
 
     .hero-name {
       font-size: clamp(1.5rem, 3vw, 2.2rem);
-      font-weight: 800;
+      font-weight: 900;
       color: var(--primary);
-      text-shadow: 0 0 10px rgba(255, 79, 216, 0.8);
+      text-shadow: 0 0 12px rgba(255,79,216,0.75);
     }
 
     .stats-grid {
@@ -253,7 +219,7 @@
     }
 
     .tiny-box {
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 12px;
       padding: 12px;
@@ -262,52 +228,52 @@
 
     .tiny-box .label {
       color: var(--muted);
-      font-size: 0.76rem;
-      text-transform: uppercase;
+      font-size: 0.72rem;
       letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .tiny-box .value {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
       margin-top: 8px;
+      font-weight: 900;
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
       color: var(--info);
-      font-weight: 700;
     }
 
     .battle-panel {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 18px;
       align-items: stretch;
-      margin-top: 20px;
+      margin-top: 18px;
     }
 
     .fighter-card {
-      background: linear-gradient(180deg, rgba(17,24,39,0.88), rgba(30,41,59,0.8));
-      border: 1px solid rgba(255, 79, 216, 0.5);
+      background: linear-gradient(180deg, rgba(17,24,39,0.88), rgba(30,41,59,0.78));
+      border: 1px solid rgba(255,79,216,0.55);
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 18px 28px rgba(0,0,0,0.22);
     }
 
     .fighter-top {
-      padding: 18px 18px 12px;
+      padding: 16px 18px 12px;
       text-align: center;
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
 
     .fighter-name {
-      font-size: 1.4rem;
-      font-weight: 800;
+      font-weight: 900;
+      font-size: clamp(1.3rem, 2vw, 1.7rem);
       color: var(--info);
     }
 
     .fighter-role {
-      margin-top: 4px;
-      font-size: 0.85rem;
+      margin-top: 6px;
       color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      font-size: 0.78rem;
     }
 
     .sprite-wrap {
@@ -315,60 +281,56 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: linear-gradient(180deg, rgba(255,79,216,0.1), rgba(124,58,237,0.16));
       position: relative;
-      background: linear-gradient(180deg, rgba(255,79,216,0.08), rgba(124,58,237,0.16));
+      overflow: hidden;
     }
 
     .sprite {
       position: relative;
-      width: 125px;
-      height: 125px;
+      width: 135px;
+      height: 135px;
       display: grid;
       place-items: center;
       border-radius: 30% 30% 38% 38%;
-      background: linear-gradient(135deg, rgba(103,232,249,0.25), rgba(124,58,237,0.28));
-      border: 2px solid rgba(103, 232, 249, 0.6);
-      box-shadow: inset 0 0 20px rgba(103,232,249,0.16), 0 10px 22px rgba(103,232,249,0.12);
-      animation: floatSprite 2.2s ease-in-out infinite alternate;
+      background: linear-gradient(135deg, rgba(103,232,249,0.25), rgba(124,58,237,0.3));
+      border: 2px solid rgba(103,232,249,0.7);
+      box-shadow: inset 0 0 24px rgba(103,232,249,0.12), 0 10px 22px rgba(103,232,249,0.18);
+      animation: floatSprite 2.4s ease-in-out infinite alternate;
     }
 
     .sprite.enemy {
-      background: linear-gradient(135deg, rgba(251,113,133,0.2), rgba(239,68,68,0.2));
-      border-color: rgba(251,113,133,0.65);
-      box-shadow: inset 0 0 20px rgba(251,113,133,0.16), 0 10px 22px rgba(251,113,133,0.12);
+      background: linear-gradient(135deg, rgba(251,113,133,0.25), rgba(239,68,68,0.2));
+      border-color: rgba(251,113,133,0.7);
+      box-shadow: inset 0 0 24px rgba(251,113,133,0.12), 0 10px 22px rgba(251,113,133,0.18);
       animation: wobble 2.2s ease-in-out infinite alternate;
     }
 
     .sprite::before, .sprite::after {
       content: "";
       position: absolute;
-      background: rgba(255,255,255,0.9);
-      border-radius: 50%;
+      top: 33px;
       width: 12px;
       height: 12px;
-      top: 30px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.92);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255,255,255,0.7);
     }
 
     .sprite::before { left: 28px; }
     .sprite::after { right: 28px; }
 
-    .sprite span {
-      font-size: 3.5rem;
-      filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
-    }
+    .sprite span { font-size: 3.7rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.45)); }
 
-    .hp-wrap {
-      padding: 12px 18px 18px;
-    }
+    .hp-wrap { padding: 12px 18px 18px; }
 
     .hp-bar {
       width: 100%;
       height: 18px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.07);
       border-radius: 999px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.11);
       position: relative;
     }
 
@@ -376,16 +338,15 @@
       height: 100%;
       width: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #34d399 0%, #10b981 60%, #f59e0b 100%);
-      transition: width 0.25s ease, filter 0.2s ease;
-      position: relative;
+      background: linear-gradient(90deg, #34d399, #10b981, #f59e0b);
+      transition: width 0.24s ease, filter 0.2s ease;
     }
 
     .hp-text {
-      font-size: 0.82rem;
-      color: var(--muted);
+      font-size: 0.8rem;
       margin-top: 8px;
       text-align: right;
+      color: var(--muted);
     }
 
     .battle-actions {
@@ -397,16 +358,14 @@
 
     .battle-btn {
       min-height: 62px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      font-size: 0.9rem;
+      line-height: 1.25;
+      padding: 12px 10px;
       text-transform: none;
-      padding: 10px 12px;
-      line-height: 1.3;
+      letter-spacing: 0.03em;
     }
 
-    .battle-btn[data-skill="ultimate"] {
+    .battle-btn[data-kind='ultimate'] {
       background: linear-gradient(135deg, #f59e0b, #f97316);
     }
 
@@ -417,67 +376,63 @@
     }
 
     .battle-log {
-      margin-top: 18px;
       min-height: 180px;
       max-height: 260px;
       overflow-y: auto;
-      background: rgba(2, 6, 23, 0.62);
-      border: 1px solid rgba(103,232,249,0.35);
+      margin-top: 18px;
+      background: rgba(2, 6, 23, 0.68);
+      border: 1px solid rgba(103,232,249,0.3);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px 16px;
       box-shadow: inset 0 0 12px rgba(0,0,0,0.25);
     }
 
     .log-line {
-      display: flex;
-      padding: 8px 6px;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      line-height: 1.5;
+      display: block;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      line-height: 1.45;
     }
 
     .log-line:last-child { border-bottom: none; }
-
     .log-line.player { color: #86efac; }
     .log-line.enemy { color: #fda4af; }
     .log-line.system { color: #a5f3fc; }
     .log-line.gold { color: #fbbf24; }
 
-    .message-box {
-      margin-top: 20px;
-      padding: 18px 20px;
-      border-radius: 14px;
-      text-align: center;
-      font-size: 1.05rem;
-      font-weight: 600;
-      background: rgba(103,232,249,0.08);
-      border: 1px solid rgba(103,232,249,0.35);
+    .story-card {
+      display: block;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .story-card .story-head {
+      padding: 16px 18px 12px;
+      background: linear-gradient(135deg, rgba(255,79,216,0.1), rgba(103,232,249,0.08));
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-weight: 900;
       color: var(--info);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
-    .message-box.success {
-      color: var(--success);
-      border-color: rgba(52,211,153,0.45);
-      background: rgba(52,211,153,0.08);
-    }
-
-    .message-box.danger {
-      color: #fecdd3;
-      border-color: rgba(251,113,133,0.45);
-      background: rgba(251,113,133,0.08);
+    .story-card .story-body {
+      padding: 16px 18px 18px;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
     .leaderboard-box {
-      margin-top: 28px;
-      padding: 18px;
-      border-radius: 16px;
       background: linear-gradient(180deg, rgba(17,24,39,0.8), rgba(30,41,59,0.72));
-      border: 1px solid rgba(255, 79, 216, 0.4);
+      border: 1px solid rgba(255,79,216,0.4);
+      border-radius: 16px;
+      padding: 18px;
     }
 
     .leaderboard-list {
-      margin-top: 14px;
       display: grid;
       gap: 10px;
+      margin-top: 14px;
     }
 
     .leaderboard-item {
@@ -489,69 +444,53 @@
       cursor: default;
     }
 
-    .leaderboard-rank {
-      font-weight: 900;
-      color: var(--gold);
-      min-width: 40px;
-    }
+    .leaderboard-rank { color: var(--gold); font-weight: 900; min-width: 40px; }
+    .leaderboard-name { flex: 1; font-weight: 700; }
+    .leaderboard-score { color: var(--info); font-weight: 800; }
 
-    .leaderboard-name {
-      flex: 1;
+    .message-box {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
       font-weight: 700;
-    }
-
-    .leaderboard-score {
+      background: rgba(103,232,249,0.08);
+      border: 1px solid rgba(103,232,249,0.35);
       color: var(--info);
-      font-weight: 800;
     }
 
-    .map-card .map-title {
-      font-size: 1.2rem;
-      color: var(--info);
-      font-weight: 800;
-      margin-bottom: 8px;
+    .message-box.success {
+      background: rgba(52,211,153,0.08);
+      border-color: rgba(52,211,153,0.4);
+      color: var(--success);
     }
 
-    .map-card .map-meta {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.5;
+    .message-box.danger {
+      background: rgba(251,113,133,0.08);
+      border-color: rgba(251,113,133,0.4);
+      color: #fecdd3;
     }
-
-    .map-card .map-boss {
-      margin-top: 12px;
-      color: var(--gold);
-      font-weight: 700;
-    }
-
-    .skill-meta {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-
-    .hidden { display: none !important; }
 
     @media (max-width: 860px) {
       .battle-panel { grid-template-columns: 1fr; }
-      .stats-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
       .grid-2 { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
     }
 
     @media (max-width: 520px) {
       .battle-actions { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
-      .character-grid, .map-grid, .shop-grid { grid-template-columns: 1fr; }
+      .character-grid, .map-grid, .shop-grid, .story-grid { grid-template-columns: 1fr; }
     }
 
     @keyframes pulseGlow {
-      0% { text-shadow: 0 0 12px rgba(255,79,216,0.8), 0 0 18px rgba(124,58,237,0.8); }
-      100% { text-shadow: 0 0 24px rgba(255,79,216,1), 0 0 45px rgba(124,58,237,1), 0 0 60px rgba(103,232,249,0.7); }
+      0% { text-shadow: 0 0 12px rgba(255,79,216,0.8), 0 0 20px rgba(124,58,237,0.75); }
+      100% { text-shadow: 0 0 22px rgba(255,79,216,1), 0 0 42px rgba(124,58,237,1), 0 0 60px rgba(103,232,249,0.7); }
     }
 
     @keyframes floatSprite {
       0% { transform: translateY(0) rotate(-2deg); }
-      100% { transform: translateY(-8px) rotate(2deg); }
+      100% { transform: translateY(-9px) rotate(2deg); }
     }
 
     @keyframes wobble {
@@ -564,32 +503,33 @@
   <div class="container">
     <header>
       <h1>🎮 K-pop Demon Hunters League 👹</h1>
-      <div class="subtitle">Battle across realms, collect loot, and climb the leaderboard</div>
+      <div class="subtitle">Cinematic arcade RPG • story mode • ranked ladder</div>
     </header>
 
     <section id="selection-screen" class="screen active">
       <div class="panel">
-        <h2 style="margin:0 0 14px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Choose Your Hunter</h2>
+        <h2 style="margin:0 0 16px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Choose Your Hunter</h2>
         <div id="character-grid" class="character-grid"></div>
         <div class="form-row">
           <input id="hunter-name" type="text" maxlength="20" placeholder="Enter your hunter name..." />
-          <button id="start-button">Begin Journey</button>
+          <button id="start-button" class="btn">Begin Journey</button>
         </div>
       </div>
     </section>
 
     <section id="hub-screen" class="screen">
-      <div class="hero-card" id="hero-card"></div>
+      <div id="hero-card" class="hero-card"></div>
 
-      <div class="grid grid-2" style="margin-top: 22px;">
+      <div class="grid grid-2" style="margin-top:22px;">
         <div class="panel">
-          <h3 style="margin-top:0; color:var(--info); text-transform:uppercase; letter-spacing:0.08em;">Main Menu</h3>
-          <div class="form-row" style="justify-content:flex-start; margin-top:16px;">
-            <button id="explore-button">Explore Map</button>
-            <button id="shop-button" class="btn-secondary">Open Shop</button>
-            <button id="save-button" class="btn-success">Save</button>
-            <button id="load-button" class="btn-info">Load</button>
-            <button id="new-game-button" class="btn-danger">New Game</button>
+          <h3 style="margin:0 0 14px; color:var(--info); text-transform:uppercase; letter-spacing:0.08em;">Main Menu</h3>
+          <div class="form-row" style="justify-content:flex-start; margin-top:8px;">
+            <button id="story-button" class="btn">Story Mode</button>
+            <button id="explore-button" class="btn secondary">Explore Map</button>
+            <button id="shop-button" class="btn secondary">Shop</button>
+            <button id="save-button" class="btn success">Save</button>
+            <button id="load-button" class="btn info">Load</button>
+            <button id="new-game-button" class="btn danger">New Game</button>
           </div>
         </div>
 
@@ -600,25 +540,35 @@
       </div>
     </section>
 
+    <section id="story-screen" class="screen">
+      <div class="panel">
+        <h2 style="margin:0 0 16px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Story Mode</h2>
+        <div id="story-grid" class="story-grid"></div>
+        <div style="text-align:center; margin-top:20px;">
+          <button id="story-back-button" class="btn secondary">Back to Hub</button>
+        </div>
+      </div>
+    </section>
+
     <section id="map-screen" class="screen">
       <div class="panel">
         <h2 style="margin:0 0 16px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Choose a Domain</h2>
         <div id="map-grid" class="map-grid"></div>
-        <div style="text-align:center; margin-top:20px;">
-          <button id="back-from-maps" class="btn-secondary">Back to Hub</button>
+        <div style="text-align:center; margin-top:18px;">
+          <button id="back-from-maps" class="btn secondary">Back to Hub</button>
         </div>
       </div>
     </section>
 
     <section id="exploration-screen" class="screen">
       <div id="exploration-card" class="hero-card"></div>
-      <div style="text-align:center; margin-top:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:12px;">
-        <button id="fight-rival-button">Fight Rival</button>
-        <button id="treasure-button" class="btn-secondary">Search Treasure</button>
-        <button id="boss-button" class="btn-danger">Battle Boss</button>
-        <button id="back-to-hub-button" class="btn-info">Return to Hub</button>
+      <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:20px;">
+        <button id="fight-rival-button" class="btn">Fight Rival</button>
+        <button id="treasure-button" class="btn secondary">Search Treasure</button>
+        <button id="boss-button" class="btn danger">Battle Boss</button>
+        <button id="back-to-hub-button" class="btn info">Return to Hub</button>
       </div>
-      <div id="exploration-message" class="message-box hidden"></div>
+      <div id="exploration-message" class="message-box" style="display:none;"></div>
     </section>
 
     <section id="battle-screen" class="screen">
@@ -641,7 +591,7 @@
           <div class="fighter-card">
             <div class="fighter-top">
               <div id="enemy-name" class="fighter-name"></div>
-              <div class="fighter-role" id="enemy-role">Enemy</div>
+              <div id="enemy-role" class="fighter-role">Enemy</div>
             </div>
             <div class="sprite-wrap">
               <div id="enemy-sprite" class="sprite enemy"><span>👾</span></div>
@@ -653,7 +603,7 @@
           </div>
         </div>
 
-        <div class="battle-actions" id="battle-actions"></div>
+        <div id="battle-actions" class="battle-actions"></div>
         <div id="battle-log" class="battle-log"></div>
       </div>
     </section>
@@ -661,9 +611,9 @@
     <section id="result-screen" class="screen">
       <div class="panel">
         <div id="result-message" class="message-box"></div>
-        <div id="result-summary" style="margin-top:20px;"></div>
-        <div style="text-align:center; margin-top:24px;">
-          <button id="result-back-button">Back to Hub</button>
+        <div id="result-summary" style="margin-top: 20px;"></div>
+        <div style="text-align:center; margin-top: 20px;">
+          <button id="result-back-button" class="btn">Back to Hub</button>
         </div>
       </div>
     </section>
@@ -674,7 +624,7 @@
         <div id="shop-card" class="hero-card"></div>
         <div id="shop-grid" class="shop-grid" style="margin-top:20px;"></div>
         <div style="text-align:center; margin-top:18px;">
-          <button id="shop-back-button" class="btn-secondary">Back to Hub</button>
+          <button id="shop-back-button" class="btn secondary">Back to Hub</button>
         </div>
       </div>
     </section>
@@ -718,19 +668,38 @@
       }
     };
 
+    const storyChapters = [
+      {
+        title: 'Chapter 1: Nightfall Awakening',
+        text: 'As the moon rises over Whisperwood, your hunter is called to defend the city from a wave of demon rivals emerging from the shadows.'
+      },
+      {
+        title: 'Chapter 2: Iron Furnace',
+        text: 'The Scorched Volcano shakes with the fury of the Inferno Overlord. Only fierce discipline and raw skill can endure the blaze.'
+      },
+      {
+        title: 'Chapter 3: The Hollow Rift',
+        text: 'Below the earth lies the Abyss, swallowing lantern light and memory. Every step deeper turns the hunt into a battle against fear itself.'
+      },
+      {
+        title: 'Chapter 4: Crown of the Heavens',
+        text: 'The final battle awaits in the Celestial Realm, where the Eternal Sovereign commands the sky and demands a legendary victor.'
+      }
+    ];
+
     const defaultSkills = [
       { id: 'basic', name: 'Basic Strike', description: 'Reliable melee hit', cost: 0, power: 1 },
-      { id: 'pulse', name: 'Pulse Burst', description: 'Focused energy blast', cost: 12, power: 1.6 },
-      { id: 'guard', name: 'Guard', description: 'Raise defense briefly', cost: 0, power: 0 },
-      { id: 'heal', name: 'Recovery', description: 'Recover health', cost: 18, power: 1.2 },
-      { id: 'ultimate', name: 'Final Echo', description: 'High-cost devastating finisher', cost: 55, power: 2.7 }
+      { id: 'pulse', name: 'Pulse Burst', description: 'Focused energy blast', cost: 12, power: 1.5 },
+      { id: 'guard', name: 'Guard', description: 'Raise your defense', cost: 0, power: 0 },
+      { id: 'heal', name: 'Recovery', description: 'Restore health', cost: 18, power: 1.2 },
+      { id: 'ultimate', name: 'Final Echo', description: 'Devastating finisher', cost: 55, power: 2.7 }
     ];
 
     class Hunter {
-      constructor(name, typeKey, selectedCharacter) {
-        const base = characters[selectedCharacter];
+      constructor(name, typeKey) {
+        const base = characters[typeKey] || characters.nova;
         this.name = name;
-        this.typeKey = selectedCharacter;
+        this.typeKey = typeKey;
         this.archetype = base.name;
         this.emoji = base.emoji;
         this.maxHp = base.hp;
@@ -749,6 +718,34 @@
         this.inventory = [];
         this.bossesDefeated = [];
         this.currentMap = 'forest';
+      }
+
+      addExp(amount) {
+        this.exp += amount;
+        while (this.exp >= this.expTarget) {
+          this.exp -= this.expTarget;
+          this.level += 1;
+          this.expTarget = Math.round(this.expTarget * 1.18);
+          this.maxHp += 12;
+          this.hp = this.maxHp;
+          this.atk += 3;
+          this.def += 1;
+          this.gold += 25;
+          this.energy = Math.min(100, this.energy + 15);
+        }
+      }
+
+      takeDamage(value) {
+        const actual = Math.max(0, value - this.def);
+        this.hp = Math.max(0, this.hp - actual);
+      }
+
+      heal(value) {
+        this.hp = Math.min(this.maxHp, this.hp + value);
+      }
+
+      gainEnergy(amount) {
+        this.energy = Math.min(100, this.energy + amount);
       }
 
       toJSON() {
@@ -777,49 +774,22 @@
       }
 
       static fromJSON(data) {
-        const hunter = new Hunter(data.name || 'Hunter', data.typeKey || 'nova', data.typeKey || 'nova');
+        const hunter = new Hunter(data.name || 'Hunter', data.typeKey || 'nova');
         Object.assign(hunter, data);
-        hunter.maxHp = Number(hunter.maxHp ?? hunter.maxHp || 100);
-        hunter.hp = Number(hunter.hp ?? hunter.maxHp);
+        hunter.maxHp = Number(hunter.maxHp || 100);
+        hunter.hp = Number(hunter.hp || hunter.maxHp);
         hunter.atk = Number(hunter.atk || 0);
         hunter.def = Number(hunter.def || 0);
         hunter.gold = Number(hunter.gold || 0);
         hunter.level = Number(hunter.level || 1);
         hunter.exp = Number(hunter.exp || 0);
         hunter.expTarget = Number(hunter.expTarget || 100);
-        hunter.skillSet = data.skillSet || defaultSkills.map(skill => ({ ...skill }));
-        hunter.inventory = data.inventory || [];
-        hunter.bossesDefeated = data.bossesDefeated || [];
-        hunter.currentMap = data.currentMap || 'forest';
+        hunter.energy = Number(hunter.energy || 0);
+        hunter.skillSet = hunter.skillSet || defaultSkills.map(skill => ({ ...skill }));
+        hunter.inventory = hunter.inventory || [];
+        hunter.bossesDefeated = hunter.bossesDefeated || [];
+        hunter.currentMap = hunter.currentMap || 'forest';
         return hunter;
-      }
-
-      gainEnergy(amount) {
-        this.energy = Math.min(100, this.energy + amount);
-      }
-
-      addExp(amount) {
-        this.exp += amount;
-        while (this.exp >= this.expTarget) {
-          this.exp -= this.expTarget;
-          this.level += 1;
-          this.expTarget = Math.round(this.expTarget * 1.18);
-          this.maxHp += 12;
-          this.hp = this.maxHp;
-          this.atk += 3;
-          this.def += 1;
-          this.gold += 20;
-          this.gainEnergy(15);
-        }
-      }
-
-      takeDamage(value) {
-        const actual = Math.max(0, value - this.def);
-        this.hp = Math.max(0, this.hp - actual);
-      }
-
-      heal(value) {
-        this.hp = Math.min(this.maxHp, this.hp + value);
       }
     }
 
@@ -828,7 +798,7 @@
         this.player = null;
         this.opponent = null;
         this.battleType = null;
-        this.currentMapKey = 'forest';
+        this.goalStoryIndex = 0;
         this.selectedCharacter = null;
         this.log = [];
         this.leaderboard = this.getLeaderboard();
@@ -838,18 +808,21 @@
       init() {
         this.renderCharacters();
         this.renderMaps();
+        this.renderStoryChoices();
         this.bindEvents();
         this.renderLeaderboard();
-        this.loadState();
+        this.loadState(false);
       }
 
       bindEvents() {
         document.getElementById('start-button').addEventListener('click', () => this.startNewGame());
-        document.getElementById('explore-button').addEventListener('click', () => this.openMapScreen());
+        document.getElementById('story-button').addEventListener('click', () => this.showScreen('story-screen'));
+        document.getElementById('explore-button').addEventListener('click', () => this.showScreen('map-screen'));
         document.getElementById('shop-button').addEventListener('click', () => this.openShop());
         document.getElementById('save-button').addEventListener('click', () => this.saveState());
         document.getElementById('load-button').addEventListener('click', () => this.loadState(true));
         document.getElementById('new-game-button').addEventListener('click', () => this.newGame());
+        document.getElementById('story-back-button').addEventListener('click', () => this.showScreen('hub-screen'));
         document.getElementById('back-from-maps').addEventListener('click', () => this.showScreen('hub-screen'));
         document.getElementById('back-to-hub-button').addEventListener('click', () => this.showScreen('hub-screen'));
         document.getElementById('fight-rival-button').addEventListener('click', () => this.startRivalBattle());
@@ -893,16 +866,43 @@
           const card = document.createElement('div');
           card.className = 'map-card';
           card.innerHTML = `
-            <div class="map-title">${map.name}</div>
-            <div class="map-meta">${map.description}</div>
-            <div class="map-boss">Boss: ${map.boss.name}</div>
-            <div class="skill-meta">Difficulty: ${'★'.repeat(map.difficulty)}</div>
+            <div class="card-head">
+              <h3>${map.name}</h3>
+            </div>
+            <div class="card-body">
+              <div class="stats-row"><span>Difficulty</span><strong>${'★'.repeat(map.difficulty)}</strong></div>
+              <div class="stats-row"><span>Boss</span><strong>${map.boss.name}</strong></div>
+              <div style="margin-top:10px; color:var(--muted); line-height:1.5;">${map.description}</div>
+            </div>
           `;
           card.addEventListener('click', () => {
-            this.currentMapKey = key;
+            if (!this.player) return;
             this.player.currentMap = key;
             this.renderExplorationCard();
             this.showScreen('exploration-screen');
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      renderStoryChoices() {
+        const grid = document.getElementById('story-grid');
+        grid.innerHTML = '';
+        storyChapters.forEach((chapter, index) => {
+          const card = document.createElement('div');
+          card.className = 'story-card';
+          card.innerHTML = `
+            <div class="story-head">${chapter.title}</div>
+            <div class="story-body">${chapter.text}</div>
+          `;
+          card.addEventListener('click', () => {
+            if (!this.player) return;
+            this.goalStoryIndex = index;
+            this.showScreen('exploration-screen');
+            const msg = document.getElementById('exploration-message');
+            msg.style.display = 'block';
+            msg.className = 'message-box success';
+            msg.textContent = `Story objective: ${chapter.title}`;
           });
           grid.appendChild(card);
         });
@@ -920,7 +920,7 @@
           alert('Select a hunter first.');
           return;
         }
-        this.player = new Hunter(name, this.selectedCharacter, this.selectedCharacter);
+        this.player = new Hunter(name, this.selectedCharacter);
         this.showScreen('hub-screen');
         this.renderHub();
         this.playTone(520, 0.09, 'square');
@@ -934,49 +934,39 @@
 
       renderHeroCard() {
         const heroCard = document.getElementById('hero-card');
-        const player = this.player;
+        const p = this.player;
         heroCard.innerHTML = `
-          <div class="hero-name">${player.name}</div>
-          <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">${player.archetype}</div>
+          <div class="hero-name">${p.name}</div>
+          <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">${p.archetype}</div>
           <div class="stats-grid">
-            <div class="tiny-box"><div class="label">Level</div><div class="value">${player.level}</div></div>
-            <div class="tiny-box"><div class="label">HP</div><div class="value">${player.hp}/${player.maxHp}</div></div>
-            <div class="tiny-box"><div class="label">ATK</div><div class="value">${player.atk}</div></div>
-            <div class="tiny-box"><div class="label">DEF</div><div class="value">${player.def}</div></div>
-            <div class="tiny-box"><div class="label">Gold</div><div class="value">${player.gold}</div></div>
-            <div class="tiny-box"><div class="label">Rank</div><div class="value">${player.rank}</div></div>
-            <div class="tiny-box"><div class="label">Wins</div><div class="value">${player.wins}</div></div>
-            <div class="tiny-box"><div class="label">Energy</div><div class="value">${player.energy}%</div></div>
+            <div class="tiny-box"><div class="label">Level</div><div class="value">${p.level}</div></div>
+            <div class="tiny-box"><div class="label">HP</div><div class="value">${p.hp}/${p.maxHp}</div></div>
+            <div class="tiny-box"><div class="label">ATK</div><div class="value">${p.atk}</div></div>
+            <div class="tiny-box"><div class="label">DEF</div><div class="value">${p.def}</div></div>
+            <div class="tiny-box"><div class="label">Gold</div><div class="value">${p.gold}</div></div>
+            <div class="tiny-box"><div class="label">Rank</div><div class="value">${p.rank}</div></div>
+            <div class="tiny-box"><div class="label">Wins</div><div class="value">${p.wins}</div></div>
+            <div class="tiny-box"><div class="label">Energy</div><div class="value">${p.energy}%</div></div>
           </div>
         `;
-
-        const explorationCard = document.getElementById('exploration-card');
-        if (explorationCard) {
-          this.renderExplorationCard();
-        }
+        this.renderExplorationCard();
       }
 
       renderExplorationCard() {
-        const player = this.player;
         const card = document.getElementById('exploration-card');
-        if (!card || !player) return;
-        const mapName = maps[player.currentMap]?.name || 'Whisperwood Forest';
+        if (!card || !this.player) return;
+        const currentMap = maps[this.player.currentMap] || maps.forest;
         card.innerHTML = `
-          <div class="hero-name">${player.name}</div>
+          <div class="hero-name">${this.player.name}</div>
           <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Current Domain</div>
-          <div style="font-size:1.3rem; color:var(--info); font-weight:800; margin-top:8px;">${mapName}</div>
+          <div style="font-size:1.3rem; font-weight:800; color:var(--info); margin-top:8px;">${currentMap.name}</div>
           <div class="stats-grid" style="margin-top:12px;">
-            <div class="tiny-box"><div class="label">HP</div><div class="value">${player.hp}/${player.maxHp}</div></div>
-            <div class="tiny-box"><div class="label">ATK</div><div class="value">${player.atk}</div></div>
-            <div class="tiny-box"><div class="label">DEF</div><div class="value">${player.def}</div></div>
-            <div class="tiny-box"><div class="label">Gold</div><div class="value">${player.gold}</div></div>
+            <div class="tiny-box"><div class="label">HP</div><div class="value">${this.player.hp}/${this.player.maxHp}</div></div>
+            <div class="tiny-box"><div class="label">ATK</div><div class="value">${this.player.atk}</div></div>
+            <div class="tiny-box"><div class="label">DEF</div><div class="value">${this.player.def}</div></div>
+            <div class="tiny-box"><div class="label">Gold</div><div class="value">${this.player.gold}</div></div>
           </div>
         `;
-      }
-
-      openMapScreen() {
-        if (!this.player) return;
-        this.showScreen('map-screen');
       }
 
       searchTreasure() {
@@ -986,15 +976,16 @@
         this.player.gainEnergy(10);
         this.renderHeroCard();
         const msg = document.getElementById('exploration-message');
-        msg.classList.remove('hidden');
+        msg.style.display = 'block';
         msg.className = 'message-box success';
         msg.textContent = `You found a hidden cache and gained ${found} gold.`;
       }
 
       startRivalBattle() {
         if (!this.player) return;
-        const enemy = new Hunter('Rival Hunter', 'rival', 'nova');
-        enemy.name = ['Jin Hwa', 'Aiko Hex', 'Rae Circuit', 'Mina Fang'][Math.floor(Math.random() * 4)];
+        const names = ['Jin Hwa', 'Aiko Hex', 'Rae Circuit', 'Mina Fang'];
+        const enemy = new Hunter('Rival Hunter', 'nova');
+        enemy.name = names[Math.floor(Math.random() * names.length)];
         enemy.emoji = '👹';
         enemy.maxHp = 90 + this.player.level * 12;
         enemy.hp = enemy.maxHp;
@@ -1008,8 +999,8 @@
 
       startBossBattle() {
         if (!this.player) return;
-        const map = maps[this.player.currentMap || this.currentMapKey] || maps.forest;
-        const boss = map.boss;
+        const currentMap = maps[this.player.currentMap] || maps.forest;
+        const boss = currentMap.boss;
         this.opponent = {
           name: boss.name,
           emoji: boss.emoji,
@@ -1033,41 +1024,40 @@
 
       renderBattle() {
         if (!this.player || !this.opponent) return;
-
         document.getElementById('player-name').textContent = this.player.name;
         document.getElementById('enemy-name').textContent = this.opponent.name;
         document.getElementById('enemy-role').textContent = this.opponent.role || 'Enemy';
         document.getElementById('player-sprite').innerHTML = `<span>${this.player.emoji}</span>`;
         document.getElementById('enemy-sprite').innerHTML = `<span>${this.opponent.emoji}</span>`;
-
         this.updateBattleBars();
         this.renderBattleActions();
       }
 
       renderBattleActions() {
-        const battleActions = document.getElementById('battle-actions');
-        battleActions.innerHTML = '';
+        const actions = document.getElementById('battle-actions');
+        actions.innerHTML = '';
 
         const skills = this.player.skillSet;
         skills.forEach(skill => {
           const button = document.createElement('button');
-          button.className = 'battle-btn';
-          button.dataset.skill = skill.id;
-          button.textContent = `${skill.name}${skill.cost ? ' (' + skill.cost + ' energy)' : ''}`;
-          button.disabled = this.player.energy < skill.cost && skill.id !== 'basic' && skill.id !== 'guard';
+          button.className = 'battle-btn btn';
+          if (skill.id === 'ultimate') button.dataset.kind = 'ultimate';
+          button.textContent = `${skill.name}${skill.cost ? ` (${skill.cost} energy)` : ''}`;
+          button.disabled = !!(skill.id !== 'basic' && skill.id !== 'guard' && this.player.energy < skill.cost);
           button.addEventListener('click', () => this.useSkill(skill));
-          battleActions.appendChild(button);
+          actions.appendChild(button);
         });
 
         const fleeBtn = document.createElement('button');
-        fleeBtn.className = 'battle-btn btn-danger';
+        fleeBtn.className = 'battle-btn btn danger';
         fleeBtn.textContent = 'Flee';
         fleeBtn.addEventListener('click', () => this.endBattle(false, 'The hunter withdrew from battle.'));
-        battleActions.appendChild(fleeBtn);
+        actions.appendChild(fleeBtn);
       }
 
       useSkill(skill) {
         if (!this.player || !this.opponent) return;
+
         if (skill.id === 'guard') {
           this.player.def += 6;
           this.player.gainEnergy(8);
@@ -1098,7 +1088,7 @@
           damage = this.player.atk + 6 + Math.floor(Math.random() * 10);
           text = `${this.player.name} lands a basic strike for ${damage} damage.`;
         } else if (skill.id === 'pulse') {
-          damage = Math.round((this.player.atk + 10) * skill.power + Math.random() * 14);
+          damage = Math.round((this.player.atk + 12) * skill.power + Math.random() * 16);
           text = `${this.player.name} fires a Pulse Burst for ${damage} damage.`;
         } else if (skill.id === 'ultimate') {
           damage = Math.round((this.player.atk + 18) * skill.power + Math.random() * 20);
@@ -1118,15 +1108,15 @@
       }
 
       enemyTurn() {
-        const attackRoll = Math.random();
+        const roll = Math.random();
         let damage = 0;
         let text = '';
 
-        if (attackRoll < 0.5) {
+        if (roll < 0.5) {
           damage = this.opponent.atk + Math.floor(Math.random() * 12);
           text = `${this.opponent.name} hits for ${damage} damage.`;
           this.player.takeDamage(damage);
-        } else if (attackRoll < 0.8) {
+        } else if (roll < 0.8) {
           damage = Math.round((this.opponent.atk + 10) * 1.4 + Math.random() * 18);
           text = `${this.opponent.name} unleashes a dark blast for ${damage} damage.`;
           this.player.takeDamage(damage);
@@ -1154,27 +1144,10 @@
         const playerHpPercent = this.player ? (this.player.hp / this.player.maxHp) * 100 : 0;
         const enemyHpPercent = this.opponent ? (this.opponent.hp / this.opponent.maxHp) * 100 : 0;
 
-        const playerFill = document.getElementById('player-hp-fill');
-        const enemyFill = document.getElementById('enemy-hp-fill');
-        const playerText = document.getElementById('player-hp-text');
-        const enemyText = document.getElementById('enemy-hp-text');
-
-        playerFill.style.width = `${Math.max(0, playerHpPercent)}%`;
-        enemyFill.style.width = `${Math.max(0, enemyHpPercent)}%`;
-        playerText.textContent = `${Math.max(0, this.player.hp)}/${this.player.maxHp}`;
-        enemyText.textContent = `${Math.max(0, this.opponent.hp)}/${this.opponent.maxHp}`;
-
-        if (playerHpPercent < 30) {
-          playerFill.style.filter = 'hue-rotate(35deg) saturate(1.4)';
-        } else {
-          playerFill.style.filter = 'none';
-        }
-
-        if (enemyHpPercent < 30) {
-          enemyFill.style.filter = 'hue-rotate(-20deg) saturate(1.8)';
-        } else {
-          enemyFill.style.filter = 'none';
-        }
+        document.getElementById('player-hp-fill').style.width = `${Math.max(0, playerHpPercent)}%`;
+        document.getElementById('enemy-hp-fill').style.width = `${Math.max(0, enemyHpPercent)}%`;
+        document.getElementById('player-hp-text').textContent = `${Math.max(0, this.player.hp)}/${this.player.maxHp}`;
+        document.getElementById('enemy-hp-text').textContent = `${Math.max(0, this.opponent.hp)}/${this.opponent.maxHp}`;
       }
 
       endBattle(won, message = '') {
@@ -1182,12 +1155,12 @@
         const resultSummary = document.getElementById('result-summary');
 
         if (won) {
-          const rewardGold = 40 + this.player.level * 8 + (this.battleType === 'boss' ? 120 : 0);
-          const rewardExp = 55 + this.player.level * 10 + (this.battleType === 'boss' ? 80 : 0);
+          const rewardGold = 45 + this.player.level * 8 + (this.battleType === 'boss' ? 120 : 0);
+          const rewardExp = 60 + this.player.level * 10 + (this.battleType === 'boss' ? 80 : 0);
           this.player.gold += rewardGold;
           this.player.addExp(rewardExp);
           this.player.wins += 1;
-          this.player.gainEnergy(18);
+          this.player.gainEnergy(20);
 
           if (this.battleType === 'boss') {
             this.player.bossesDefeated.push(this.opponent.name);
@@ -1226,7 +1199,7 @@
               </div>
             </div>
           `;
-          this.playTone(200, 0.18, 'sawtooth');
+          this.playTone(240, 0.2, 'sawtooth');
         }
 
         this.saveState();
@@ -1244,33 +1217,33 @@
         `;
 
         const items = [
-          { name: 'Attack Surge', cost: 25, effect: 'Increase ATK by 4', action: () => { this.player.atk += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
-          { name: 'Defense Plate', cost: 25, effect: 'Increase DEF by 4', action: () => { this.player.def += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
+          { name: 'Attack Surge', cost: 25, effect: 'ATK +4', action: () => { this.player.atk += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
+          { name: 'Defense Plate', cost: 25, effect: 'DEF +4', action: () => { this.player.def += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
           { name: 'Vital Brew', cost: 20, effect: 'Restore 50 HP', action: () => { this.player.heal(50); this.player.gold -= 20; this.renderHub(); this.openShop(); } }
         ];
 
-        const shopGrid = document.getElementById('shop-grid');
-        shopGrid.innerHTML = '';
+        const grid = document.getElementById('shop-grid');
+        grid.innerHTML = '';
         items.forEach(item => {
-          const el = document.createElement('div');
-          el.className = 'shop-item';
-          el.innerHTML = `
+          const card = document.createElement('div');
+          card.className = 'shop-item';
+          card.innerHTML = `
             <div class="card-head">
               <h3>${item.name}</h3>
             </div>
             <div class="card-body">
-              <div class="stats-row"><span>Cost</span><strong>${item.cost} gold</strong></div>
+              <div class="stats-row"><span>Cost</span><strong>${item.cost}</strong></div>
               <div class="stats-row"><span>Effect</span><strong>${item.effect}</strong></div>
-              <div style="margin-top:12px; text-align:center;">
-                <button class="shop-buy ${this.player.gold >= item.cost ? '' : 'btn-secondary'}" ${this.player.gold < item.cost ? 'disabled' : ''}>Buy</button>
+              <div style="text-align:center; margin-top:12px;">
+                <button class="btn ${this.player.gold >= item.cost ? '' : 'secondary'}" ${this.player.gold < item.cost ? 'disabled' : ''}>Buy</button>
               </div>
             </div>
           `;
-          const button = el.querySelector('button');
+          const button = card.querySelector('button');
           if (this.player.gold >= item.cost) {
             button.addEventListener('click', item.action);
           }
-          shopGrid.appendChild(el);
+          grid.appendChild(card);
         });
 
         this.showScreen('shop-screen');
@@ -1287,7 +1260,7 @@
       updateLeaderboard() {
         if (!this.player) return;
         const board = this.getLeaderboard();
-        const entry = { name: this.player.name, score: this.player.level * 120 + this.player.wins * 60 + this.player.gold };
+        const entry = { name: this.player.name, score: this.player.level * 140 + this.player.wins * 70 + this.player.gold };
         board.push(entry);
         const top = board.sort((a, b) => b.score - a.score).slice(0, 5);
         localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(top));
@@ -1297,7 +1270,7 @@
 
       renderLeaderboard() {
         const list = document.getElementById('leaderboard-list');
-        const leaderboard = this.leaderboard;
+        const leaderboard = this.leaderboard && this.leaderboard.length ? this.leaderboard : this.getLeaderboard();
         if (!leaderboard.length) {
           list.innerHTML = '<div class="leaderboard-item"><div class="leaderboard-name">No champions yet</div></div>';
           return;
@@ -1318,11 +1291,11 @@
         this.playTone(420, 0.07, 'square');
       }
 
-      loadState(fromAction = false) {
+      loadState(showAlert = false) {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (!raw) {
-            if (fromAction) alert('No saved game found.');
+            if (showAlert) alert('No saved game found.');
             return;
           }
           const data = JSON.parse(raw);
@@ -1330,13 +1303,11 @@
           this.selectedCharacter = this.player.typeKey || 'nova';
           this.showScreen('hub-screen');
           this.renderHub();
-          if (fromAction) {
-            alert('Game loaded successfully.');
-          }
-          this.playTone(550, 0.08, 'triangle');
+          if (showAlert) alert('Save loaded successfully.');
+          this.playTone(560, 0.08, 'triangle');
         } catch (error) {
           console.error(error);
-          if (fromAction) alert('Unable to load save file.');
+          if (showAlert) alert('Unable to load save.');
         }
       }
 
