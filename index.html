@@ -1,1122 +1,1373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-pop Demon Hunters League - Web Edition</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #ff1493;
-            --secondary: #8b008b;
-            --accent: #00ffff;
-            --dark: #1a1a2e;
-            --darker: #0f0f1e;
-            --success: #00ff41;
-            --danger: #ff4444;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 20px;
-            animation: glow 2s infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px var(--primary); }
-            50% { text-shadow: 0 0 20px var(--primary), 0 0 30px var(--secondary); }
-        }
-
-        h1 {
-            font-size: 2.5em;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: var(--accent);
-            font-size: 1.1em;
-        }
-
-        /* Screen Management */
-        .screen {
-            display: none;
-            animation: fadeIn 0.3s ease-in;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Character Selection */
-        .character-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .character-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
-            border: 2px solid var(--primary);
-            padding: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .character-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--primary);
-        }
-
-        .character-card h3 {
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        .character-card p {
-            margin: 5px 0;
-            color: #ccc;
-        }
-
-        .stat {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-        }
-
-        /* Buttons */
-        button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            border: none;
-            color: white;
-            padding: 12px 30px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px 5px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 20, 147, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, var(--secondary) 0%, #4a0080 100%);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger) 0%, #cc0000 100%);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #00cc00 100%);
-        }
-
-        /* Hunter Profile */
-        .hunter-profile {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
-            border: 2px solid var(--accent);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .hunter-name {
-            font-size: 1.8em;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-
-        .stat-box {
-            background: rgba(255, 20, 147, 0.1);
-            border: 1px solid var(--primary);
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .stat-label {
-            color: var(--accent);
-            font-size: 0.9em;
-        }
-
-        .stat-value {
-            color: var(--primary);
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        /* Battle Screen */
-        .battle-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .combatant {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
-            border: 2px solid var(--accent);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .combatant.enemy {
-            border-color: var(--danger);
-        }
-
-        .combatant h2 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-
-        .hp-bar {
-            background: #333;
-            border: 2px solid var(--accent);
-            height: 30px;
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 15px 0;
-        }
-
-        .hp-fill {
-            background: linear-gradient(90deg, var(--success) 0%, var(--danger) 100%);
-            height: 100%;
-            transition: width 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9em;
-        }
-
-        .battle-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .battle-actions button {
-            padding: 15px;
-            font-size: 0.95em;
-        }
-
-        .battle-log {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent);
-            padding: 15px;
-            border-radius: 5px;
-            height: 200px;
-            overflow-y: auto;
-            margin: 20px 0;
-        }
-
-        .log-entry {
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 20, 147, 0.2);
-        }
-
-        .log-player {
-            color: var(--success);
-        }
-
-        .log-enemy {
-            color: var(--danger);
-        }
-
-        .log-system {
-            color: var(--accent);
-        }
-
-        /* Maps and Hub */
-        .map-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .map-card {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
-            border: 2px solid var(--primary);
-            padding: 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .map-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px var(--primary);
-        }
-
-        .map-card h3 {
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        .difficulty {
-            color: var(--primary);
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        /* Shop */
-        .shop-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .shop-item {
-            background: rgba(255, 20, 147, 0.1);
-            border: 2px solid var(--primary);
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-        }
-
-        .item-name {
-            color: var(--accent);
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .item-price {
-            color: var(--success);
-            font-size: 1.2em;
-            margin: 10px 0;
-        }
-
-        .item-bonus {
-            color: #aaa;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        /* Messages and Notifications */
-        .message-box {
-            background: rgba(255, 20, 147, 0.1);
-            border: 2px solid var(--primary);
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-            text-align: center;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .message-box.success {
-            border-color: var(--success);
-            color: var(--success);
-        }
-
-        .message-box.danger {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-
-        .message-box.info {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Input */
-        input[type="text"] {
-            background: rgba(255, 20, 147, 0.1);
-            border: 2px solid var(--primary);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1em;
-            width: 100%;
-            max-width: 300px;
-            margin: 10px 0;
-        }
-
-        input[type="text"]::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8em;
-            }
-
-            .battle-container {
-                grid-template-columns: 1fr;
-            }
-
-            .character-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Equipment Display */
-        .equipment-list {
-            margin: 15px 0;
-        }
-
-        .equipment-item {
-            background: rgba(0, 255, 255, 0.1);
-            border-left: 3px solid var(--accent);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 3px;
-        }
-
-        .rarity-legendary {
-            color: #ffd700;
-        }
-
-        .rarity-epic {
-            color: #9370db;
-        }
-
-        .rarity-rare {
-            color: #0099ff;
-        }
-
-        .rarity-common {
-            color: #999;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-pop Demon Hunters League Web Edition</title>
+  <style>
+    :root {
+      --bg-1: #090d1b;
+      --bg-2: #1a1231;
+      --panel: rgba(17, 24, 39, 0.8);
+      --panel-2: rgba(31, 41, 55, 0.82);
+      --primary: #ff4fd8;
+      --primary-2: #ff74d4;
+      --secondary: #7c3aed;
+      --secondary-2: #5b21b6;
+      --gold: #fbbf24;
+      --success: #34d399;
+      --danger: #fb7185;
+      --info: #67e8f9;
+      --text: #edf6ff;
+      --muted: #cbd5e1;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(124, 58, 237, 0.28), transparent 35%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 18px 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid rgba(255, 79, 216, 0.6);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      text-shadow: 0 0 20px rgba(255, 79, 216, 0.9), 0 0 40px rgba(124, 58, 237, 0.8);
+      animation: pulseGlow 2.5s infinite alternate;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: var(--info);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .screen {
+      display: none;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(17, 24, 39, 0.9), rgba(30, 41, 59, 0.7));
+      border: 1px solid rgba(103, 232, 249, 0.38);
+      border-radius: 18px;
+      box-shadow: 0 16px 30px var(--shadow);
+      padding: 20px;
+      backdrop-filter: blur(8px);
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .character-grid, .map-grid, .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .character-card, .map-card, .shop-item, .leaderboard-item {
+      background: linear-gradient(160deg, rgba(124, 58, 237, 0.18), rgba(17, 24, 39, 0.7));
+      border: 1px solid rgba(255, 79, 216, 0.45);
+      border-radius: 16px;
+      transform: translateY(0);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .character-card:hover, .map-card:hover, .shop-item:hover, .leaderboard-item:hover {
+      transform: translateY(-4px);
+      border-color: var(--info);
+      box-shadow: 0 14px 30px rgba(103, 232, 249, 0.15);
+    }
+
+    .character-card.selected {
+      border-color: var(--info);
+      box-shadow: 0 0 0 2px rgba(103, 232, 249, 0.35), 0 18px 28px rgba(103, 232, 249, 0.18);
+    }
+
+    .card-head {
+      background: linear-gradient(135deg, rgba(255,79,216,0.15), rgba(124,58,237,0.2));
+      padding: 16px 18px 10px;
+    }
+
+    .card-head h3 {
+      margin: 0;
+      color: var(--info);
+      font-size: 1.2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .card-body {
+      padding: 12px 18px 18px;
+      color: var(--muted);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stats-row:last-child {
+      border-bottom: none;
+    }
+
+    button {
+      appearance: none;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 12px 18px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      box-shadow: 0 10px 22px rgba(124, 58, 237, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px) scale(1.01);
+      filter: brightness(1.08);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #2d3748, #475569);
+      box-shadow: none;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success), #0f766e);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #b91c1c);
+    }
+
+    .btn-info {
+      background: linear-gradient(135deg, var(--info), #0ea5e9);
+      color: #07141a;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    input[type="text"] {
+      width: min(90%, 360px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 79, 216, 0.6);
+      background: rgba(15, 23, 42, 0.75);
+      color: var(--text);
+      padding: 12px 14px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .hero-card {
+      position: relative;
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.2), rgba(17,24,39,0.7));
+      border: 1px solid rgba(255, 79, 216, 0.5);
+    }
+
+    .hero-name {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(255, 79, 216, 0.8);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .tiny-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .tiny-box .label {
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tiny-box .value {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      margin-top: 8px;
+      color: var(--info);
+      font-weight: 700;
+    }
+
+    .battle-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 20px;
+    }
+
+    .fighter-card {
+      background: linear-gradient(180deg, rgba(17,24,39,0.88), rgba(30,41,59,0.8));
+      border: 1px solid rgba(255, 79, 216, 0.5);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 20px 30px rgba(0,0,0,0.15);
+    }
+
+    .fighter-top {
+      padding: 18px 18px 12px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .fighter-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--info);
+    }
+
+    .fighter-role {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .sprite-wrap {
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,79,216,0.08), rgba(124,58,237,0.16));
+    }
+
+    .sprite {
+      position: relative;
+      width: 125px;
+      height: 125px;
+      display: grid;
+      place-items: center;
+      border-radius: 30% 30% 38% 38%;
+      background: linear-gradient(135deg, rgba(103,232,249,0.25), rgba(124,58,237,0.28));
+      border: 2px solid rgba(103, 232, 249, 0.6);
+      box-shadow: inset 0 0 20px rgba(103,232,249,0.16), 0 10px 22px rgba(103,232,249,0.12);
+      animation: floatSprite 2.2s ease-in-out infinite alternate;
+    }
+
+    .sprite.enemy {
+      background: linear-gradient(135deg, rgba(251,113,133,0.2), rgba(239,68,68,0.2));
+      border-color: rgba(251,113,133,0.65);
+      box-shadow: inset 0 0 20px rgba(251,113,133,0.16), 0 10px 22px rgba(251,113,133,0.12);
+      animation: wobble 2.2s ease-in-out infinite alternate;
+    }
+
+    .sprite::before, .sprite::after {
+      content: "";
+      position: absolute;
+      background: rgba(255,255,255,0.9);
+      border-radius: 50%;
+      width: 12px;
+      height: 12px;
+      top: 30px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+    }
+
+    .sprite::before { left: 28px; }
+    .sprite::after { right: 28px; }
+
+    .sprite span {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
+    }
+
+    .hp-wrap {
+      padding: 12px 18px 18px;
+    }
+
+    .hp-bar {
+      width: 100%;
+      height: 18px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+      position: relative;
+    }
+
+    .hp-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #34d399 0%, #10b981 60%, #f59e0b 100%);
+      transition: width 0.25s ease, filter 0.2s ease;
+      position: relative;
+    }
+
+    .hp-text {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 8px;
+      text-align: right;
+    }
+
+    .battle-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .battle-btn {
+      min-height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      text-transform: none;
+      padding: 10px 12px;
+      line-height: 1.3;
+    }
+
+    .battle-btn[data-skill="ultimate"] {
+      background: linear-gradient(135deg, #f59e0b, #f97316);
+    }
+
+    .battle-btn[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .battle-log {
+      margin-top: 18px;
+      min-height: 180px;
+      max-height: 260px;
+      overflow-y: auto;
+      background: rgba(2, 6, 23, 0.62);
+      border: 1px solid rgba(103,232,249,0.35);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.25);
+    }
+
+    .log-line {
+      display: flex;
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      line-height: 1.5;
+    }
+
+    .log-line:last-child { border-bottom: none; }
+
+    .log-line.player { color: #86efac; }
+    .log-line.enemy { color: #fda4af; }
+    .log-line.system { color: #a5f3fc; }
+    .log-line.gold { color: #fbbf24; }
+
+    .message-box {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 14px;
+      text-align: center;
+      font-size: 1.05rem;
+      font-weight: 600;
+      background: rgba(103,232,249,0.08);
+      border: 1px solid rgba(103,232,249,0.35);
+      color: var(--info);
+    }
+
+    .message-box.success {
+      color: var(--success);
+      border-color: rgba(52,211,153,0.45);
+      background: rgba(52,211,153,0.08);
+    }
+
+    .message-box.danger {
+      color: #fecdd3;
+      border-color: rgba(251,113,133,0.45);
+      background: rgba(251,113,133,0.08);
+    }
+
+    .leaderboard-box {
+      margin-top: 28px;
+      padding: 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(17,24,39,0.8), rgba(30,41,59,0.72));
+      border: 1px solid rgba(255, 79, 216, 0.4);
+    }
+
+    .leaderboard-list {
+      margin-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      cursor: default;
+    }
+
+    .leaderboard-rank {
+      font-weight: 900;
+      color: var(--gold);
+      min-width: 40px;
+    }
+
+    .leaderboard-name {
+      flex: 1;
+      font-weight: 700;
+    }
+
+    .leaderboard-score {
+      color: var(--info);
+      font-weight: 800;
+    }
+
+    .map-card .map-title {
+      font-size: 1.2rem;
+      color: var(--info);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .map-card .map-meta {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .map-card .map-boss {
+      margin-top: 12px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .skill-meta {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 860px) {
+      .battle-panel { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      .battle-actions { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .character-grid, .map-grid, .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    @keyframes pulseGlow {
+      0% { text-shadow: 0 0 12px rgba(255,79,216,0.8), 0 0 18px rgba(124,58,237,0.8); }
+      100% { text-shadow: 0 0 24px rgba(255,79,216,1), 0 0 45px rgba(124,58,237,1), 0 0 60px rgba(103,232,249,0.7); }
+    }
+
+    @keyframes floatSprite {
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    @keyframes wobble {
+      0% { transform: translateY(0) scale(1) rotate(-3deg); }
+      100% { transform: translateY(-10px) scale(1.04) rotate(3deg); }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
     <header>
-        <h1>🎮 K-pop Demon Hunters League 👹</h1>
-        <p class="subtitle">Battle for glory across mystical realms</p>
+      <h1>🎮 K-pop Demon Hunters League 👹</h1>
+      <div class="subtitle">Battle across realms, collect loot, and climb the leaderboard</div>
     </header>
 
-    <div class="container">
-        <!-- Character Selection Screen -->
-        <div id="character-selection" class="screen active">
-            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Choose Your Champion</h2>
-            <div class="character-grid" id="characterGrid"></div>
-            <div style="text-align: center;">
-                <input type="text" id="hunterName" placeholder="Enter your hunter name..." maxlength="20">
-                <button onclick="app.confirmHunterSelection()">Begin Your Journey</button>
-            </div>
+    <section id="selection-screen" class="screen active">
+      <div class="panel">
+        <h2 style="margin:0 0 14px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Choose Your Hunter</h2>
+        <div id="character-grid" class="character-grid"></div>
+        <div class="form-row">
+          <input id="hunter-name" type="text" maxlength="20" placeholder="Enter your hunter name..." />
+          <button id="start-button">Begin Journey</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="hub-screen" class="screen">
+      <div class="hero-card" id="hero-card"></div>
+
+      <div class="grid grid-2" style="margin-top: 22px;">
+        <div class="panel">
+          <h3 style="margin-top:0; color:var(--info); text-transform:uppercase; letter-spacing:0.08em;">Main Menu</h3>
+          <div class="form-row" style="justify-content:flex-start; margin-top:16px;">
+            <button id="explore-button">Explore Map</button>
+            <button id="shop-button" class="btn-secondary">Open Shop</button>
+            <button id="save-button" class="btn-success">Save</button>
+            <button id="load-button" class="btn-info">Load</button>
+            <button id="new-game-button" class="btn-danger">New Game</button>
+          </div>
         </div>
 
-        <!-- Main Hub Screen -->
-        <div id="main-hub" class="screen">
-            <div class="hunter-profile" id="hunterProfile"></div>
-            <div style="text-align: center; margin: 30px 0;">
-                <button onclick="app.showMapScreen()">🗺️ Explore Maps</button>
-                <button onclick="app.showShopScreen()">🛍️ Visit Shop</button>
-                <button onclick="app.saveGame()">💾 Save Game</button>
-                <button onclick="app.showLoadScreen()">📂 Load Game</button>
-                <button class="btn-danger" onclick="app.newGame()">🔄 New Game</button>
+        <div class="leaderboard-box">
+          <h3 style="margin:0; color:var(--gold); text-transform:uppercase; letter-spacing:0.08em;">Hall of Fame</h3>
+          <div id="leaderboard-list" class="leaderboard-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="map-screen" class="screen">
+      <div class="panel">
+        <h2 style="margin:0 0 16px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Choose a Domain</h2>
+        <div id="map-grid" class="map-grid"></div>
+        <div style="text-align:center; margin-top:20px;">
+          <button id="back-from-maps" class="btn-secondary">Back to Hub</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="exploration-screen" class="screen">
+      <div id="exploration-card" class="hero-card"></div>
+      <div style="text-align:center; margin-top:20px; display:flex; justify-content:center; flex-wrap:wrap; gap:12px;">
+        <button id="fight-rival-button">Fight Rival</button>
+        <button id="treasure-button" class="btn-secondary">Search Treasure</button>
+        <button id="boss-button" class="btn-danger">Battle Boss</button>
+        <button id="back-to-hub-button" class="btn-info">Return to Hub</button>
+      </div>
+      <div id="exploration-message" class="message-box hidden"></div>
+    </section>
+
+    <section id="battle-screen" class="screen">
+      <div class="panel">
+        <div class="battle-panel">
+          <div class="fighter-card">
+            <div class="fighter-top">
+              <div id="player-name" class="fighter-name"></div>
+              <div class="fighter-role">Hunter</div>
             </div>
+            <div class="sprite-wrap">
+              <div id="player-sprite" class="sprite"><span>🦊</span></div>
+            </div>
+            <div class="hp-wrap">
+              <div class="hp-bar"><div id="player-hp-fill" class="hp-fill"></div></div>
+              <div id="player-hp-text" class="hp-text">0/0</div>
+            </div>
+          </div>
+
+          <div class="fighter-card">
+            <div class="fighter-top">
+              <div id="enemy-name" class="fighter-name"></div>
+              <div class="fighter-role" id="enemy-role">Enemy</div>
+            </div>
+            <div class="sprite-wrap">
+              <div id="enemy-sprite" class="sprite enemy"><span>👾</span></div>
+            </div>
+            <div class="hp-wrap">
+              <div class="hp-bar"><div id="enemy-hp-fill" class="hp-fill"></div></div>
+              <div id="enemy-hp-text" class="hp-text">0/0</div>
+            </div>
+          </div>
         </div>
 
-        <!-- Map Selection Screen -->
-        <div id="map-selection" class="screen">
-            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Select a Map</h2>
-            <div class="map-grid" id="mapGrid"></div>
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
-            </div>
+        <div class="battle-actions" id="battle-actions"></div>
+        <div id="battle-log" class="battle-log"></div>
+      </div>
+    </section>
+
+    <section id="result-screen" class="screen">
+      <div class="panel">
+        <div id="result-message" class="message-box"></div>
+        <div id="result-summary" style="margin-top:20px;"></div>
+        <div style="text-align:center; margin-top:24px;">
+          <button id="result-back-button">Back to Hub</button>
         </div>
+      </div>
+    </section>
 
-        <!-- Exploration Screen -->
-        <div id="exploration" class="screen">
-            <div class="hunter-profile" id="explorationProfile"></div>
-            <div style="text-align: center; margin: 30px 0;">
-                <button onclick="app.startRivalBattle()">⚔️ Fight Rival</button>
-                <button onclick="app.searchTreasure()">💰 Search for Treasure</button>
-                <button onclick="app.startBossBattle()">🔥 Challenge Boss</button>
-                <button class="btn-secondary" onclick="app.showHubScreen()">← Return to Hub</button>
-            </div>
-            <div class="message-box info" id="explorationMessage"></div>
+    <section id="shop-screen" class="screen">
+      <div class="panel">
+        <h2 style="margin:0 0 16px; color:var(--info); text-align:center; letter-spacing:0.08em; text-transform:uppercase;">Ranked Shop</h2>
+        <div id="shop-card" class="hero-card"></div>
+        <div id="shop-grid" class="shop-grid" style="margin-top:20px;"></div>
+        <div style="text-align:center; margin-top:18px;">
+          <button id="shop-back-button" class="btn-secondary">Back to Hub</button>
         </div>
+      </div>
+    </section>
+  </div>
 
-        <!-- Battle Screen -->
-        <div id="battle-screen" class="screen">
-            <div class="battle-container">
-                <div class="combatant">
-                    <h2 id="playerName"></h2>
-                    <div class="hp-bar">
-                        <div class="hp-fill" id="playerHPBar" style="width: 100%;">
-                            <span id="playerHPText">100/100</span>
-                        </div>
-                    </div>
-                    <div class="stat">
-                        <span>Attack:</span>
-                        <span id="playerATK">16</span>
-                    </div>
-                    <div class="stat">
-                        <span>Defense:</span>
-                        <span id="playerDEF">5</span>
-                    </div>
-                </div>
+  <script>
+    const STORAGE_KEY = 'kpop-hunter-league-save';
+    const LEADERBOARD_KEY = 'kpop-hunter-league-board';
 
-                <div class="combatant enemy">
-                    <h2 id="enemyName"></h2>
-                    <div class="hp-bar">
-                        <div class="hp-fill" id="enemyHPBar" style="width: 100%;">
-                            <span id="enemyHPText">100/100</span>
-                        </div>
-                    </div>
-                    <div class="stat">
-                        <span>Attack:</span>
-                        <span id="enemyATK">16</span>
-                    </div>
-                    <div class="stat">
-                        <span>Defense:</span>
-                        <span id="enemyDEF">5</span>
-                    </div>
-                </div>
-            </div>
+    const characters = {
+      nova: { name: 'Nova Bloom', emoji: '🦊', atk: 18, def: 5, hp: 100 },
+      riot: { name: 'Riot Mirage', emoji: '🦉', atk: 15, def: 7, hp: 110 },
+      velvet: { name: 'Velvet Viper', emoji: '🐍', atk: 20, def: 4, hp: 95 },
+      moonlight: { name: 'Moonlight Mantis', emoji: '🦋', atk: 17, def: 6, hp: 105 }
+    };
 
-            <div class="battle-log" id="battleLog"></div>
+    const maps = {
+      forest: {
+        name: 'Whisperwood Forest',
+        description: 'Ancient spirits whisper through moonlit trees.',
+        boss: { name: 'Whisper Wraith', emoji: '👻', hp: 170, atk: 18, def: 6 },
+        difficulty: 1
+      },
+      volcano: {
+        name: 'Scorched Volcano',
+        description: 'Molten lanes crackle with heat and fury.',
+        boss: { name: 'Inferno Overlord', emoji: '🔥', hp: 260, atk: 28, def: 8 },
+        difficulty: 2
+      },
+      abyss: {
+        name: 'The Abyss',
+        description: 'The void swallows all sound and hope.',
+        boss: { name: 'Void Leviathan', emoji: '🕳️', hp: 400, atk: 39, def: 11 },
+        difficulty: 3
+      },
+      celestial: {
+        name: 'Celestial Realm',
+        description: 'Divine light splits reality itself.',
+        boss: { name: 'Eternal Sovereign', emoji: '🌌', hp: 620, atk: 52, def: 14 },
+        difficulty: 4
+      }
+    };
 
-            <div class="battle-actions" id="battleActions">
-                <button onclick="app.playerAttack(1)">Basic Attack</button>
-                <button onclick="app.playerAttack(2)">Special Attack</button>
-                <button onclick="app.playerAttack(3)">Guard</button>
-                <button class="btn-danger" onclick="app.forfeitBattle()">Forfeit</button>
-            </div>
-        </div>
+    const defaultSkills = [
+      { id: 'basic', name: 'Basic Strike', description: 'Reliable melee hit', cost: 0, power: 1 },
+      { id: 'pulse', name: 'Pulse Burst', description: 'Focused energy blast', cost: 12, power: 1.6 },
+      { id: 'guard', name: 'Guard', description: 'Raise defense briefly', cost: 0, power: 0 },
+      { id: 'heal', name: 'Recovery', description: 'Recover health', cost: 18, power: 1.2 },
+      { id: 'ultimate', name: 'Final Echo', description: 'High-cost devastating finisher', cost: 55, power: 2.7 }
+    ];
 
-        <!-- Battle Result Screen -->
-        <div id="battle-result" class="screen">
-            <div class="message-box" id="resultMessage"></div>
-            <div class="hunter-profile" id="resultProfile"></div>
-            <div style="text-align: center; margin-top: 30px;">
-                <button onclick="app.showHubScreen()">← Back to Hub</button>
-            </div>
-        </div>
+    class Hunter {
+      constructor(name, typeKey, selectedCharacter) {
+        const base = characters[selectedCharacter];
+        this.name = name;
+        this.typeKey = selectedCharacter;
+        this.archetype = base.name;
+        this.emoji = base.emoji;
+        this.maxHp = base.hp;
+        this.hp = base.hp;
+        this.atk = base.atk;
+        this.def = base.def;
+        this.gold = 120;
+        this.level = 1;
+        this.exp = 0;
+        this.expTarget = 100;
+        this.wins = 0;
+        this.losses = 0;
+        this.rank = 1;
+        this.energy = 0;
+        this.skillSet = defaultSkills.map(skill => ({ ...skill }));
+        this.inventory = [];
+        this.bossesDefeated = [];
+        this.currentMap = 'forest';
+      }
 
-        <!-- Shop Screen -->
-        <div id="shop-screen" class="screen">
-            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Ranked Shop</h2>
-            <div class="hunter-profile" id="shopProfile"></div>
-            <div class="shop-items" id="shopItems"></div>
-            <div style="text-align: center; margin-top: 30px;">
-                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
-            </div>
-        </div>
-
-        <!-- Load Screen -->
-        <div id="load-screen" class="screen">
-            <h2 style="text-align: center; color: var(--accent); margin-bottom: 20px;">Load Game</h2>
-            <div style="text-align: center;">
-                <button class="btn-success" onclick="app.loadGame()">Load Saved Game</button>
-                <button class="btn-secondary" onclick="app.showHubScreen()">← Back to Hub</button>
-            </div>
-            <div class="message-box info" id="loadMessage"></div>
-        </div>
-    </div>
-
-    <script>
-        const CHARACTERS = {
-            "nova": { name: "Nova Bloom", attack: 18, defense: 5, hp: 100 },
-            "riot": { name: "Riot Mirage", attack: 15, defense: 7, hp: 110 },
-            "velvet": { name: "Velvet Viper", attack: 20, defense: 4, hp: 95 },
-            "moonlight": { name: "Moonlight Mantis", attack: 17, defense: 6, hp: 105 }
+      toJSON() {
+        return {
+          name: this.name,
+          typeKey: this.typeKey,
+          archetype: this.archetype,
+          emoji: this.emoji,
+          maxHp: this.maxHp,
+          hp: this.hp,
+          atk: this.atk,
+          def: this.def,
+          gold: this.gold,
+          level: this.level,
+          exp: this.exp,
+          expTarget: this.expTarget,
+          wins: this.wins,
+          losses: this.losses,
+          rank: this.rank,
+          energy: this.energy,
+          skillSet: this.skillSet,
+          inventory: this.inventory,
+          bossesDefeated: this.bossesDefeated,
+          currentMap: this.currentMap
         };
+      }
 
-        const MAPS = {
-            "forest": {
-                name: "Whisperwood Forest",
-                description: "A mystical forest filled with whispers and ancient magic.",
-                difficulty: 1,
-                boss: { name: "Whisper Wraith", hp: 150, attack: 20, defense: 6 }
-            },
-            "volcano": {
-                name: "Scorched Volcano",
-                description: "A fiery mountain where demons emerge from molten depths.",
-                difficulty: 2,
-                boss: { name: "Inferno Overlord", hp: 250, attack: 30, defense: 8 }
-            },
-            "abyss": {
-                name: "The Abyss",
-                description: "A dark chasm where lost souls wander eternally.",
-                difficulty: 3,
-                boss: { name: "Void Leviathan", hp: 400, attack: 40, defense: 10 }
-            },
-            "celestial": {
-                name: "Celestial Realm",
-                description: "The highest plane of existence, home to the ultimate demons.",
-                difficulty: 4,
-                boss: { name: "Eternal Sovereign", hp: 600, attack: 50, defense: 12 }
-            }
+      static fromJSON(data) {
+        const hunter = new Hunter(data.name || 'Hunter', data.typeKey || 'nova', data.typeKey || 'nova');
+        Object.assign(hunter, data);
+        hunter.maxHp = Number(hunter.maxHp ?? hunter.maxHp || 100);
+        hunter.hp = Number(hunter.hp ?? hunter.maxHp);
+        hunter.atk = Number(hunter.atk || 0);
+        hunter.def = Number(hunter.def || 0);
+        hunter.gold = Number(hunter.gold || 0);
+        hunter.level = Number(hunter.level || 1);
+        hunter.exp = Number(hunter.exp || 0);
+        hunter.expTarget = Number(hunter.expTarget || 100);
+        hunter.skillSet = data.skillSet || defaultSkills.map(skill => ({ ...skill }));
+        hunter.inventory = data.inventory || [];
+        hunter.bossesDefeated = data.bossesDefeated || [];
+        hunter.currentMap = data.currentMap || 'forest';
+        return hunter;
+      }
+
+      gainEnergy(amount) {
+        this.energy = Math.min(100, this.energy + amount);
+      }
+
+      addExp(amount) {
+        this.exp += amount;
+        while (this.exp >= this.expTarget) {
+          this.exp -= this.expTarget;
+          this.level += 1;
+          this.expTarget = Math.round(this.expTarget * 1.18);
+          this.maxHp += 12;
+          this.hp = this.maxHp;
+          this.atk += 3;
+          this.def += 1;
+          this.gold += 20;
+          this.gainEnergy(15);
+        }
+      }
+
+      takeDamage(value) {
+        const actual = Math.max(0, value - this.def);
+        this.hp = Math.max(0, this.hp - actual);
+      }
+
+      heal(value) {
+        this.hp = Math.min(this.maxHp, this.hp + value);
+      }
+    }
+
+    class Game {
+      constructor() {
+        this.player = null;
+        this.opponent = null;
+        this.battleType = null;
+        this.currentMapKey = 'forest';
+        this.selectedCharacter = null;
+        this.log = [];
+        this.leaderboard = this.getLeaderboard();
+        this.init();
+      }
+
+      init() {
+        this.renderCharacters();
+        this.renderMaps();
+        this.bindEvents();
+        this.renderLeaderboard();
+        this.loadState();
+      }
+
+      bindEvents() {
+        document.getElementById('start-button').addEventListener('click', () => this.startNewGame());
+        document.getElementById('explore-button').addEventListener('click', () => this.openMapScreen());
+        document.getElementById('shop-button').addEventListener('click', () => this.openShop());
+        document.getElementById('save-button').addEventListener('click', () => this.saveState());
+        document.getElementById('load-button').addEventListener('click', () => this.loadState(true));
+        document.getElementById('new-game-button').addEventListener('click', () => this.newGame());
+        document.getElementById('back-from-maps').addEventListener('click', () => this.showScreen('hub-screen'));
+        document.getElementById('back-to-hub-button').addEventListener('click', () => this.showScreen('hub-screen'));
+        document.getElementById('fight-rival-button').addEventListener('click', () => this.startRivalBattle());
+        document.getElementById('treasure-button').addEventListener('click', () => this.searchTreasure());
+        document.getElementById('boss-button').addEventListener('click', () => this.startBossBattle());
+        document.getElementById('shop-back-button').addEventListener('click', () => this.showScreen('hub-screen'));
+        document.getElementById('result-back-button').addEventListener('click', () => this.showScreen('hub-screen'));
+      }
+
+      renderCharacters() {
+        const grid = document.getElementById('character-grid');
+        grid.innerHTML = '';
+        Object.entries(characters).forEach(([key, value]) => {
+          const card = document.createElement('div');
+          card.className = 'character-card';
+          card.dataset.key = key;
+          card.innerHTML = `
+            <div class="card-head">
+              <h3>${value.name}</h3>
+            </div>
+            <div class="card-body">
+              <div class="stats-row"><span>Emoji</span><strong>${value.emoji}</strong></div>
+              <div class="stats-row"><span>Attack</span><strong>${value.atk}</strong></div>
+              <div class="stats-row"><span>Defense</span><strong>${value.def}</strong></div>
+              <div class="stats-row"><span>HP</span><strong>${value.hp}</strong></div>
+            </div>
+          `;
+          card.addEventListener('click', () => {
+            this.selectedCharacter = key;
+            document.querySelectorAll('.character-card').forEach(item => item.classList.remove('selected'));
+            card.classList.add('selected');
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      renderMaps() {
+        const grid = document.getElementById('map-grid');
+        grid.innerHTML = '';
+        Object.entries(maps).forEach(([key, map]) => {
+          const card = document.createElement('div');
+          card.className = 'map-card';
+          card.innerHTML = `
+            <div class="map-title">${map.name}</div>
+            <div class="map-meta">${map.description}</div>
+            <div class="map-boss">Boss: ${map.boss.name}</div>
+            <div class="skill-meta">Difficulty: ${'★'.repeat(map.difficulty)}</div>
+          `;
+          card.addEventListener('click', () => {
+            this.currentMapKey = key;
+            this.player.currentMap = key;
+            this.renderExplorationCard();
+            this.showScreen('exploration-screen');
+          });
+          grid.appendChild(card);
+        });
+      }
+
+      showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+      }
+
+      startNewGame() {
+        const nameInput = document.getElementById('hunter-name');
+        const name = (nameInput.value || 'Player One').trim();
+        if (!this.selectedCharacter) {
+          alert('Select a hunter first.');
+          return;
+        }
+        this.player = new Hunter(name, this.selectedCharacter, this.selectedCharacter);
+        this.showScreen('hub-screen');
+        this.renderHub();
+        this.playTone(520, 0.09, 'square');
+      }
+
+      renderHub() {
+        if (!this.player) return;
+        this.renderHeroCard();
+        this.renderLeaderboard();
+      }
+
+      renderHeroCard() {
+        const heroCard = document.getElementById('hero-card');
+        const player = this.player;
+        heroCard.innerHTML = `
+          <div class="hero-name">${player.name}</div>
+          <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">${player.archetype}</div>
+          <div class="stats-grid">
+            <div class="tiny-box"><div class="label">Level</div><div class="value">${player.level}</div></div>
+            <div class="tiny-box"><div class="label">HP</div><div class="value">${player.hp}/${player.maxHp}</div></div>
+            <div class="tiny-box"><div class="label">ATK</div><div class="value">${player.atk}</div></div>
+            <div class="tiny-box"><div class="label">DEF</div><div class="value">${player.def}</div></div>
+            <div class="tiny-box"><div class="label">Gold</div><div class="value">${player.gold}</div></div>
+            <div class="tiny-box"><div class="label">Rank</div><div class="value">${player.rank}</div></div>
+            <div class="tiny-box"><div class="label">Wins</div><div class="value">${player.wins}</div></div>
+            <div class="tiny-box"><div class="label">Energy</div><div class="value">${player.energy}%</div></div>
+          </div>
+        `;
+
+        const explorationCard = document.getElementById('exploration-card');
+        if (explorationCard) {
+          this.renderExplorationCard();
+        }
+      }
+
+      renderExplorationCard() {
+        const player = this.player;
+        const card = document.getElementById('exploration-card');
+        if (!card || !player) return;
+        const mapName = maps[player.currentMap]?.name || 'Whisperwood Forest';
+        card.innerHTML = `
+          <div class="hero-name">${player.name}</div>
+          <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Current Domain</div>
+          <div style="font-size:1.3rem; color:var(--info); font-weight:800; margin-top:8px;">${mapName}</div>
+          <div class="stats-grid" style="margin-top:12px;">
+            <div class="tiny-box"><div class="label">HP</div><div class="value">${player.hp}/${player.maxHp}</div></div>
+            <div class="tiny-box"><div class="label">ATK</div><div class="value">${player.atk}</div></div>
+            <div class="tiny-box"><div class="label">DEF</div><div class="value">${player.def}</div></div>
+            <div class="tiny-box"><div class="label">Gold</div><div class="value">${player.gold}</div></div>
+          </div>
+        `;
+      }
+
+      openMapScreen() {
+        if (!this.player) return;
+        this.showScreen('map-screen');
+      }
+
+      searchTreasure() {
+        if (!this.player) return;
+        const found = 20 + Math.floor(Math.random() * 35);
+        this.player.gold += found;
+        this.player.gainEnergy(10);
+        this.renderHeroCard();
+        const msg = document.getElementById('exploration-message');
+        msg.classList.remove('hidden');
+        msg.className = 'message-box success';
+        msg.textContent = `You found a hidden cache and gained ${found} gold.`;
+      }
+
+      startRivalBattle() {
+        if (!this.player) return;
+        const enemy = new Hunter('Rival Hunter', 'rival', 'nova');
+        enemy.name = ['Jin Hwa', 'Aiko Hex', 'Rae Circuit', 'Mina Fang'][Math.floor(Math.random() * 4)];
+        enemy.emoji = '👹';
+        enemy.maxHp = 90 + this.player.level * 12;
+        enemy.hp = enemy.maxHp;
+        enemy.atk = 12 + this.player.level * 2;
+        enemy.def = 4 + this.player.level;
+        enemy.role = 'Rival';
+        this.opponent = enemy;
+        this.battleType = 'rival';
+        this.startBattle();
+      }
+
+      startBossBattle() {
+        if (!this.player) return;
+        const map = maps[this.player.currentMap || this.currentMapKey] || maps.forest;
+        const boss = map.boss;
+        this.opponent = {
+          name: boss.name,
+          emoji: boss.emoji,
+          role: 'Boss',
+          maxHp: boss.hp + this.player.level * 8,
+          hp: boss.hp + this.player.level * 8,
+          atk: boss.atk + this.player.level * 2,
+          def: boss.def + Math.floor(this.player.level / 2),
+          isBoss: true
         };
+        this.battleType = 'boss';
+        this.startBattle();
+      }
 
-        const RIVAL_NAMES = ["Jin Hwa", "Sora Byte", "Aiko Hex", "Kae Prism", "Mina Fang", "Rae Circuit"];
+      startBattle() {
+        this.log = [];
+        this.renderBattle();
+        this.showScreen('battle-screen');
+        this.addBattleLog('A new challenger appears.', 'system');
+      }
 
-        class Hunter {
-            constructor(name, archetype, stats) {
-                this.name = name;
-                this.archetype = archetype;
-                this.level = 1;
-                this.exp = 0;
-                this.exp_to_level = 100;
-                this.hp = stats.hp;
-                this.max_hp = stats.hp;
-                this.attack = stats.attack;
-                this.defense = stats.defense;
-                this.gold = 100;
-                this.rank = 1;
-                this.wins = 0;
-                this.losses = 0;
-                this.equipment = [];
-                this.bosses_defeated = [];
-                this.current_map = "Whisperwood Forest";
-            }
+      renderBattle() {
+        if (!this.player || !this.opponent) return;
 
-            addExp(amount) {
-                this.exp += amount;
-                while (this.exp >= this.exp_to_level) {
-                    this.levelUp();
-                }
-            }
+        document.getElementById('player-name').textContent = this.player.name;
+        document.getElementById('enemy-name').textContent = this.opponent.name;
+        document.getElementById('enemy-role').textContent = this.opponent.role || 'Enemy';
+        document.getElementById('player-sprite').innerHTML = `<span>${this.player.emoji}</span>`;
+        document.getElementById('enemy-sprite').innerHTML = `<span>${this.opponent.emoji}</span>`;
 
-            levelUp() {
-                this.exp -= this.exp_to_level;
-                this.level++;
-                this.exp_to_level = Math.floor(this.exp_to_level * 1.1);
-                this.max_hp += 15;
-                this.hp = this.max_hp;
-                this.attack += 3;
-                this.defense += 1;
-            }
+        this.updateBattleBars();
+        this.renderBattleActions();
+      }
 
-            takeDamage(damage) {
-                const actual = Math.max(0, damage - this.defense);
-                this.hp = Math.max(0, this.hp - actual);
-            }
+      renderBattleActions() {
+        const battleActions = document.getElementById('battle-actions');
+        battleActions.innerHTML = '';
 
-            heal(amount) {
-                this.hp = Math.min(this.max_hp, this.hp + amount);
-            }
+        const skills = this.player.skillSet;
+        skills.forEach(skill => {
+          const button = document.createElement('button');
+          button.className = 'battle-btn';
+          button.dataset.skill = skill.id;
+          button.textContent = `${skill.name}${skill.cost ? ' (' + skill.cost + ' energy)' : ''}`;
+          button.disabled = this.player.energy < skill.cost && skill.id !== 'basic' && skill.id !== 'guard';
+          button.addEventListener('click', () => this.useSkill(skill));
+          battleActions.appendChild(button);
+        });
 
-            toJSON() {
-                return {
-                    name: this.name,
-                    archetype: this.archetype,
-                    level: this.level,
-                    exp: this.exp,
-                    exp_to_level: this.exp_to_level,
-                    hp: this.hp,
-                    max_hp: this.max_hp,
-                    attack: this.attack,
-                    defense: this.defense,
-                    gold: this.gold,
-                    rank: this.rank,
-                    wins: this.wins,
-                    losses: this.losses,
-                    equipment: this.equipment,
-                    bosses_defeated: this.bosses_defeated,
-                    current_map: this.current_map
-                };
-            }
+        const fleeBtn = document.createElement('button');
+        fleeBtn.className = 'battle-btn btn-danger';
+        fleeBtn.textContent = 'Flee';
+        fleeBtn.addEventListener('click', () => this.endBattle(false, 'The hunter withdrew from battle.'));
+        battleActions.appendChild(fleeBtn);
+      }
 
-            static fromJSON(data) {
-                const hunter = new Hunter(data.name, data.archetype, { hp: data.max_hp, attack: data.attack, defense: data.defense });
-                Object.assign(hunter, data);
-                return hunter;
-            }
+      useSkill(skill) {
+        if (!this.player || !this.opponent) return;
+        if (skill.id === 'guard') {
+          this.player.def += 6;
+          this.player.gainEnergy(8);
+          this.addBattleLog(`${this.player.name} braces behind a guard, raising defense.`, 'player');
+          this.enemyTurn();
+          this.updateBattleBars();
+          return;
         }
 
-        class KpopDemonHuntersGame {
-            constructor() {
-                this.player = null;
-                this.opponent = null;
-                this.current_map = null;
-                this.is_boss_battle = false;
-                this.selected_character = null;
-                this.battle_active = false;
-                this.init();
-            }
-
-            init() {
-                this.populateCharacterGrid();
-                this.loadGame();
-            }
-
-            populateCharacterGrid() {
-                const grid = document.getElementById("characterGrid");
-                grid.innerHTML = "";
-                Object.entries(CHARACTERS).forEach(([key, char]) => {
-                    const card = document.createElement("div");
-                    card.className = "character-card";
-                    card.onclick = () => this.selectCharacter(key);
-                    card.innerHTML = `
-                        <h3>${char.name}</h3>
-                        <div class="stat">
-                            <span>Attack:</span>
-                            <span>${char.attack}</span>
-                        </div>
-                        <div class="stat">
-                            <span>Defense:</span>
-                            <span>${char.defense}</span>
-                        </div>
-                        <div class="stat">
-                            <span>Health:</span>
-                            <span>${char.hp}</span>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-
-            selectCharacter(key) {
-                this.selected_character = key;
-                document.querySelectorAll(".character-card").forEach(card => {
-                    card.style.borderColor = "var(--primary)";
-                });
-                document.querySelectorAll(".character-card")[Object.keys(CHARACTERS).indexOf(key)].style.borderColor = "var(--accent)";
-            }
-
-            confirmHunterSelection() {
-                if (!this.selected_character) {
-                    alert("Please select a character!");
-                    return;
-                }
-                const name = document.getElementById("hunterName").value || "Player One";
-                const charData = CHARACTERS[this.selected_character];
-                this.player = new Hunter(name, charData.name, {
-                    hp: charData.hp,
-                    attack: charData.attack,
-                    defense: charData.defense
-                });
-                this.showHubScreen();
-            }
-
-            showScreen(screenId) {
-                document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-                document.getElementById(screenId).classList.add("active");
-            }
-
-            showHubScreen() {
-                this.updateHunterProfile();
-                this.showScreen("main-hub");
-            }
-
-            showMapScreen() {
-                const grid = document.getElementById("mapGrid");
-                grid.innerHTML = "";
-                Object.entries(MAPS).forEach(([key, map]) => {
-                    const card = document.createElement("div");
-                    card.className = "map-card";
-                    card.onclick = () => this.selectMap(key);
-                    card.innerHTML = `
-                        <h3>${map.name}</h3>
-                        <p>${map.description}</p>
-                        <div class="difficulty">${"⭐".repeat(map.difficulty)}</div>
-                    `;
-                    grid.appendChild(card);
-                });
-                this.showScreen("map-selection");
-            }
-
-            selectMap(key) {
-                this.current_map = key;
-                const map = MAPS[key];
-                this.player.current_map = map.name;
-                this.updateExplorationProfile();
-                document.getElementById("explorationMessage").innerHTML = `📍 ${map.description}`;
-                this.showScreen("exploration");
-            }
-
-            showShopScreen() {
-                this.updateShopProfile();
-                this.populateShop();
-                this.showScreen("shop-screen");
-            }
-
-            showLoadScreen() {
-                this.showScreen("load-screen");
-            }
-
-            populateShop() {
-                const items = [
-                    { name: "Attack Upgrade +4", price: 25, bonus: "ATK +4" },
-                    { name: "Defense Upgrade +4", price: 25, bonus: "DEF +4" },
-                    { name: "Health Potion", price: 20, bonus: "HP +50" }
-                ];
-                const shop = document.getElementById("shopItems");
-                shop.innerHTML = "";
-                items.forEach((item, idx) => {
-                    const itemDiv = document.createElement("div");
-                    itemDiv.className = "shop-item";
-                    itemDiv.innerHTML = `
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-bonus">${item.bonus}</div>
-                        <div class="item-price">💰 ${item.price}</div>
-                        <button onclick="app.buyItem(${idx})">Purchase</button>
-                    `;
-                    shop.appendChild(itemDiv);
-                });
-            }
-
-            buyItem(idx) {
-                const items = [
-                    { price: 25, type: "attack" },
-                    { price: 25, type: "defense" },
-                    { price: 20, type: "heal" }
-                ];
-                const item = items[idx];
-                if (this.player.gold < item.price) {
-                    alert("Not enough gold!");
-                    return;
-                }
-                this.player.gold -= item.price;
-                if (item.type === "attack") this.player.attack += 4;
-                if (item.type === "defense") this.player.defense += 4;
-                if (item.type === "heal") this.player.heal(50);
-                alert(`Purchased! ${item.type}`);
-                this.updateShopProfile();
-            }
-
-            startRivalBattle() {
-                this.is_boss_battle = false;
-                const rival_name = RIVAL_NAMES[Math.floor(Math.random() * RIVAL_NAMES.length)];
-                const base_attack = 10 + this.player.rank * 3;
-                const base_defense = 3 + this.player.rank;
-                const rival_hp = 80 + this.player.rank * 12;
-                this.opponent = new Hunter(rival_name, "Rival", {
-                    hp: rival_hp,
-                    attack: base_attack,
-                    defense: base_defense
-                });
-                this.startBattle();
-            }
-
-            startBossBattle() {
-                const map = MAPS[this.current_map];
-                const boss_data = map.boss;
-                this.is_boss_battle = true;
-                this.opponent = new Hunter(boss_data.name, "Boss", {
-                    hp: boss_data.hp,
-                    attack: boss_data.attack,
-                    defense: boss_data.defense
-                });
-                this.opponent.max_hp = boss_data.hp;
-                this.startBattle();
-            }
-
-            startBattle() {
-                this.battle_active = true;
-                this.opponent.hp = this.opponent.max_hp;
-                document.getElementById("playerName").textContent = this.player.name;
-                document.getElementById("enemyName").textContent = this.opponent.name;
-                this.updateBattleUI();
-                document.getElementById("battleLog").innerHTML = "";
-                this.showScreen("battle-screen");
-            }
-
-            playerAttack(moveType) {
-                if (!this.battle_active) return;
-
-                let damage = 0;
-                let action = "";
-
-                if (moveType === 1) {
-                    damage = this.player.attack + Math.floor(Math.random() * 9) + 4;
-                    action = `${this.player.name} strikes for ${Math.floor(damage)} damage!`;
-                } else if (moveType === 2) {
-                    damage = this.player.attack + Math.floor(Math.random() * 11) + 8;
-                    action = `${this.player.name} uses Special Attack for ${Math.floor(damage)} damage!`;
-                } else if (moveType === 3) {
-                    this.player.defense += 6;
-                    action = `${this.player.name} guards (Defense +6)`;
-                }
-
-                if (moveType !== 3) {
-                    this.opponent.takeDamage(damage);
-                }
-
-                this.addLogEntry(action, "log-player");
-
-                if (this.opponent.hp <= 0) {
-                    this.endBattle(true);
-                    return;
-                }
-
-                this.enemyTurn();
-            }
-
-            enemyTurn() {
-                const actions = ["attack", "attack", "special", "guard"];
-                const action = actions[Math.floor(Math.random() * actions.length)];
-                let damage = 0;
-                let logText = "";
-
-                if (action === "attack") {
-                    damage = this.opponent.attack + Math.floor(Math.random() * 9) + 4;
-                    logText = `${this.opponent.name} strikes for ${Math.floor(damage)} damage!`;
-                } else if (action === "special") {
-                    damage = this.opponent.attack * 1.3 + Math.floor(Math.random() * 11) + 8;
-                    logText = `${this.opponent.name} uses Special Attack for ${Math.floor(damage)} damage!`;
-                } else if (action === "guard") {
-                    this.opponent.defense += 4;
-                    logText = `${this.opponent.name} guards (Defense +4)`;
-                }
-
-                if (action !== "guard") {
-                    this.player.takeDamage(damage);
-                }
-
-                this.addLogEntry(logText, "log-enemy");
-
-                if (this.player.hp <= 0) {
-                    this.endBattle(false);
-                    return;
-                }
-
-                this.updateBattleUI();
-            }
-
-            forfeitBattle() {
-                this.addLogEntry(`${this.player.name} forfeits the battle!`, "log-system");
-                this.endBattle(false);
-            }
-
-            updateBattleUI() {
-                const playerHPPercent = Math.max(0, (this.player.hp / this.player.max_hp) * 100);
-                const enemyHPPercent = Math.max(0, (this.opponent.hp / this.opponent.max_hp) * 100);
-
-                document.getElementById("playerHPBar").style.width = playerHPPercent + "%";
-                document.getElementById("playerHPText").textContent = `${Math.max(0, this.player.hp)}/${this.player.max_hp}`;
-
-                document.getElementById("enemyHPBar").style.width = enemyHPPercent + "%";
-                document.getElementById("enemyHPText").textContent = `${Math.max(0, this.opponent.hp)}/${this.opponent.max_hp}`;
-
-                document.getElementById("playerATK").textContent = this.player.attack;
-                document.getElementById("playerDEF").textContent = this.player.defense;
-                document.getElementById("enemyATK").textContent = this.opponent.attack;
-                document.getElementById("enemyDEF").textContent = this.opponent.defense;
-            }
-
-            addLogEntry(text, className) {
-                const log = document.getElementById("battleLog");
-                const entry = document.createElement("div");
-                entry.className = "log-entry " + className;
-                entry.textContent = text;
-                log.appendChild(entry);
-                log.scrollTop = log.scrollHeight;
-            }
-
-            endBattle(playerWon) {
-                this.battle_active = false;
-                let resultHTML = "";
-
-                if (playerWon) {
-                    this.player.wins++;
-                    const goldReward = 30 + this.player.rank * 5;
-                    const expReward = 50 + this.player.rank * 10;
-                    this.player.gold += goldReward;
-                    this.player.addExp(expReward);
-
-                    if (this.is_boss_battle) {
-                        this.player.bosses_defeated.push(this.opponent.name);
-                        this.player.gold += 200;
-                        resultHTML = `
-                            <div class="message-box success">
-                                <h2>🎉 VICTORY! You defeated ${this.opponent.name}!</h2>
-                                <p>Gained ${goldReward + 200} gold and ${expReward} EXP</p>
-                            </div>
-                        `;
-                    } else {
-                        resultHTML = `
-                            <div class="message-box success">
-                                <h2>✅ Victory!</h2>
-                                <p>Gained ${goldReward} gold and ${expReward} EXP</p>
-                            </div>
-                        `;
-                    }
-                } else {
-                    this.player.losses++;
-                    this.player.gold = Math.max(0, this.player.gold - 10);
-                    this.player.hp = Math.max(20, this.player.hp);
-                    resultHTML = `
-                        <div class="message-box danger">
-                            <h2>❌ Defeat</h2>
-                            <p>You lost 10 gold</p>
-                        </div>
-                    `;
-                }
-
-                document.getElementById("resultMessage").innerHTML = resultHTML;
-                this.updateResultProfile();
-                this.showScreen("battle-result");
-            }
-
-            searchTreasure() {
-                const goldFound = Math.floor(Math.random() * 31) + 20;
-                this.player.gold += goldFound;
-                document.getElementById("explorationMessage").innerHTML = `💰 Found ${goldFound} gold!`;
-            }
-
-            updateHunterProfile() {
-                document.getElementById("hunterProfile").innerHTML = `
-                    <div class="hunter-name">${this.player.name} - ${this.player.archetype}</div>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-label">Level</div>
-                            <div class="stat-value">${this.player.level}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">HP</div>
-                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Attack</div>
-                            <div class="stat-value">${this.player.attack}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Defense</div>
-                            <div class="stat-value">${this.player.defense}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Gold</div>
-                            <div class="stat-value">${this.player.gold}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Rank</div>
-                            <div class="stat-value">${this.player.rank}</div>
-                        </div>
-                    </div>
-                    <div style="margin-top: 15px;">
-                        <strong>Record:</strong> ${this.player.wins}W - ${this.player.losses}L
-                    </div>
-                `;
-            }
-
-            updateExplorationProfile() {
-                document.getElementById("explorationProfile").innerHTML = `
-                    <div class="hunter-name">${this.player.name}</div>
-                    <div style="text-align: center; margin: 10px 0;">📍 ${this.player.current_map}</div>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-label">Level</div>
-                            <div class="stat-value">${this.player.level}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">HP</div>
-                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Gold</div>
-                            <div class="stat-value">${this.player.gold}</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            updateResultProfile() {
-                document.getElementById("resultProfile").innerHTML = `
-                    <div class="hunter-name">${this.player.name}</div>
-                    <div class="stats-grid">
-                        <div class="stat-box">
-                            <div class="stat-label">Level</div>
-                            <div class="stat-value">${this.player.level}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">HP</div>
-                            <div class="stat-value">${this.player.hp}/${this.player.max_hp}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Gold</div>
-                            <div class="stat-value">${this.player.gold}</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Record</div>
-                            <div class="stat-value">${this.player.wins}W</div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            updateShopProfile() {
-                document.getElementById("shopProfile").innerHTML = `
-                    <div class="hunter-name">${this.player.name}</div>
-                    <div style="text-align: center;">
-                        <strong>Gold:</strong> 💰 ${this.player.gold}
-                    </div>
-                `;
-            }
-
-            saveGame() {
-                localStorage.setItem("kpop_hunter_save", JSON.stringify(this.player.toJSON()));
-                alert("✅ Game saved successfully!");
-            }
-
-            loadGame() {
-                const saved = localStorage.getItem("kpop_hunter_save");
-                if (saved) {
-                    this.player = Hunter.fromJSON(JSON.parse(saved));
-                    this.showHubScreen();
-                    document.getElementById("loadMessage").innerHTML = `<p style="color: var(--success);">✅ Loaded ${this.player.name}!</p>`;
-                } else {
-                    document.getElementById("loadMessage").innerHTML = `<p style="color: var(--accent);">No save file found. Start a new game.</p>`;
-                }
-            }
-
-            newGame() {
-                if (confirm("Start a new game? This will erase your current progress.")) {
-                    localStorage.removeItem("kpop_hunter_save");
-                    this.player = null;
-                    this.populateCharacterGrid();
-                    this.showScreen("character-selection");
-                }
-            }
+        if (skill.id === 'heal') {
+          if (this.player.energy < skill.cost) return;
+          this.player.energy -= skill.cost;
+          const amount = Math.round(this.player.maxHp * 0.32);
+          this.player.heal(amount);
+          this.addBattleLog(`${this.player.name} recovers ${amount} HP.`, 'player');
+          this.enemyTurn();
+          this.updateBattleBars();
+          return;
         }
 
-        const app = new KpopDemonHuntersGame();
-    </script>
+        if (this.player.energy < skill.cost) return;
+        this.player.energy -= skill.cost;
+
+        let damage = 0;
+        let text = '';
+
+        if (skill.id === 'basic') {
+          damage = this.player.atk + 6 + Math.floor(Math.random() * 10);
+          text = `${this.player.name} lands a basic strike for ${damage} damage.`;
+        } else if (skill.id === 'pulse') {
+          damage = Math.round((this.player.atk + 10) * skill.power + Math.random() * 14);
+          text = `${this.player.name} fires a Pulse Burst for ${damage} damage.`;
+        } else if (skill.id === 'ultimate') {
+          damage = Math.round((this.player.atk + 18) * skill.power + Math.random() * 20);
+          text = `${this.player.name} unleashes Final Echo for ${damage} damage.`;
+        }
+
+        this.opponent.hp = Math.max(0, this.opponent.hp - damage);
+        this.addBattleLog(text, 'player');
+        this.player.gainEnergy(12);
+
+        if (this.opponent.hp <= 0) {
+          this.endBattle(true);
+          return;
+        }
+
+        this.enemyTurn();
+      }
+
+      enemyTurn() {
+        const attackRoll = Math.random();
+        let damage = 0;
+        let text = '';
+
+        if (attackRoll < 0.5) {
+          damage = this.opponent.atk + Math.floor(Math.random() * 12);
+          text = `${this.opponent.name} hits for ${damage} damage.`;
+          this.player.takeDamage(damage);
+        } else if (attackRoll < 0.8) {
+          damage = Math.round((this.opponent.atk + 10) * 1.4 + Math.random() * 18);
+          text = `${this.opponent.name} unleashes a dark blast for ${damage} damage.`;
+          this.player.takeDamage(damage);
+        } else {
+          this.opponent.def += 3;
+          text = `${this.opponent.name} raises a guard and fortifies defense.`;
+        }
+
+        this.addBattleLog(text, 'enemy');
+        this.updateBattleBars();
+
+        if (this.player.hp <= 0) {
+          this.endBattle(false, `${this.opponent.name} overpowers ${this.player.name}.`);
+        }
+      }
+
+      addBattleLog(text, type) {
+        this.log.push({ text, type });
+        const log = document.getElementById('battle-log');
+        log.innerHTML = this.log.map(entry => `<div class="log-line ${entry.type}">${entry.text}</div>`).join('');
+        log.scrollTop = log.scrollHeight;
+      }
+
+      updateBattleBars() {
+        const playerHpPercent = this.player ? (this.player.hp / this.player.maxHp) * 100 : 0;
+        const enemyHpPercent = this.opponent ? (this.opponent.hp / this.opponent.maxHp) * 100 : 0;
+
+        const playerFill = document.getElementById('player-hp-fill');
+        const enemyFill = document.getElementById('enemy-hp-fill');
+        const playerText = document.getElementById('player-hp-text');
+        const enemyText = document.getElementById('enemy-hp-text');
+
+        playerFill.style.width = `${Math.max(0, playerHpPercent)}%`;
+        enemyFill.style.width = `${Math.max(0, enemyHpPercent)}%`;
+        playerText.textContent = `${Math.max(0, this.player.hp)}/${this.player.maxHp}`;
+        enemyText.textContent = `${Math.max(0, this.opponent.hp)}/${this.opponent.maxHp}`;
+
+        if (playerHpPercent < 30) {
+          playerFill.style.filter = 'hue-rotate(35deg) saturate(1.4)';
+        } else {
+          playerFill.style.filter = 'none';
+        }
+
+        if (enemyHpPercent < 30) {
+          enemyFill.style.filter = 'hue-rotate(-20deg) saturate(1.8)';
+        } else {
+          enemyFill.style.filter = 'none';
+        }
+      }
+
+      endBattle(won, message = '') {
+        const resultMessage = document.getElementById('result-message');
+        const resultSummary = document.getElementById('result-summary');
+
+        if (won) {
+          const rewardGold = 40 + this.player.level * 8 + (this.battleType === 'boss' ? 120 : 0);
+          const rewardExp = 55 + this.player.level * 10 + (this.battleType === 'boss' ? 80 : 0);
+          this.player.gold += rewardGold;
+          this.player.addExp(rewardExp);
+          this.player.wins += 1;
+          this.player.gainEnergy(18);
+
+          if (this.battleType === 'boss') {
+            this.player.bossesDefeated.push(this.opponent.name);
+          }
+
+          resultMessage.className = 'message-box success';
+          resultMessage.textContent = message || `Victory! ${this.player.name} defeated ${this.opponent.name}.`;
+          resultSummary.innerHTML = `
+            <div class="hero-card">
+              <div class="hero-name">Battle Rewards</div>
+              <div class="stats-grid">
+                <div class="tiny-box"><div class="label">Gold</div><div class="value">+${rewardGold}</div></div>
+                <div class="tiny-box"><div class="label">EXP</div><div class="value">+${rewardExp}</div></div>
+                <div class="tiny-box"><div class="label">Level</div><div class="value">${this.player.level}</div></div>
+                <div class="tiny-box"><div class="label">Energy</div><div class="value">${this.player.energy}%</div></div>
+              </div>
+            </div>
+          `;
+          this.playTone(660, 0.12, 'triangle');
+          this.playTone(880, 0.14, 'triangle');
+          this.updateLeaderboard();
+        } else {
+          this.player.losses += 1;
+          this.player.gold = Math.max(0, this.player.gold - 10);
+          this.player.heal(20);
+          resultMessage.className = 'message-box danger';
+          resultMessage.textContent = message || `Defeat. ${this.player.name} withdrew from the battle.`;
+          resultSummary.innerHTML = `
+            <div class="hero-card">
+              <div class="hero-name">Battle Summary</div>
+              <div class="stats-grid">
+                <div class="tiny-box"><div class="label">HP</div><div class="value">${this.player.hp}/${this.player.maxHp}</div></div>
+                <div class="tiny-box"><div class="label">Gold</div><div class="value">-${10}</div></div>
+                <div class="tiny-box"><div class="label">Rank</div><div class="value">${this.player.rank}</div></div>
+                <div class="tiny-box"><div class="label">Battle</div><div class="value">Loss</div></div>
+              </div>
+            </div>
+          `;
+          this.playTone(200, 0.18, 'sawtooth');
+        }
+
+        this.saveState();
+        this.renderHeroCard();
+        this.showScreen('result-screen');
+      }
+
+      openShop() {
+        if (!this.player) return;
+        const shopCard = document.getElementById('shop-card');
+        shopCard.innerHTML = `
+          <div class="hero-name">${this.player.name}</div>
+          <div style="color:var(--muted); text-transform:uppercase; letter-spacing:0.08em;">Current Gold</div>
+          <div style="font-size:1.6rem; color:var(--gold); margin-top:8px; font-weight:800;">${this.player.gold}</div>
+        `;
+
+        const items = [
+          { name: 'Attack Surge', cost: 25, effect: 'Increase ATK by 4', action: () => { this.player.atk += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
+          { name: 'Defense Plate', cost: 25, effect: 'Increase DEF by 4', action: () => { this.player.def += 4; this.player.gold -= 25; this.renderHub(); this.openShop(); } },
+          { name: 'Vital Brew', cost: 20, effect: 'Restore 50 HP', action: () => { this.player.heal(50); this.player.gold -= 20; this.renderHub(); this.openShop(); } }
+        ];
+
+        const shopGrid = document.getElementById('shop-grid');
+        shopGrid.innerHTML = '';
+        items.forEach(item => {
+          const el = document.createElement('div');
+          el.className = 'shop-item';
+          el.innerHTML = `
+            <div class="card-head">
+              <h3>${item.name}</h3>
+            </div>
+            <div class="card-body">
+              <div class="stats-row"><span>Cost</span><strong>${item.cost} gold</strong></div>
+              <div class="stats-row"><span>Effect</span><strong>${item.effect}</strong></div>
+              <div style="margin-top:12px; text-align:center;">
+                <button class="shop-buy ${this.player.gold >= item.cost ? '' : 'btn-secondary'}" ${this.player.gold < item.cost ? 'disabled' : ''}>Buy</button>
+              </div>
+            </div>
+          `;
+          const button = el.querySelector('button');
+          if (this.player.gold >= item.cost) {
+            button.addEventListener('click', item.action);
+          }
+          shopGrid.appendChild(el);
+        });
+
+        this.showScreen('shop-screen');
+      }
+
+      getLeaderboard() {
+        try {
+          return JSON.parse(localStorage.getItem(LEADERBOARD_KEY) || '[]');
+        } catch {
+          return [];
+        }
+      }
+
+      updateLeaderboard() {
+        if (!this.player) return;
+        const board = this.getLeaderboard();
+        const entry = { name: this.player.name, score: this.player.level * 120 + this.player.wins * 60 + this.player.gold };
+        board.push(entry);
+        const top = board.sort((a, b) => b.score - a.score).slice(0, 5);
+        localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(top));
+        this.leaderboard = top;
+        this.renderLeaderboard();
+      }
+
+      renderLeaderboard() {
+        const list = document.getElementById('leaderboard-list');
+        const leaderboard = this.leaderboard;
+        if (!leaderboard.length) {
+          list.innerHTML = '<div class="leaderboard-item"><div class="leaderboard-name">No champions yet</div></div>';
+          return;
+        }
+        list.innerHTML = leaderboard.map((entry, index) => `
+          <div class="leaderboard-item">
+            <div class="leaderboard-rank">#${index + 1}</div>
+            <div class="leaderboard-name">${entry.name}</div>
+            <div class="leaderboard-score">${entry.score}</div>
+          </div>
+        `).join('');
+      }
+
+      saveState() {
+        if (!this.player) return;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.player.toJSON()));
+        this.renderLeaderboard();
+        this.playTone(420, 0.07, 'square');
+      }
+
+      loadState(fromAction = false) {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) {
+            if (fromAction) alert('No saved game found.');
+            return;
+          }
+          const data = JSON.parse(raw);
+          this.player = Hunter.fromJSON(data);
+          this.selectedCharacter = this.player.typeKey || 'nova';
+          this.showScreen('hub-screen');
+          this.renderHub();
+          if (fromAction) {
+            alert('Game loaded successfully.');
+          }
+          this.playTone(550, 0.08, 'triangle');
+        } catch (error) {
+          console.error(error);
+          if (fromAction) alert('Unable to load save file.');
+        }
+      }
+
+      newGame() {
+        localStorage.removeItem(STORAGE_KEY);
+        this.player = null;
+        this.selectedCharacter = null;
+        document.getElementById('hunter-name').value = '';
+        document.querySelectorAll('.character-card').forEach(card => card.classList.remove('selected'));
+        this.showScreen('selection-screen');
+      }
+
+      playTone(freq, duration, type = 'sine') {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const oscillator = ctx.createOscillator();
+        const gain = ctx.createGain();
+        oscillator.type = type;
+        oscillator.frequency.value = freq;
+        gain.gain.value = 0.04;
+        oscillator.connect(gain);
+        gain.connect(ctx.destination);
+        oscillator.start();
+        oscillator.stop(ctx.currentTime + duration);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+        oscillator.onended = () => ctx.close();
+      }
+    }
+
+    const game = new Game();
+  </script>
 </body>
 </html>
