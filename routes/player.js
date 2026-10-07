@@ -1,26 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const Player = require('../models/Player');
+const { authMiddleware } = require('../middleware/auth');
 
-// Middleware to verify JWT
-const verifyToken = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    req.playerId = decoded.id;
-    next();
-  } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-};
-
-// Get player data
-router.get('/profile', verifyToken, async (req, res) => {
+// Get player profile
+router.get('/profile', authMiddleware, async (req, res) => {
   try {
     const player = await Player.findById(req.playerId).select('-password');
     if (!player) {
@@ -33,21 +17,18 @@ router.get('/profile', verifyToken, async (req, res) => {
 });
 
 // Save game progress
-router.post('/save', verifyToken, async (req, res) => {
+router.post('/save', authMiddleware, async (req, res) => {
   try {
-    const { character, progression } = req.body;
+    const { character, progression, settings } = req.body;
     const player = await Player.findById(req.playerId);
 
     if (!player) {
       return res.status(404).json({ error: 'Player not found' });
     }
 
-    if (character) {
-      player.character = { ...player.character, ...character };
-    }
-    if (progression) {
-      player.progression = { ...player.progression, ...progression };
-    }
+    if (character) player.character = { ...player.character, ...character };
+    if (progression) player.progression = { ...player.progression, ...progression };
+    if (settings) player.settings = { ...player.settings, ...settings };
 
     await player.save();
     res.json({ message: 'Progress saved successfully', player });
@@ -57,13 +38,13 @@ router.post('/save', verifyToken, async (req, res) => {
   }
 });
 
-// Get leaderboard
+// Get leaderboard (top players by rank/wins/gold)
 router.get('/leaderboard', async (req, res) => {
   try {
-    const limit = Math.min(parseInt(req.query.limit) || 50, 100);
+    const limit = Math.min(parseInt(req.query.limit) || 20, 100);
     const players = await Player.find({ 'ranking.is_banned': false })
-      .select('username character.level ranking.rank_points ranking.seasonal_wins ranking.seasonal_losses -password')
-      .sort({ 'ranking.rank_points': -1 })
+      .select('username character.name character.level character.wins character.losses character.gold ranking.rank_points -password')
+      .sort({ 'ranking.rank_points': -1, 'character.wins': -1, 'character.gold': -1 })
       .limit(limit);
 
     res.json(players);
@@ -73,7 +54,7 @@ router.get('/leaderboard', async (req, res) => {
 });
 
 // Get player statistics
-router.get('/stats', verifyToken, async (req, res) => {
+router.get('/stats', authMiddleware, async (req, res) => {
   try {
     const player = await Player.findById(req.playerId);
     if (!player) {
@@ -84,14 +65,14 @@ router.get('/stats', verifyToken, async (req, res) => {
       level: player.character.level,
       wins: player.character.wins,
       losses: player.character.losses,
-      win_rate: player.character.losses > 0 
+      win_rate: player.character.losses > 0
         ? ((player.character.wins / (player.character.wins + player.character.losses)) * 100).toFixed(2) + '%'
         : '0%',
       rank_points: player.ranking.rank_points,
-      bosses_defeated: player.character.bosses_defeated.length,
+      bosses_defeated: (player.character.bosses_defeated || []).length,
       total_damage_dealt: player.progression.total_damage_dealt,
       total_damage_taken: player.progression.total_damage_taken,
-      playtime_hours: (player.character.playtime_seconds / 3600).toFixed(2)
+      playtime_hours: ((player.character.playtime_seconds || 0) / 3600).toFixed(2)
     };
 
     res.json(stats);
@@ -101,7 +82,7 @@ router.get('/stats', verifyToken, async (req, res) => {
 });
 
 // Update character name
-router.put('/character/name', verifyToken, async (req, res) => {
+router.put('/character/name', authMiddleware, async (req, res) => {
   try {
     const { name } = req.body;
     if (!name || name.trim().length === 0) {

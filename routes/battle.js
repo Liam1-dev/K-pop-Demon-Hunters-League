@@ -1,27 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const Battle = require('../models/Battle');
 const Player = require('../models/Player');
+const { authMiddleware } = require('../middleware/auth');
 
-const verifyToken = async (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-      return res.status(401).json({ error: 'No token provided' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    req.playerId = decoded.id;
-    next();
-  } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-};
-
-// Create PvE/Boss battle
-router.post('/create-boss-battle', verifyToken, async (req, res) => {
+// Create boss battle
+router.post('/create-boss-battle', authMiddleware, async (req, res) => {
   try {
     const { boss_name, boss_archetype, map_name, boss_hp, boss_attack } = req.body;
     const player = await Player.findById(req.playerId);
@@ -38,14 +23,16 @@ router.post('/create-boss-battle', verifyToken, async (req, res) => {
         player_id: player._id,
         username: player.username,
         character_name: player.character.name,
-        initial_hp: player.character.hp
+        initial_hp: player.character.hp,
+        final_hp: player.character.hp
       },
       boss: {
         name: boss_name,
         archetype: boss_archetype,
         map: map_name,
         initial_hp: boss_hp,
-        final_hp: boss_hp
+        final_hp: boss_hp,
+        phases_reached: 1
       },
       started_at: new Date()
     });
@@ -64,7 +51,7 @@ router.post('/create-boss-battle', verifyToken, async (req, res) => {
 });
 
 // End battle and save results
-router.post('/end-battle', verifyToken, async (req, res) => {
+router.post('/end-battle', authMiddleware, async (req, res) => {
   try {
     const { battle_id, winner, rewards, final_player_hp, final_boss_hp } = req.body;
     const battle = await Battle.findOne({ battle_id });
@@ -73,37 +60,43 @@ router.post('/end-battle', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Battle not found' });
     }
 
+    const player = await Player.findById(req.playerId);
+    if (!player) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
     battle.status = 'completed';
     battle.winner = winner;
     battle.loser = winner === 'player' ? 'boss' : 'player';
     battle.rewards = rewards || {};
-    battle.player1.final_hp = final_player_hp;
+    battle.player1.final_hp = final_player_hp || player.character.hp;
     battle.boss.final_hp = final_boss_hp;
     battle.ended_at = new Date();
     battle.duration_seconds = Math.floor((battle.ended_at - battle.started_at) / 1000);
 
-    await battle.save();
-
-    // Update player stats
-    const player = await Player.findById(req.playerId);
     if (winner === 'player') {
       player.character.wins += 1;
-      player.character.gold += rewards.gold || 0;
-      player.character.add_exp = function(exp) {
-        this.character.exp += exp;
-        while (this.character.exp >= this.character.exp_to_level) {
-          this.levelUp();
+      player.character.gold += rewards?.gold || 0;
+      player.addExp(rewards?.exp || 0);
+
+      if (rewards?.loot && Array.isArray(rewards.loot)) {
+        rewards.loot.forEach((item) => player.equipItem(item));
+      }
+
+      if (battle.boss.name) {
+        if (!player.character.bosses_defeated) {
+          player.character.bosses_defeated = [];
         }
-      };
-      player.addExp(rewards.exp || 0);
-      if (rewards.loot) {
-        rewards.loot.forEach(item => player.equipItem(item));
+        if (!player.character.bosses_defeated.includes(battle.boss.name)) {
+          player.character.bosses_defeated.push(battle.boss.name);
+        }
       }
     } else {
       player.character.losses += 1;
     }
 
     await player.save();
+    await battle.save();
 
     res.json({
       message: 'Battle ended',
@@ -117,7 +110,7 @@ router.post('/end-battle', verifyToken, async (req, res) => {
 });
 
 // Get battle history
-router.get('/history', verifyToken, async (req, res) => {
+router.get('/history', authMiddleware, async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
     const battles = await Battle.find({

@@ -21,20 +21,21 @@ const battleNamespace = (io) => {
   gameIO.on('connection', (socket) => {
     console.log('✓ Player connected to battle socket:', socket.playerId);
 
+    // Join multiplayer battle room
     socket.on('join-battle', async (data) => {
       try {
         const { battle_id, username } = data;
         const existingRoom = battleRooms.get(battle_id) || { players: [] };
 
-        const secondPlayer = await Player.findById(socket.playerId);
-        if (!secondPlayer) {
+        const player = await Player.findById(socket.playerId);
+        if (!player) {
           socket.emit('error', { message: 'Player not found' });
           return;
         }
 
-        const hasPlayer = existingRoom.players.some((player) => player.id === socket.playerId);
+        const hasPlayer = existingRoom.players.some((p) => p.id === socket.playerId);
         if (!hasPlayer) {
-          existingRoom.players.push({ id: socket.playerId, username: username || secondPlayer.username });
+          existingRoom.players.push({ id: socket.playerId, username: username || player.username });
         }
 
         battleRooms.set(battle_id, existingRoom);
@@ -42,7 +43,7 @@ const battleNamespace = (io) => {
 
         gameIO.to(battle_id).emit('player-joined', {
           player_id: socket.playerId,
-          username: username || secondPlayer.username,
+          username: username || player.username,
           socket_id: socket.id,
           players: existingRoom.players
         });
@@ -51,9 +52,10 @@ const battleNamespace = (io) => {
       }
     });
 
+    // Handle battle actions
     socket.on('battle-action', (data) => {
       const { battle_id, action, target, damage, source } = data;
-      io.to(battle_id).emit('battle-update', {
+      gameIO.to(battle_id).emit('battle-update', {
         actor: source || socket.playerId,
         action,
         target,
@@ -62,6 +64,7 @@ const battleNamespace = (io) => {
       });
     });
 
+    // Send damage notification
     socket.on('send-damage', (data) => {
       const { battle_id, damage, target, animation } = data;
       gameIO.to(battle_id).emit('receive-damage', {
@@ -72,6 +75,7 @@ const battleNamespace = (io) => {
       });
     });
 
+    // Sync HP updates
     socket.on('sync-hp', (data) => {
       const { battle_id, player_hp, boss_hp } = data;
       gameIO.to(battle_id).emit('hp-sync', {
@@ -80,6 +84,7 @@ const battleNamespace = (io) => {
       });
     });
 
+    // End battle
     socket.on('battle-end', async (data) => {
       try {
         const { battle_id, winner, rewards } = data;
@@ -105,9 +110,10 @@ const battleNamespace = (io) => {
       }
     });
 
+    // Handle disconnect
     socket.on('disconnect', () => {
       for (const [battleId, room] of battleRooms.entries()) {
-        const updatedPlayers = room.players.filter((player) => player.id !== socket.playerId);
+        const updatedPlayers = room.players.filter((p) => p.id !== socket.playerId);
         if (updatedPlayers.length !== room.players.length) {
           room.players = updatedPlayers;
           battleRooms.set(battleId, room);

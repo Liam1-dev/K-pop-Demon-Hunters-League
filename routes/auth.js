@@ -10,11 +10,24 @@ const generateToken = (id) => {
   });
 };
 
-// Register
-router.post('/register', [
-  body('username').trim().isLength({ min: 3, max: 20 }),
-  body('email').isEmail(),
-  body('password').isLength({ min: 6 })
+const sanitizePlayer = (player) => ({
+  id: player._id,
+  username: player.username,
+  email: player.email,
+  character: player.character,
+  ranking: player.ranking,
+  progression: player.progression,
+  settings: player.settings,
+  lastLogin: player.lastLogin,
+  createdAt: player.createdAt,
+  updatedAt: player.updatedAt
+});
+
+// Register / Signup
+router.post(['/signup', '/register'], [
+  body('username').trim().isLength({ min: 3, max: 20 }).withMessage('Username must be 3-20 chars'),
+  body('email').isEmail().withMessage('Email is invalid'),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -22,43 +35,39 @@ router.post('/register', [
   }
 
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, character } = req.body;
 
-    // Check if user exists
-    let player = await Player.findOne({ $or: [{ username }, { email }] });
-    if (player) {
-      return res.status(400).json({ error: 'User already exists' });
+    const existingPlayer = await Player.findOne({ $or: [{ username }, { email }] });
+    if (existingPlayer) {
+      return res.status(400).json({ error: 'Username or email already exists' });
     }
 
-    // Create new player
-    player = new Player({
+    const player = new Player({
       username,
       email,
       password,
       character: {
-        name: `${username}'s Hunter`,
-        archetype: 'Beginner',
-        level: 1,
-        hp: 100,
-        max_hp: 100,
-        attack: 16,
-        defense: 5,
-        gold: 100
+        ...(character || {}),
+        name: character?.name || `${username}'s Hunter`,
+        archetype: character?.archetype || 'Beginner',
+        level: character?.level || 1,
+        hp: character?.hp || 100,
+        max_hp: character?.max_hp || 100,
+        attack: character?.attack || 16,
+        defense: character?.defense || 5,
+        gold: character?.gold || 100,
+        wins: character?.wins || 0,
+        losses: character?.losses || 0
       }
     });
 
     await player.save();
-
     const token = generateToken(player._id);
 
     res.status(201).json({
       message: 'Account created successfully',
       token,
-      player: {
-        id: player._id,
-        username: player.username,
-        character: player.character
-      }
+      player: sanitizePlayer(player)
     });
   } catch (error) {
     console.error('Registration error:', error);
@@ -68,13 +77,22 @@ router.post('/register', [
 
 // Login
 router.post('/login', [
-  body('username').trim(),
-  body('password').isLength({ min: 6 })
+  body('username').trim().notEmpty().withMessage('Username is required'),
+  body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-    const player = await Player.findOne({ username });
+    const { username, password } = req.body;
+    const loginValue = username || req.body.email;
+
+    const player = await Player.findOne({
+      $or: [{ username: loginValue }, { email: loginValue }]
+    });
+
     if (!player) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -84,7 +102,6 @@ router.post('/login', [
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Update last login
     player.lastLogin = new Date();
     await player.save();
 
@@ -93,13 +110,7 @@ router.post('/login', [
     res.json({
       message: 'Login successful',
       token,
-      player: {
-        id: player._id,
-        username: player.username,
-        character: player.character,
-        ranking: player.ranking,
-        progression: player.progression
-      }
+      player: sanitizePlayer(player)
     });
   } catch (error) {
     console.error('Login error:', error);
