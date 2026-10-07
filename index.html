@@ -32,8 +32,7 @@
       margin: 0;
       min-height: 100vh;
       font-family: Inter, "Segoe UI", Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(124,58,237,0.28), transparent 30%),
+      background: radial-gradient(circle at top, rgba(124,58,237,0.28), transparent 30%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
       color: var(--text);
       overflow-x: hidden;
@@ -57,121 +56,70 @@
 
     .screen.active { display: flex; }
 
-    /* === TITLE SCREEN === */
-    .title-screen {
+    .auth-screen, .character-select-screen {
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
       text-align: center;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,79,216,0.15), transparent 50%),
+      background: radial-gradient(circle at 50% 0%, rgba(255,79,216,0.15), transparent 50%),
         linear-gradient(135deg, rgba(9,13,29,0.95), rgba(27,18,48,0.95));
     }
 
-    .title-wrapper {
-      position: relative;
-      max-width: 900px;
+    .auth-wrapper {
+      max-width: 420px;
       width: 100%;
+      background: linear-gradient(180deg, rgba(17,24,39,0.95), rgba(35,46,69,0.95));
+      border: 1px solid rgba(255,79,216,0.55);
+      border-radius: 24px;
+      padding: 40px 30px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.45);
     }
 
-    .title-stars {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: rgba(255,255,255,0.6);
-      border-radius: 50%;
-      animation: twinkle 3s infinite ease-in-out;
-    }
-
-    .title-logo {
-      font-size: clamp(2.5rem, 7vw, 5.5rem);
+    .auth-title, .char-title {
+      font-size: 2.4rem;
       font-weight: 900;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
       color: var(--pink);
-      text-shadow: 
-        0 0 18px rgba(255, 79, 216, 0.85),
-        0 0 34px rgba(124,58,237,0.8),
-        0 0 60px rgba(103,232,249,0.4);
-      margin: 0;
-      animation: titlePulse 2.8s ease-in-out infinite;
-      z-index: 1;
-      position: relative;
+      margin: 0 0 30px;
+      text-shadow: 0 0 18px rgba(255, 79, 216, 0.85);
     }
 
-    .title-logo span {
-      display: inline-block;
-      animation: logoFloat 2s ease-in-out infinite;
+    .auth-form {
+      display: none;
     }
 
-    .title-logo span:nth-child(1) { animation-delay: 0s; }
-    .title-logo span:nth-child(2) { animation-delay: 0.1s; }
-    .title-logo span:nth-child(3) { animation-delay: 0.2s; }
-    .title-logo span:nth-child(4) { animation-delay: 0.3s; }
+    .auth-form.active { display: block; }
 
-    .title-tagline {
-      font-size: clamp(0.8rem, 1.2vw, 1.1rem);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      opacity: 0.85;
-      margin-top: 12px;
-      animation: fadeInUp 1.2s ease-out 0.5s both;
+    .form-group {
+      margin-bottom: 18px;
+      text-align: left;
     }
 
-    .title-features {
-      margin-top: 32px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 18px;
-      padding: 0 20px;
-      animation: fadeInUp 1.2s ease-out 0.8s both;
-    }
-
-    .feature-card {
-      background: rgba(255,79,216,0.08);
-      border: 1px solid rgba(255,79,216,0.25);
-      border-radius: 14px;
-      padding: 16px 14px;
-      backdrop-filter: blur(8px);
-      transition: all 0.35s ease;
-    }
-
-    .feature-card:hover {
-      background: rgba(255,79,216,0.15);
-      border-color: rgba(255,79,216,0.45);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(255,79,216,0.12);
-    }
-
-    .feature-icon {
-      font-size: 2.2rem;
-      margin-bottom: 8px;
-    }
-
-    .feature-title {
-      font-size: 0.85rem;
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--pink);
+      color: var(--cyan);
+      margin-bottom: 8px;
     }
 
-    .title-controls {
-      margin-top: 48px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 14px;
-      animation: fadeInUp 1.2s ease-out 1.1s both;
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(255,79,216,0.3);
+      border-radius: 10px;
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(255,79,216,0.8);
+      box-shadow: 0 0 12px rgba(255,79,216,0.3);
     }
 
     .btn {
@@ -188,6 +136,7 @@
       cursor: pointer;
       box-shadow: 0 12px 24px rgba(124, 58, 237, 0.3);
       transition: all 0.3s ease;
+      width: 100%;
       position: relative;
       overflow: hidden;
     }
@@ -204,14 +153,11 @@
     }
 
     .btn:hover::before { left: 100%; }
-
     .btn:hover {
       transform: translateY(-2px);
       filter: brightness(1.12);
       box-shadow: 0 16px 32px rgba(124, 58, 237, 0.4);
     }
-
-    .btn:active { transform: translateY(0); }
 
     .btn.secondary {
       background: linear-gradient(135deg, #475569, #1e293b);
@@ -224,7 +170,88 @@
       box-shadow: 0 12px 24px rgba(251, 191, 36, 0.25);
     }
 
-    /* === GAME SCREEN === */
+    .auth-toggle {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .auth-toggle a {
+      color: var(--cyan);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .char-select-container {
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .character-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .character-card {
+      background: linear-gradient(180deg, rgba(124,58,237,0.12), rgba(15,23,42,0.8));
+      border: 2px solid rgba(255,79,216,0.25);
+      border-radius: 16px;
+      padding: 22px 16px;
+      cursor: pointer;
+      transition: all 0.35s ease;
+    }
+
+    .character-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(255,79,216,0.6);
+      box-shadow: 0 20px 40px rgba(255,79,216,0.2);
+    }
+
+    .character-card.selected {
+      border-color: rgba(255,79,216,0.8);
+      background: rgba(255,79,216,0.15);
+      box-shadow: 0 0 18px rgba(255,79,216,0.26);
+    }
+
+    .character-emoji {
+      font-size: 4rem;
+      margin-bottom: 12px;
+    }
+
+    .character-name {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--pink);
+      margin-bottom: 12px;
+    }
+
+    .character-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .char-selected-info {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      color: var(--cyan);
+    }
+
+    .char-select-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
     .game-screen {
       flex-direction: column;
       position: relative;
@@ -299,16 +326,12 @@
       padding: 18px;
     }
 
-    .hud {
-      display: grid;
-      gap: 16px;
-    }
-
     .hero-card {
       background: linear-gradient(180deg, rgba(124,58,237,0.12), rgba(15,23,42,0.8));
       border: 1px solid rgba(255,79,216,0.4);
       border-radius: 16px;
       padding: 18px;
+      margin-bottom: 16px;
     }
 
     .hero-name {
@@ -347,148 +370,12 @@
       color: var(--cyan);
     }
 
-    .update-box {
-      background: rgba(103, 232, 249, 0.06);
-      border: 1px solid rgba(103, 232, 249, 0.28);
-      border-radius: 14px;
-      padding: 14px 16px;
-    }
-
-    .update-list {
-      margin: 12px 0 0;
-      padding-left: 22px;
-      color: var(--text);
-      line-height: 1.8;
-    }
-
-    .update-list li::marker { color: var(--green); }
-
-    .inventory-box {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .weapon-grid {
-      margin-top: 14px;
-      display: grid;
-      gap: 12px;
-      max-height: 260px;
-      overflow-y: auto;
-    }
-
-    .weapon-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px 12px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.06);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .weapon-item::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .weapon-item.common::before { background: linear-gradient(90deg, transparent, var(--common), transparent); }
-    .weapon-item.rare::before { background: linear-gradient(90deg, transparent, var(--rare), transparent); }
-    .weapon-item.epic::before { background: linear-gradient(90deg, transparent, var(--epic), transparent); }
-    .weapon-item.legendary::before { background: linear-gradient(90deg, transparent, var(--legendary), transparent); }
-
-    .weapon-item:hover {
-      background: rgba(255,79,216,0.08);
-      border-color: rgba(255,79,216,0.3);
-      transform: translateX(4px);
-    }
-
-    .weapon-item:hover::before { opacity: 1; }
-
-    .weapon-emoji {
-      display: grid;
-      place-items: center;
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      font-size: 1.5rem;
-    }
-
-    .weapon-item.common .weapon-emoji { background: rgba(184,194,204,0.12); }
-    .weapon-item.rare .weapon-emoji { background: rgba(96,165,250,0.12); }
-    .weapon-item.epic .weapon-emoji { background: rgba(192,132,252,0.12); }
-    .weapon-item.legendary .weapon-emoji { background: rgba(251,191,36,0.12); }
-
-    .weapon-name {
-      font-weight: 800;
-      font-size: 0.95rem;
-    }
-
-    .rarity {
-      display: inline-block;
-      font-size: 0.58rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-weight: 800;
-      margin-top: 4px;
-    }
-
-    .rarity.common { background: rgba(184,194,204,0.2); color: var(--common); border: 1px solid rgba(184,194,204,0.35); }
-    .rarity.rare { background: rgba(96,165,250,0.2); color: var(--rare); border: 1px solid rgba(96,165,250,0.35); }
-    .rarity.epic { background: rgba(192,132,252,0.2); color: var(--epic); border: 1px solid rgba(192,132,252,0.35); }
-    .rarity.legendary { background: rgba(251,191,36,0.2); color: var(--legendary); border: 1px solid rgba(251,191,36,0.35); }
-
-    .weapon-stat {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .weapon-upgrade-btn {
-      appearance: none;
-      border: none;
-      background: linear-gradient(135deg, rgba(52,211,153,0.8), rgba(16,185,129,0.6));
-      color: white;
-      font-weight: 800;
-      font-size: 0.7rem;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      letter-spacing: 0.06em;
-    }
-
-    .weapon-upgrade-btn:hover {
-      background: linear-gradient(135deg, rgba(52,211,153,1), rgba(16,185,129,0.8));
-      transform: scale(1.06);
-    }
-
-    .weapon-upgrade-btn:active { transform: scale(0.98); }
-
-    .weapon-upgrade-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
     .cutscene-box {
       background: rgba(255,255,255,0.02);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 14px;
       padding: 14px;
+      margin-bottom: 16px;
     }
 
     .cutscene-preview {
@@ -523,14 +410,8 @@
       margin-top: 14px;
     }
 
-    .scene-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
     .tag-pill {
+      display: inline-block;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
       color: var(--text);
@@ -541,7 +422,6 @@
       text-transform: uppercase;
     }
 
-    /* === MODAL / CUTSCENE SCREEN === */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -592,12 +472,6 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 0.8rem;
-      transition: all 0.2s ease;
-    }
-
-    .modal-close-btn:hover {
-      background: rgba(255,79,216,0.3);
-      transform: scale(1.05);
     }
 
     .scene-text {
@@ -607,14 +481,12 @@
       line-height: 1.9;
     }
 
-    /* === BATTLE SCREEN === */
     .battle-screen {
       flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(251,113,133,0.2), transparent 50%),
+      background: radial-gradient(circle at 50% 30%, rgba(251,113,133,0.2), transparent 50%),
         linear-gradient(135deg, rgba(9,13,29,0.98), rgba(27,18,48,0.98));
       animation: fadeIn 0.6s ease;
     }
@@ -657,6 +529,7 @@
     .hp-display {
       text-align: center;
       width: 100%;
+      position: relative;
     }
 
     .hp-bar {
@@ -724,41 +597,27 @@
       transition: all 0.2s ease;
     }
 
-    .action-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 24px rgba(124, 58, 237, 0.45);
+    .action-btn:hover { transform: translateY(-3px); }
+    .action-btn.secondary { background: linear-gradient(135deg, #475569, #1e293b); }
+
+    .boss-phase-indicator {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(251,191,36,0.2);
+      border: 2px solid rgba(251,191,36,0.8);
+      color: var(--gold);
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 900;
+      font-size: 1.2rem;
+      animation: phaseGlow 1s ease-in-out infinite;
+      z-index: 5;
     }
 
-    .action-btn:active { transform: translateY(-1px); }
-
-    .action-btn.secondary {
-      background: linear-gradient(135deg, #475569, #1e293b);
-    }
-
-    /* === ANIMATIONS === */
     @keyframes pulseGlow {
       0% { text-shadow: 0 0 12px rgba(255,79,216,0.8), 0 0 20px rgba(124,58,237,0.75); }
       100% { text-shadow: 0 0 22px rgba(255,79,216,1), 0 0 42px rgba(124,58,237,1), 0 0 60px rgba(103,232,249,0.7); }
-    }
-
-    @keyframes titlePulse {
-      0%, 100% { opacity: 0.85; text-shadow: 0 0 18px rgba(255, 79, 216, 0.85), 0 0 34px rgba(124,58,237,0.8), 0 0 60px rgba(103,232,249,0.4); }
-      50% { opacity: 1; text-shadow: 0 0 28px rgba(255, 79, 216, 1), 0 0 50px rgba(124,58,237,1), 0 0 80px rgba(103,232,249,0.6); }
-    }
-
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     @keyframes fadeIn {
@@ -767,14 +626,8 @@
     }
 
     @keyframes slideUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     @keyframes bossBeat {
@@ -797,6 +650,16 @@
       50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
     }
 
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-80px); }
+    }
+
+    @keyframes phaseGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.5); }
+      50% { box-shadow: 0 0 20px rgba(251,191,36,0.9); }
+    }
+
     @media (max-width: 900px) {
       .layout { grid-template-columns: 1fr; }
       .battle-container { grid-template-columns: 1fr; gap: 20px; }
@@ -806,53 +669,63 @@
     @media (max-width: 580px) {
       .topbar { flex-direction: column; align-items: flex-start; }
       .stats-grid { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
-      .title-features { grid-template-columns: 1fr; }
-      .title-controls { flex-direction: column; width: 100%; }
-      .btn { width: 100%; }
+      .character-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <!-- TITLE SCREEN -->
-  <section id="titleScreen" class="screen active title-screen">
-    <div class="title-wrapper">
-      <div class="title-stars" id="titleStars"></div>
-      <h1 class="title-logo">
-        <span>K</span><span>-</span><span>P</span><span>O</span><span>P</span>
-      </h1>
-      <h2 class="title-logo" style="font-size: clamp(2rem, 6vw, 5rem);">
-        <span>D</span><span>E</span><span>M</span><span>O</span><span>N</span>
-        <span style="margin: 0 8px;">H</span><span>U</span><span>N</span><span>T</span><span>E</span><span>R</span><span>S</span>
-      </h2>
-      <div class="title-tagline">Cinematic Arcade RPG</div>
+  <section id="authScreen" class="screen auth-screen active">
+    <div class="auth-wrapper">
+      <h1 class="auth-title">🎮 K-pop Hunters</h1>
 
-      <div class="title-features">
-        <div class="feature-card">
-          <div class="feature-icon">🎬</div>
-          <div class="feature-title">Animated Title</div>
+      <div id="loginForm" class="auth-form active">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="loginUsername" class="form-input" placeholder="Enter username" />
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎭</div>
-          <div class="feature-title">Boss Cutscenes</div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" placeholder="Enter password" />
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">🎮</div>
-          <div class="feature-title">Battle System</div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">⚔️</div>
-          <div class="feature-title">Rarity System</div>
-        </div>
+        <button id="loginSubmitBtn" class="btn">Sign In</button>
+        <div class="auth-toggle">No account? <a id="registerBtn">Create one</a></div>
       </div>
 
-      <div class="title-controls">
-        <button id="enterBtn" class="btn">Enter League</button>
-        <button id="howBtn" class="btn secondary">How to Play</button>
+      <div id="registerForm" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="regUsername" class="form-input" placeholder="Choose username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="regEmail" class="form-input" placeholder="Enter email" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="regPassword" class="form-input" placeholder="Create password" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" id="regConfirmPassword" class="form-input" placeholder="Confirm password" />
+        </div>
+        <button id="registerSubmitBtn" class="btn">Create Account</button>
+        <div class="auth-toggle">Already have account? <a id="toggleAuthBtn">Sign In</a></div>
       </div>
     </div>
   </section>
 
-  <!-- GAME SCREEN -->
+  <section id="characterSelectScreen" class="screen character-select-screen">
+    <div class="char-select-container">
+      <h1 class="char-title">Choose Your Demon Hunter</h1>
+      <div id="characterGrid" class="character-grid"></div>
+      <div class="char-selected-info">Selected: <span id="selectedCharacterName" style="color: var(--pink);">None</span></div>
+      <div class="char-select-actions">
+        <button id="confirmCharacterBtn" class="btn">Confirm Selection</button>
+        <button id="enterGameBtn" class="btn secondary">Back to Login</button>
+      </div>
+    </div>
+  </section>
+
   <section id="gameScreen" class="screen game-screen">
     <div class="app">
       <div class="topbar">
@@ -864,48 +737,46 @@
         <div class="panel left-panel">
           <div class="section-title">
             <span>Hunter Status</span>
-            <button class="btn secondary" id="playCutsceneBtn" style="padding: 8px 14px; font-size: 0.75rem;">View Cutscene</button>
+            <button class="btn secondary" id="playCutsceneBtn" style="padding: 8px 14px; font-size: 0.75rem; width: auto;">Cutscene</button>
           </div>
 
-          <div class="hud">
-            <div class="hero-card">
-              <div class="hero-name">Nova Bloom</div>
-              <div class="tag" style="margin-bottom: 4px;">Elite Tracker</div>
-              <div class="stats-grid">
-                <div class="stat-box">
-                  <div class="stat-label">Level</div>
-                  <div class="stat-value">12</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-label">HP</div>
-                  <div class="stat-value">980</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-label">ATK</div>
-                  <div class="stat-value">82</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-label">DEF</div>
-                  <div class="stat-value">42</div>
-                </div>
+          <div class="hero-card">
+            <div class="hero-name" id="hunterNameDisplay">Hunter Name</div>
+            <div class="tag" id="characterArchetype" style="margin-bottom: 4px;">Archetype</div>
+            <div class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-label">Level</div>
+                <div class="stat-value" id="levelDisplay">1</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">HP</div>
+                <div class="stat-value" id="hpDisplay">100</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">ATK</div>
+                <div class="stat-value" id="attackDisplay">16</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">DEF</div>
+                <div class="stat-value" id="defenseDisplay">5</div>
               </div>
             </div>
+          </div>
 
-            <div class="update-box">
-              <div class="section-title" style="margin-bottom: 0;"><span>Latest Features</span></div>
-              <ul class="update-list">
-                <li>Full animated title screen with intro</li>
-                <li>Boss cutscenes with story moments</li>
-                <li>Rarity system for weapons</li>
-                <li>Clickable weapon upgrades</li>
-              </ul>
-            </div>
-
-            <div class="inventory-box">
-              <div class="section-title"><span>Inventory</span></div>
-              <div class="weapon-grid" id="weaponGrid">
-                <!-- Weapons populated by JS -->
+          <div class="cutscene-box">
+            <div class="section-title"><span>Gold & Rank</span></div>
+            <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+              <div class="stat-box">
+                <div class="stat-label">Gold</div>
+                <div class="stat-value" id="goldDisplay">100</div>
               </div>
+              <div class="stat-box">
+                <div class="stat-label">Rank</div>
+                <div class="stat-value" id="rankDisplay">1</div>
+              </div>
+            </div>
+            <div style="margin-top: 12px; color: var(--muted); font-size: 0.9rem;">
+              Record: <span id="recordDisplay">0W - 0L</span>
             </div>
           </div>
         </div>
@@ -919,27 +790,19 @@
               <div class="boss-portrait">👹</div>
             </div>
             <div class="cutscene-text">
-              The Demon Sovereign emerges. A cinematic cutscene sets the stage before the final clash begins.
+              Face powerful demon bosses and prove your strength in combat. Each victory brings greater rewards and challenges.
             </div>
           </div>
 
           <div class="controls">
             <button class="btn gold" id="startBattleBtn">⚔️ Battle Boss</button>
-            <button class="btn secondary" id="viewRarityBtn">View Rarities</button>
-          </div>
-
-          <div class="scene-tags" style="margin-top: 18px;">
-            <span class="tag-pill">Start Menu</span>
-            <span class="tag-pill">Intro Animation</span>
-            <span class="tag-pill">Boss Cutscenes</span>
-            <span class="tag-pill">Weapon Rarity</span>
+            <button class="btn secondary" id="viewStatsBtn" style="width: auto;">View Stats</button>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CUTSCENE MODAL -->
   <div id="cutsceneModal" class="modal-overlay">
     <div class="modal-card">
       <div class="modal-head">
@@ -950,9 +813,9 @@
         <div class="boss-portrait">👹</div>
       </div>
       <p class="scene-text">
-        The moon cracks over the skyline as the Demon Sovereign rises behind a wall of shattered light. The city trembles under the sound of thunder and a chorus of battle drums. Your hunter steps forward, weapon ready, eyes locked on the enemy. The next chapter begins now.
+        The moon cracks over the skyline as the Demon Sovereign rises behind a wall of shattered light. The city trembles under the sound of thunder and a chorus of battle drums. Your hunter steps forward, ready for the ultimate confrontation...
       </p>
-      <div class="scene-tags">
+      <div style="display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap;">
         <span class="tag-pill">Threat Level: Apex</span>
         <span class="tag-pill">Arena: Celestial Rift</span>
         <span class="tag-pill">Objective: Defeat the boss</span>
@@ -960,242 +823,42 @@
     </div>
   </div>
 
-  <!-- BATTLE SCREEN -->
   <section id="battleScreen" class="screen battle-screen">
+    <div id="phaseIndicator" class="boss-phase-indicator" style="display: none;">PHASE <span id="phaseNumber">1</span></div>
     <div class="battle-container">
       <div class="combatant player">
-        <div class="combatant-name">Nova Bloom</div>
+        <div id="playerNameLabel" class="combatant-name">Your Hunter</div>
         <div class="combatant-portrait">🦊</div>
         <div class="hp-display">
           <div class="hp-bar">
-            <div class="hp-fill" id="playerHpFill" style="width: 100%;"></div>
+            <div id="playerHpFill" class="hp-fill" style="width: 100%;"></div>
           </div>
-          <div class="hp-text" id="playerHpText">980 / 980 HP</div>
+          <div id="playerHpText" class="hp-text">100 / 100 HP</div>
         </div>
       </div>
 
       <div class="vs-text">VS</div>
 
       <div class="combatant enemy">
-        <div class="combatant-name">Demon Sovereign</div>
-        <div class="combatant-portrait enemy">👹</div>
+        <div id="bossNameLabel" class="combatant-name">Demon Boss</div>
+        <div id="bossPortrait" class="combatant-portrait enemy">👹</div>
         <div class="hp-display">
           <div class="hp-bar">
-            <div class="hp-fill" id="bossHpFill" style="width: 100%;"></div>
+            <div id="bossHpFill" class="hp-fill" style="width: 100%;"></div>
           </div>
-          <div class="hp-text" id="bossHpText">1500 / 1500 HP</div>
+          <div id="bossHpText" class="hp-text">250 / 250 HP</div>
         </div>
       </div>
 
       <div class="battle-actions">
-        <button class="action-btn" id="attackBtn">Attack</button>
-        <button class="action-btn" id="skillBtn">Skill</button>
-        <button class="action-btn secondary" id="defendBtn">Defend</button>
-        <button class="action-btn secondary" id="retreatBtn">Retreat</button>
+        <button id="attackBtn" class="action-btn">⚔️ Attack</button>
+        <button id="skillBtn" class="action-btn">✨ Skill</button>
+        <button id="defendBtn" class="action-btn secondary">🛡️ Defend</button>
+        <button id="retreatBtn" class="action-btn secondary">↪️ Retreat</button>
       </div>
     </div>
   </section>
 
-  <script>
-    // ========== TITLE SCREEN SETUP ==========
-    function createStars() {
-      const container = document.getElementById('titleStars');
-      for (let i = 0; i < 50; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.left = Math.random() * 100 + '%';
-        star.style.top = Math.random() * 100 + '%';
-        star.style.animationDelay = Math.random() * 3 + 's';
-        container.appendChild(star);
-      }
-    }
-    createStars();
-
-    // ========== WEAPON DATABASE ==========
-    const weapons = [
-      { id: 1, name: 'Moonblade', emoji: '🗡️', atk: 26, rarity: 'rare', cost: 120 },
-      { id: 2, name: 'Pulse Fang', emoji: '⚡', atk: 42, rarity: 'epic', cost: 200 },
-      { id: 3, name: 'Eclipse Relic', emoji: '🌙', atk: 68, rarity: 'legendary', cost: 450 },
-      { id: 4, name: 'Shadow Dagger', emoji: '🔪', atk: 15, rarity: 'common', cost: 45 },
-      { id: 5, name: 'Inferno Blade', emoji: '🔥', atk: 55, rarity: 'epic', cost: 280 },
-    ];
-
-    let playerGold = 1200;
-    let equippedWeapon = null;
-
-    // ========== RENDER WEAPON GRID ==========
-    function renderWeapons() {
-      const grid = document.getElementById('weaponGrid');
-      grid.innerHTML = '';
-
-      weapons.forEach(weapon => {
-        const item = document.createElement('div');
-        item.className = `weapon-item ${weapon.rarity}`;
-        item.innerHTML = `
-          <div class="weapon-emoji">${weapon.emoji}</div>
-          <div>
-            <div class="weapon-name">${weapon.name}</div>
-            <span class="rarity ${weapon.rarity}">${weapon.rarity.toUpperCase()}</span>
-          </div>
-          <div class="weapon-stat">+${weapon.atk} ATK</div>
-          <button class="weapon-upgrade-btn" data-weapon-id="${weapon.id}" data-cost="${weapon.cost}">
-            ${weapon.cost}💰
-          </button>
-        `;
-
-        const btn = item.querySelector('.weapon-upgrade-btn');
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          upgradeWeapon(weapon);
-        });
-
-        item.addEventListener('click', () => {
-          equipWeapon(weapon);
-        });
-
-        grid.appendChild(item);
-      });
-    }
-
-    function upgradeWeapon(weapon) {
-      if (playerGold >= weapon.cost) {
-        playerGold -= weapon.cost;
-        alert(`🎉 Upgraded to ${weapon.name}! Gold remaining: ${playerGold}`);
-        renderWeapons();
-      } else {
-        alert(`❌ Not enough gold! Need ${weapon.cost - playerGold} more.`);
-      }
-    }
-
-    function equipWeapon(weapon) {
-      equippedWeapon = weapon;
-      document.querySelectorAll('.weapon-item').forEach(item => {
-        item.style.background = 'rgba(255,255,255,0.025)';
-      });
-      event.currentTarget.style.background = 'rgba(52, 211, 153, 0.15)';
-      event.currentTarget.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-      alert(`✅ Equipped: ${weapon.name} (+${weapon.atk} ATK)`);
-    }
-
-    // ========== SCREEN NAVIGATION ==========
-    function showScreen(screenId) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screenId).classList.add('active');
-    }
-
-    document.getElementById('enterBtn').addEventListener('click', () => {
-      showScreen('gameScreen');
-      renderWeapons();
-    });
-
-    document.getElementById('backToTitle').addEventListener('click', () => {
-      showScreen('titleScreen');
-    });
-
-    document.getElementById('howBtn').addEventListener('click', () => {
-      alert('🎮 How to Play:\n\n1. Enter the League\n2. View your weapons and upgrade them with gold\n3. Equip weapons by clicking them\n4. Watch boss cutscenes for story\n5. Battle the boss to save the city!\n\nEach weapon has a rarity (Common → Rare → Epic → Legendary)');
-    });
-
-    // ========== CUTSCENE MODAL ==========
-    const cutsceneModal = document.getElementById('cutsceneModal');
-    const playCutsceneBtn = document.getElementById('playCutsceneBtn');
-    const closeCutsceneBtn = document.getElementById('closeCutsceneBtn');
-
-    playCutsceneBtn.addEventListener('click', () => {
-      cutsceneModal.classList.add('active');
-    });
-
-    closeCutsceneBtn.addEventListener('click', () => {
-      cutsceneModal.classList.remove('active');
-    });
-
-    document.getElementById('viewRarityBtn').addEventListener('click', () => {
-      cutsceneModal.classList.add('active');
-    });
-
-    cutsceneModal.addEventListener('click', (e) => {
-      if (e.target === cutsceneModal) cutsceneModal.classList.remove('active');
-    });
-
-    // ========== BATTLE SCREEN ==========
-    let playerHp = 980;
-    let bossHp = 1500;
-    const maxPlayerHp = 980;
-    const maxBossHp = 1500;
-
-    function updateHpBars() {
-      document.getElementById('playerHpFill').style.width = (playerHp / maxPlayerHp) * 100 + '%';
-      document.getElementById('bossHpFill').style.width = (bossHp / maxBossHp) * 100 + '%';
-      document.getElementById('playerHpText').textContent = `${Math.max(0, playerHp)} / ${maxPlayerHp} HP`;
-      document.getElementById('bossHpText').textContent = `${Math.max(0, bossHp)} / ${maxBossHp} HP`;
-    }
-
-    document.getElementById('startBattleBtn').addEventListener('click', () => {
-      cutsceneModal.classList.remove('active');
-      setTimeout(() => {
-        playerHp = maxPlayerHp;
-        bossHp = maxBossHp;
-        updateHpBars();
-        showScreen('battleScreen');
-      }, 300);
-    });
-
-    document.getElementById('attackBtn').addEventListener('click', () => {
-      const damage = equippedWeapon ? equippedWeapon.atk + Math.floor(Math.random() * 20) : 30;
-      bossHp -= damage;
-      alert(`🎯 Nova attacks for ${damage} damage!`);
-      if (bossHp <= 0) {
-        alert('🏆 VICTORY! You defeated the Demon Sovereign!');
-        showScreen('gameScreen');
-      } else {
-        updateHpBars();
-        bossTurn();
-      }
-    });
-
-    document.getElementById('skillBtn').addEventListener('click', () => {
-      const skillDmg = (equippedWeapon ? equippedWeapon.atk : 40) * 1.5;
-      bossHp -= skillDmg;
-      alert(`⚡ Pulse Burst hits for ${Math.round(skillDmg)} damage!`);
-      if (bossHp <= 0) {
-        alert('🏆 VICTORY! You defeated the Demon Sovereign!');
-        showScreen('gameScreen');
-      } else {
-        updateHpBars();
-        bossTurn();
-      }
-    });
-
-    document.getElementById('defendBtn').addEventListener('click', () => {
-      alert('🛡️ You brace for impact!');
-      const bossDamage = Math.floor(Math.random() * 30) + 10;
-      playerHp -= Math.max(1, bossDamage / 2);
-      if (playerHp <= 0) {
-        alert('💀 You were defeated...');
-        showScreen('gameScreen');
-      } else {
-        updateHpBars();
-      }
-    });
-
-    document.getElementById('retreatBtn').addEventListener('click', () => {
-      alert('🏃 You retreated from battle!');
-      showScreen('gameScreen');
-    });
-
-    function bossTurn() {
-      setTimeout(() => {
-        const bossDamage = Math.floor(Math.random() * 80) + 40;
-        playerHp -= bossDamage;
-        alert(`👹 Demon Sovereign attacks for ${bossDamage} damage!`);
-        if (playerHp <= 0) {
-          alert('💀 You were defeated...');
-          showScreen('gameScreen');
-        } else {
-          updateHpBars();
-        }
-      }, 500);
-    }
-  </script>
+  <script src="./public/game-client.js"></script>
 </body>
 </html>
