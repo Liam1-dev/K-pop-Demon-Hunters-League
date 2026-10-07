@@ -67,20 +67,6 @@ This is a personal solo project created for educational and entertainment purpos
 *Join the hunt. Become a legend.* 👹⚔️
 
 
-## Motivation:
-It shall be used to create a PVP game like League of legends for k-pop demon hunters.
-
-## Quick Start 
-
-Players can create a profile and do the tutorial for basic controls and choose a main character.
-Players will earn Gold coins to buy characters like Rumi and Jinu.
-
-## 📖 Usage
-
-Create a profile and choose a character for the tutorial. Do not use your real name.
-Earn coins to buy equipment and other characters. Play ranked to be placed in the ladder and
-compete to be the Number 1 player.
-
 
 ## 🤝 Contributing
 
