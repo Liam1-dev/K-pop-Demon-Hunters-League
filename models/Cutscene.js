@@ -12,7 +12,7 @@ const cutsceneSchema = new mongoose.Schema({
   },
   trigger: {
     type: String,
-    enum: ['intro', 'boss_encounter', 'victory', 'defeat', 'milestone', 'story'],
+    enum: ['intro', 'boss_encounter', 'victory', 'defeat', 'milestone', 'pvp_start', 'story'],
     required: true
   },
   related_boss: String,
@@ -26,12 +26,12 @@ const cutsceneSchema = new mongoose.Schema({
         enum: ['dialogue', 'narration', 'cinematic'],
         required: true
       },
-      character: String, // "Narrator", "Boss Name", etc
+      character: String,
       character_emoji: String,
       text: String,
       duration_seconds: { type: Number, default: 4 },
       background_image: String,
-      animation: String // fade, slide, zoom, etc
+      animation: String
     }
   ],
   

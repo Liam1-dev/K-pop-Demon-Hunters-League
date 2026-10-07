@@ -1,74 +1,268 @@
-# K-pop Demon Hunters League 🎮👹
-<p align="center">
-  <img src="https://api.boot.dev/v1/users/public/c89eda0d-f616-4ed8-95fe-884cac074e92/thumbnail" >
-</p>
+# K-pop Demon Hunters League - Online RPG
 
-A thrilling PVP game inspired by League of Legends, featuring K-pop demon hunters competing for glory and legendary status!
+A full-stack browser-based multiplayer RPG featuring character selection, boss battles, PvP matchmaking, cutscene storytelling, and a global leaderboard.
 
-## 📖 About
+## 🎮 Features
 
-K-pop Demon Hunters League is a competitive player-versus-player game where you create your own hunter profile, master unique characters, and climb the ranked ladder to become the ultimate Number 1 player. Earn Gold coins, unlock powerful characters like Rumi and Jinu, and dominate the battlefield with strategic gameplay.
+- **Account System**: Secure JWT-based authentication
+- **Character Selection**: 4 unique hunters with different stats
+- **Boss Encounters**: 4 powerful bosses with multi-phase battles
+- **Damage Animations**: Floating numbers, screen shake, visual feedback
+- **Boss AI**: Adaptive difficulty based on health phases
+- **PvP Matchmaking**: Real-time queue-based player matching
+- **Cutscene System**: Story-driven narrative sequences
+- **Cloud Save/Load**: Automatic progression synchronization
+- **Global Leaderboard**: Ranked ladder with tier system
+- **Player Profiles**: Public profiles with battle history
 
 ## 🚀 Quick Start
 
-1. **Create a Profile** - Sign up and choose a unique hunter name (no real names, please!)
-2. **Complete the Tutorial** - Learn basic controls and master the fundamentals
-3. **Choose Your Main Character** - Select your primary demon hunter to start your journey
-4. **Earn Gold Coins** - Win battles and complete challenges to accumulate wealth
-5. **Upgrade & Expand** - Purchase new characters, equipment, and abilities
-6. **Climb the Ranked Ladder** - Compete against other players and secure your spot as the champion
+### Prerequisites
+- Node.js 16+
+- MongoDB 4.4+
+- Docker & Docker Compose (optional)
 
-## 🎯 Features
+### Local Development
 
-- **Character Selection** - Play as iconic K-pop demon hunter characters
-- **Gold Coin Economy** - Earn, spend, and manage your in-game currency
-- **Equipment & Upgrades** - Customize your hunter with powerful gear
-- **Ranked Matchmaking** - Compete in ranked mode and climb the global ladder
-- **PVP Combat** - Battle other players in real-time tactical gameplay
-- **Character Progression** - Level up and unlock new abilities
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## 💻 Tech Stack
+2. **Setup environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your MongoDB URI and JWT secret
+   ```
 
-- **Python** - 93.9% (Core game logic & server backend)
-- **JavaScript** - 1.7% (Web interface & client-side features)
-- **C** - 4.4% (Performance-critical game systems & base code)
+3. **Start MongoDB**
+   ```bash
+   # Using Docker
+   docker-compose up -d mongodb
+   
+   # Or with local MongoDB
+   mongod
+   ```
 
-## 🤝 Contributing
+4. **Seed database with cutscenes**
+   ```bash
+   node seeds/cutscenes.js
+   ```
 
-We're looking for passionate developers and dedicated testers to help bring the K-pop Demon Hunters League to life!
+5. **Start server**
+   ```bash
+   npm start
+   # Or with auto-reload
+   npm run dev
+   ```
 
-### How You Can Help:
-- **Developers** - Contribute code, fix bugs, or implement new features
-- **Testers** - Report bugs, glitches, and balance issues
-- **Ideas** - Suggest game mechanics, characters, or features
+6. **Open browser**
+   ```
+   http://localhost:3000
+   ```
 
-To get involved, contact me directly to discuss how you can contribute.
+## 🐳 Docker Deployment
 
-### Support This Project
-⭐ **Star this repository** to show your support and help others discover this project!
+```bash
+# Build and start all services
+docker-compose up -d
 
-## 📋 Roadmap
+# View logs
+docker-compose logs -f backend
 
-- [ ] Complete core gameplay mechanics
-- [ ] Implement full ranked ladder system
-- [ ] Add additional playable characters
-- [ ] Balance PVP mechanics
-- [ ] Launch beta testing phase
-- [ ] Community feedback integration
+# Stop services
+docker-compose down
+```
+
+## 📁 Project Structure
+
+```
+.
+├── server.js                 # Main Express server
+├── models/                   # MongoDB schemas
+│   ├── Player.js
+│   ├── Battle.js
+│   ├── Cutscene.js
+│   ├── Leaderboard.js
+│   └── ...
+├── routes/                   # API endpoints
+│   ├── auth.js              # Login/Register
+│   ├── player.js            # Character & stats
+│   ├── battle.js            # Battle creation
+│   ├── leaderboard.js       # Rankings
+│   ├── cutscenes.js         # Story sequences
+│   └── profile.js           # Player profiles
+├── sockets/                 # WebSocket handlers
+│   ├── battleSocket.js      # Boss battle sync
+│   ├── matchmakingSocket.js # PvP queue
+│   └── pvpBattleSocket.js   # Player vs Player
+├── AI/                      # Boss AI
+│   └── bossAI.js
+├── public/                  # Frontend
+│   └── game-client.js
+├── seeds/                   # Database seeding
+│   └── cutscenes.js
+├── index.html               # Main game page
+└── docker-compose.yml       # Containerization
+```
+
+## 🎮 Game Flow
+
+1. **Auth Screen** → Register or Login
+2. **Character Select** → Choose hunter archetype
+3. **Game Hub** → View stats, access features
+4. **Battle Modes**:
+   - PvE: Fight bosses with AI
+   - PvP: Queue for multiplayer matches
+5. **Progression** → Level up, earn rank points
+6. **Leaderboard** → Climb global rankings
+
+## 🔌 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Create account
+- `POST /api/auth/login` - Sign in
+- `GET /api/auth/verify` - Check token
+
+### Player
+- `GET /api/player/profile` - Get player data
+- `POST /api/player/save` - Save progress
+- `GET /api/player/stats` - View statistics
+
+### Battle
+- `POST /api/battle/create-boss-battle` - Start boss encounter
+- `POST /api/battle/end-battle` - Finish and save results
+- `GET /api/battle/history` - Battle log
+
+### Leaderboard
+- `GET /api/leaderboard/global` - Top players
+- `GET /api/leaderboard/player-stats` - Personal ranking
+- `GET /api/leaderboard/rank/:username` - Player rank
+
+### Cutscenes
+- `GET /api/cutscenes` - All cutscenes
+- `GET /api/cutscenes/by-trigger/:trigger` - By event type
+
+### Profile
+- `GET /api/profile` - My full profile
+- `GET /api/profile/public/:username` - Public profile
+- `PUT /api/profile` - Update profile
+
+## 🎯 WebSocket Events
+
+### Matchmaking
+- `join-queue` - Enter PvP queue
+- `match-found` - Match ready
+- `accept-match` - Confirm matchup
+- `decline-match` - Reject match
+
+### PvP Battle
+- `enter-battle-room` - Join battle
+- `send-action` - Execute move
+- `battle-end` - Match complete
+
+## 🌐 Deployment
+
+### Heroku
+```bash
+heroku create your-app-name
+heroku addons:create mongolab:sandbox
+git push heroku online-game-v2:main
+```
+
+### Railway
+```bash
+railway link
+railway up
+```
+
+### Render
+1. Connect GitHub repo
+2. Add environment variables
+3. Deploy from main branch
+
+## 📊 Database Models
+
+### Player
+- Account info (username, email, password)
+- Character stats (HP, ATK, DEF, level)
+- Progression (bosses defeated, maps completed)
+- Equipment and inventory
+
+### Battle
+- Type (PvE, PvP)
+- Participants and results
+- Turn log with actions and damage
+- Rewards earned
+
+### Leaderboard
+- Rank points and tier
+- Seasonal/all-time records
+- Win streaks
+- Last updated timestamp
+
+## 🎨 Features Breakdown
+
+### Damage Animations
+- Floating damage numbers
+- Screen shake on hit
+- Color-coded (normal/skill/critical)
+- Smooth fade-out effect
+
+### Boss Phases
+- 4 difficulty phases based on health %
+- Stat scaling per phase
+- Unique ability at each phase
+- Visual phase indicator
+
+### Cutscenes
+- Scene-based narrative
+- Character dialogue
+- Automatic or manual progression
+- Skippable option
+- Reward system
+
+### PvP Matchmaking
+- Rank-based queue
+- 30-second accept timeout
+- Real-time status updates
+- Auto-rematch option
+
+## 🐛 Troubleshooting
+
+### MongoDB Connection Error
+```bash
+# Check if MongoDB is running
+mongosh
+
+# Or start with Docker
+docker-compose up -d mongodb
+```
+
+### Port Already in Use
+```bash
+# Change PORT in .env
+PORT=5001
+```
+
+### Cutscenes Not Loading
+```bash
+# Reseed database
+node seeds/cutscenes.js
+```
 
 ## 📝 License
 
-This is a personal solo project created for educational and entertainment purposes.
-
----
-
-**Made with ❤️ by Liam1-dev**
-
-*Join the hunt. Become a legend.* 👹⚔️
-
-
+MIT License - See LICENSE file for details
 
 ## 🤝 Contributing
 
-Contact me to add ideas to help code the game or test it to see if there are bugs and glitches etc..
-Star this Repo to support me.
+Fork the repository and submit pull requests for improvements!
+
+## 📧 Support
+
+For issues and features, open a GitHub issue on the repository.
+
+---
+
+**K-pop Demon Hunters League** - Where heroes are forged in battle! ⚔️🎮

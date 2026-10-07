@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: kpop-hunters-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  backend:
+    build: .
+    container_name: kpop-hunters-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/kpop-hunters?authSource=admin
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+      - CLIENT_URL=http://localhost:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+volumes:
+  mongo-data:
