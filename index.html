@@ -58,7 +58,6 @@
         .lobby-pane { background: rgba(20, 10, 35, 0.7); border: 1px solid rgba(157, 78, 221, 0.25); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; flex: 1; }
         .pane-title { font-size: 0.8rem; font-weight: bold; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;}
 
-        /* Select Elements Style */
         select, input[type="number"] {
             background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-purple);
             color: #fff; padding: 5px; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 8px;
@@ -66,14 +65,12 @@
 
         .char-select-row { display: flex; gap: 5px; flex-direction: column; font-size: 0.75rem; }
         
-        /* Map / Stage Node Lists */
         .stage-node {
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.2);
             padding: 6px; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-size: 0.75rem; display: flex; justify-content: space-between;
         }
         .stage-node.active { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.06); }
 
-        /* Custom Wave Creator Layout */
         .creator-field { display: flex; flex-direction: column; gap: 3px; font-size: 0.7rem; color: #a497c2; margin-bottom: 5px; }
 
         #hud { position: absolute; top: 15px; left: 20px; right: 20px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
@@ -97,7 +94,7 @@
 
             <div class="hud-panel" id="hud-p2-panel" style="display:flex; flex-direction:column; gap:2px;">
                 <div style="font-weight:bold; color:var(--neon-blue)">P2: <span id="hud-p2-name">Akali</span> <span id="hud-p2-hp">HP: 100</span></div>
-                <div style="font-size:0.7rem; color:#888;">Controls: Up/Down (Move) | Numpad1 (Strike) | Numpad3 (Special)</div>
+                <div style="font-size:0.7rem; color:#888;">Controls: Up/Down Arrows (Move) | Numpad 1 (Strike) | Numpad 3 (Special)</div>
             </div>
 
             <div class="hud-panel" style="text-align:right; display:flex; flex-direction:column; justify-content:center;">
@@ -107,26 +104,26 @@
         </div>
 
         <div class="key-guides">
-            <div class="key-cap"><span>Space</span>Cast Combined Ultimate</div>
+            <div class="key-cap"><span>Spacebar</span>Cast Screen Wipe Ultimate</div>
         </div>
 
         <!-- Master Lobby Config Dashboard -->
         <div id="lobby-screen" class="screen">
             <h1>Rift Hunter Advanced Engine</h1>
-            <div class="subtitle">Multiplayer Architecture • Custom Sandbox Wave Modding • Multi-Stage Environmental Selectors</div>
+            <div class="subtitle">Simulated Multiplayer • Sandbox Wave Modding Developer Tools • Multi-Stage Environmental Selectors</div>
             
             <div class="lobby-layout">
                 <!-- Pane 1: Squad & Matchmaking -->
                 <div class="lobby-pane">
                     <div class="pane-title">1. Multiplayer Setup</div>
                     <div class="char-select-row">
-                        <label>Game Architecture Mode:</label>
+                        <label>Architecture Operational Mode:</label>
                         <select id="select-game-mode" onchange="toggleP2Select()">
                             <option value="solo">Solo Performance Battle</option>
-                            <option value="coop">Local Co-Op (Player 1 + Player 2)</option>
+                            <option value="coop">Local Co-Op Arena (Player 1 + Player 2)</option>
                         </select>
                         
-                        <label>Player 1 Character:</label>
+                        <label>Player 1 Character Choice:</label>
                         <select id="select-p1-char">
                             <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
                             <option value="1">🥷 Akali (Rapper - Melee)</option>
@@ -135,7 +132,7 @@
                         </select>
 
                         <div id="p2-selection-wrapper" class="hidden">
-                            <label>Player 2 Character:</label>
+                            <label>Player 2 Character Choice:</label>
                             <select id="select-p2-char">
                                 <option value="1" selected>🥷 Akali (Rapper - Melee)</option>
                                 <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
@@ -170,4 +167,5 @@
                     <div class="pane-title">3. Sandbox Wave Developer Tool</div>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                         <div class="creator-field">
-                            <label>Spawn Interval (ms):</label>
+                            <label>Spawn Frequency (ms):</label>
+                            <input type="number" id="wave-spawn-speed" value="1400" min="200" max="4000">
