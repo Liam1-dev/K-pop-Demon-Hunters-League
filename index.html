@@ -56,8 +56,9 @@
         }
         .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 35px rgba(0, 240, 255, 0.8); transform: scale(1.04); }
 
-        .main-grid { display: flex; gap: 15px; width: 96%; max-height: 75%; justify-content: center; margin-bottom: 20px; }
-        .grid-pane { background: var(--bg-panel); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; flex: 1; backdrop-filter: blur(10px); }
+        /* FIXED: Re-engineered layout grid structure to enforce clean flex box mapping wrap alignment */
+        .main-grid { display: flex; flex-direction: row; gap: 15px; width: 96%; max-height: 75%; justify-content: center; margin-bottom: 20px; box-sizing: border-box;}
+        .grid-pane { background: var(--bg-panel); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; flex: 1; backdrop-filter: blur(10px); box-sizing: border-box; }
         .pane-header { font-size: 0.85rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;}
 
         select, input[type="number"], input[type="text"] {
@@ -73,13 +74,13 @@
         }
         .list-item-node.active { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 
-        .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; }
+        .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; margin-bottom: 5px; }
         .shop-meta { display: flex; flex-direction: column; gap: 2px; }
         .btn-action-small { background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-action-small:hover:not(:disabled) { background: var(--neon-gold); color: #000; }
         .btn-action-small:disabled { border-color: #444; color: #666; cursor: not-allowed; }
 
-        .ach-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; }
+        .ach-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; margin-bottom: 5px; }
         .ach-row.unlocked { border-color: var(--neon-blue); background: rgba(0,240,255,0.03); }
         .ach-row.locked { opacity: 0.4; filter: grayscale(1); }
 
@@ -139,13 +140,9 @@
             </div>
 
             <div class="main-grid">
+                <!-- Pane 1: Systems Architecture Mode & Roster Selection -->
                 <div class="grid-pane">
                     <div class="pane-header">1. Operational Deployment</div>
                     <label style="font-size:0.75rem; color:#aaa;">System Framework Mode</label>
                     <select id="select-game-mode" onchange="toggleP2InterfaceSelector()">
                         <option value="solo">Solo Queue Ranked Matchmaking</option>
-                        <option value="coop">Local Split-Bus Cooperative Arena</option>
-                    </select>
-
-                    <label style="font-size:0.75rem; color:#aaa; margin-top:5px;">Player 1 Unit Asset</label>
-                    <select id="select-p1-char">
