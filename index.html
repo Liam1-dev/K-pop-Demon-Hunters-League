@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rift Hunter Symphony: Definitive Gold Edition</title>
+    <title>Rift Hunter Symphony: Advanced Pro Engine</title>
     <style>
         :root {
             --neon-pink: #ff007f;
@@ -64,7 +64,6 @@
             background: rgba(255, 255, 255, 0.04); border: 1px solid var(--neon-purple);
             color: #fff; padding: 7px; border-radius: 8px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 10px; transition: border 0.2s;
         }
-        select:focus { border-color: var(--neon-blue); }
 
         .pane-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 280px; }
         
@@ -72,7 +71,6 @@
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.15);
             padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
         }
-        .list-item-node:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.04); }
         .list-item-node.active { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 
         .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; }
@@ -99,7 +97,6 @@
         
         .input-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .hidden { display: none !important; }
-        @keyframes pulse-glow { from { box-shadow: 0 0 5px var(--neon-pink); } to { box-shadow: 0 0 20px var(--neon-blue); } }
     </style>
 </head>
 <body>
@@ -116,7 +113,7 @@
             <div class="hud-panel hud-p-block hidden" id="hud-p2-panel" style="color: var(--neon-blue);">
                 <div>P2: <span id="hud-p2-name">Akali</span></div>
                 <div id="hud-p2-hp" style="font-size:0.75rem;">HP: 100/100</div>
-                <div style="font-size:0.65rem; color:#aaa; font-weight:400; text-transform:none; margin-top:2px;">Arrows (Move) • Numpad 1 (Strike) • Numpad 3 (Special)</div>
+                <div style="font-size:0.65rem; color:#aaa; font-weight:400; text-transform:none; margin-top:2px;">Arrows (Move) • 1 (Strike) • 3 (Special)</div>
             </div>
 
             <div class="hud-panel" style="text-align:right; font-size:0.85rem; font-weight:bold;">
@@ -128,22 +125,27 @@
 
         <!-- Epic Campaign Boss Target Overlay -->
         <div id="boss-ui" class="hidden">
-            <div id="boss-title-tag" style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px #000;">LEAGUE CHALLENGER</div>
+            <div id="boss-title-tag" style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px;">LEAGUE CHALLENGER</div>
             <div class="boss-bar-bg"><div id="boss-hp-fill" class="boss-bar-fill"></div></div>
         </div>
 
         <!-- Production Master Dashboard Screen -->
         <div id="lobby-screen" class="screen">
             <h1>Rift Hunter Symphony</h1>
-            <div class="subtitle">Definitive Release Edition • Real-Time Systems Framework Grid Integration</div>
+            <div class="subtitle">AI Pathfinding Overhaul • Expanded Melee Hitboxes • Procedural K-Pop Synth Tracker</div>
             
             <div style="color: var(--neon-gold); font-weight: 800; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; background: rgba(255,255,255,0.02); padding: 6px 20px; border-radius: 30px; border: 1px solid rgba(255,209,102,0.2);">
                 BANKED CONCERT POINTS: <span id="lobby-points">0</span>
             </div>
 
             <div class="main-grid">
-                <!-- Pane 1: Systems Architecture Mode & Roster Selection -->
                 <div class="grid-pane">
                     <div class="pane-header">1. Operational Deployment</div>
                     <label style="font-size:0.75rem; color:#aaa;">System Framework Mode</label>
                     <select id="select-game-mode" onchange="toggleP2InterfaceSelector()">
+                        <option value="solo">Solo Queue Ranked Matchmaking</option>
+                        <option value="coop">Local Split-Bus Cooperative Arena</option>
+                    </select>
+
+                    <label style="font-size:0.75rem; color:#aaa; margin-top:5px;">Player 1 Unit Asset</label>
+                    <select id="select-p1-char">
