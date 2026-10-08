@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Pop Demon Hunters: SC2 Ranked Ladder Edition</title>
+    <title>K-Pop Demon Hunters: Advanced Tactical Engine</title>
     <style>
         :root {
             --neon-pink: #ff007f;
@@ -24,7 +24,7 @@
 
         #game-container {
             position: relative;
-            width: 1100px; height: 600px;
+            width: 1150px; height: 650px;
             background: radial-gradient(circle at center, #100626 0%, #020105 100%);
             border: 3px solid var(--neon-pink); border-radius: 20px;
             box-shadow: 0 0 40px rgba(255, 0, 127, 0.4); overflow: hidden;
@@ -35,17 +35,17 @@
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(4, 2, 10, 0.97); z-index: 10; overflow-y: auto; padding: 20px 0; box-sizing: border-box;
+            background: rgba(4, 2, 10, 0.97); z-index: 10; overflow-y: auto; padding: 15px 0; box-sizing: border-box;
         }
 
         h1 {
-            font-size: 2.4rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 4px;
+            font-size: 2.2rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 4px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-gold));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 25px rgba(255, 0, 127, 0.3); text-align: center;
         }
 
-        .subtitle { font-size: 0.95rem; color: #a497c2; margin-bottom: 15px; text-align: center; max-width: 80%; }
+        .subtitle { font-size: 0.9rem; color: #a497c2; margin-bottom: 15px; text-align: center; }
 
         .btn {
             background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
@@ -54,99 +54,120 @@
         }
         .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); transform: scale(1.03); }
 
-        .lobby-layout { display: flex; gap: 12px; width: 98%; max-height: 75%; justify-content: center; margin-bottom: 15px; }
-        .lobby-pane { background: rgba(20, 10, 35, 0.65); border: 1px solid rgba(157, 78, 221, 0.2); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; }
+        .lobby-layout { display: flex; gap: 10px; width: 98%; max-height: 80%; justify-content: center; margin-bottom: 15px; }
+        .lobby-pane { background: rgba(20, 10, 35, 0.7); border: 1px solid rgba(157, 78, 221, 0.25); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; flex: 1; }
         .pane-title { font-size: 0.8rem; font-weight: bold; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;}
 
-        .char-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; width: 240px; }
-        .char-card { background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(157, 78, 221, 0.3); border-radius: 8px; padding: 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
-        .char-card:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.05); }
-        .char-card.selected { border-color: var(--neon-gold); background: rgba(255, 209, 102, 0.1); box-shadow: 0 0 15px rgba(255, 209, 102, 0.2); }
-        .char-avatar { font-size: 1.5rem; margin-bottom: 4px; }
-        .char-name { font-weight: bold; font-size: 0.85rem; }
+        /* Select Elements Style */
+        select, input[type="number"] {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-purple);
+            color: #fff; padding: 5px; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 8px;
+        }
 
-        /* Ranked Ladder Panel Styling */
-        .ladder-container { width: 320px; display: flex; flex-direction: column; gap: 6px; }
-        .ladder-header { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px; border: 1px solid rgba(0, 240, 255, 0.2); margin-bottom: 4px;}
-        .rank-badge { font-weight: bold; letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; }
-        .ladder-scroller { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; max-height: 180px; }
-        .ladder-row { display: flex; justify-content: space-between; padding: 6px 10px; background: rgba(255,255,255,0.02); border-radius: 4px; font-size: 0.8rem; border-left: 3px solid #555; }
-        .ladder-row.player-active { border-left-color: var(--neon-pink); background: rgba(255, 0, 127, 0.08); font-weight: bold; }
-
-        .shop-container { width: 220px; display: flex; flex-direction: column; gap: 6px; }
-        .shop-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; padding: 6px; display: flex; justify-content: space-between; align-items: center; }
-        .shop-details { display: flex; flex-direction: column; }
-        .shop-name { font-size: 0.75rem; font-weight: bold; }
-        .shop-cost { font-size: 0.65rem; color: var(--neon-gold); font-weight: bold; }
-        .btn-shop { background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 3px 8px; font-size: 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-shop:hover:not(:disabled) { background: var(--neon-gold); color: #000; }
-        .btn-shop:disabled { border-color: #555; color: #555; cursor: not-allowed; }
-
-        .achievements-container { width: 200px; display: flex; flex-direction: column; gap: 4px; }
-        .achievement-row { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(157, 78, 221, 0.15); border-radius: 6px; padding: 4px 8px; display: flex; align-items: center; gap: 8px; font-size: 0.7rem; }
-        .achievement-row.locked { opacity: 0.4; filter: grayscale(1); }
-        .achievement-row.unlocked { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.05); }
-
-        #hud { position: absolute; top: 20px; left: 25px; right: 25px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
-        .hud-panel { background: rgba(10, 5, 22, 0.85); padding: 10px 20px; border-radius: 10px; border-bottom: 3px solid var(--neon-purple); backdrop-filter: blur(5px); }
+        .char-select-row { display: flex; gap: 5px; flex-direction: column; font-size: 0.75rem; }
         
-        .cd-container { display: flex; gap: 15px; }
-        .cd-box { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; min-width: 80px;}
-        .cd-bar-bg { width: 100%; height: 6px; background: #221440; border-radius: 3px; overflow: hidden; margin-top: 3px; }
-        .cd-bar-fill { height: 100%; width: 100%; background: var(--neon-blue); }
+        /* Map / Stage Node Lists */
+        .stage-node {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 6px; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-size: 0.75rem; display: flex; justify-content: space-between;
+        }
+        .stage-node.active { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.06); }
 
-        #boss-ui { position: absolute; top: 95px; left: 50%; transform: translateX(-50%); width: 400px; text-align: center; z-index: 5; pointer-events: none; }
-        .boss-bar-bg { width: 100%; height: 14px; background: rgba(40, 10, 10, 0.8); border: 2px solid var(--boss-red); border-radius: 7px; overflow: hidden; box-shadow: 0 0 15px rgba(255, 51, 51, 0.4); margin-top: 5px; }
-        .boss-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #990000, var(--boss-red)); transition: width 0.1s linear; }
+        /* Custom Wave Creator Layout */
+        .creator-field { display: flex; flex-direction: column; gap: 3px; font-size: 0.7rem; color: #a497c2; margin-bottom: 5px; }
 
-        .key-guides { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 5; pointer-events: none; }
-        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.65rem; color: #796c94; }
-        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 4px 10px; font-size: 0.9rem; font-weight: bold; color: #fff; }
+        #hud { position: absolute; top: 15px; left: 20px; right: 20px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
+        .hud-panel { background: rgba(10, 5, 22, 0.85); padding: 8px 15px; border-radius: 8px; border-bottom: 3px solid var(--neon-purple); backdrop-filter: blur(5px); font-size: 0.8rem; }
+
+        .key-guides { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 5; pointer-events: none; }
+        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.6rem; color: #796c94; }
+        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 2px 8px; font-size: 0.8rem; font-weight: bold; color: #fff; }
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <!-- Game Live HUD Layer -->
+        <!-- Core Real-Time Multi-HUD Overlay -->
         <div id="hud" class="hidden">
-            <div class="hud-panel" style="display:flex; align-items:center; gap:12px;">
-                <span id="hud-avatar">🦊</span>
-                <div>
-                    <div id="hud-name" style="font-weight:bold;">Ahri</div>
-                    <div id="hud-hp" style="color:var(--neon-pink); font-size:0.85rem">HP: 100/100</div>
-                </div>
+            <div class="hud-panel" style="display:flex; flex-direction:column; gap:2px;">
+                <div style="font-weight:bold; color:var(--neon-pink)">P1: <span id="hud-p1-name">Ahri</span> <span id="hud-p1-hp">HP: 100</span></div>
+                <div style="font-size:0.7rem; color:#888;">Controls: W/S (Move) | J (Strike) | L (Special)</div>
             </div>
 
-            <div class="hud-panel cd-container">
-                <div class="cd-box">
-                    <div>Special (L)</div>
-                    <div class="cd-bar-bg"><div id="special-fill" class="cd-bar-fill" style="background:var(--neon-gold)"></div></div>
-                </div>
-                <div class="cd-box">
-                    <div>Ultimate (SPACE)</div>
-                    <div class="cd-bar-bg"><div id="ult-fill" class="cd-bar-fill" style="background:var(--neon-pink)"></div></div>
-                </div>
+            <div class="hud-panel" id="hud-p2-panel" style="display:flex; flex-direction:column; gap:2px;">
+                <div style="font-weight:bold; color:var(--neon-blue)">P2: <span id="hud-p2-name">Akali</span> <span id="hud-p2-hp">HP: 100</span></div>
+                <div style="font-size:0.7rem; color:#888;">Controls: Up/Down (Move) | Numpad1 (Strike) | Numpad3 (Special)</div>
             </div>
 
-            <div class="hud-panel" style="text-align:right;">
+            <div class="hud-panel" style="text-align:right; display:flex; flex-direction:column; justify-content:center;">
+                <div>Stage: <span id="hud-stage-name" style="color:var(--neon-gold)">Void Slums</span></div>
                 <div>Score: <span id="hud-score" style="color:var(--neon-blue)">0</span></div>
-                <div style="font-size:0.85rem">Combo: <span id="hud-combo" style="color:var(--neon-gold)">0</span></div>
             </div>
-        </div>
-
-        <!-- Enemy Challenger Health Bar Display -->
-        <div id="boss-ui" class="hidden">
-            <div id="boss-title-text" style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px;">OPPONENT CHALLENGER</div>
-            <div class="boss-bar-bg"><div id="boss-hp-fill" class="boss-bar-fill"></div></div>
         </div>
 
         <div class="key-guides">
-            <div class="key-cap"><span>W / S</span>Move Line</div>
-            <div class="key-cap"><span>I / K</span>Dodge Roll</div>
-            <div class="key-cap"><span>J</span>Strike</div>
-            <div class="key-cap"><span>L</span>Special</div>
-            <div class="key-cap"><span>Space</span>Ult</div>
+            <div class="key-cap"><span>Space</span>Cast Combined Ultimate</div>
         </div>
 
-        <!-- Master Selection, Shop & Ranked Ladder Dashboard Screen -->
+        <!-- Master Lobby Config Dashboard -->
+        <div id="lobby-screen" class="screen">
+            <h1>Rift Hunter Advanced Engine</h1>
+            <div class="subtitle">Multiplayer Architecture • Custom Sandbox Wave Modding • Multi-Stage Environmental Selectors</div>
+            
+            <div class="lobby-layout">
+                <!-- Pane 1: Squad & Matchmaking -->
+                <div class="lobby-pane">
+                    <div class="pane-title">1. Multiplayer Setup</div>
+                    <div class="char-select-row">
+                        <label>Game Architecture Mode:</label>
+                        <select id="select-game-mode" onchange="toggleP2Select()">
+                            <option value="solo">Solo Performance Battle</option>
+                            <option value="coop">Local Co-Op (Player 1 + Player 2)</option>
+                        </select>
+                        
+                        <label>Player 1 Character:</label>
+                        <select id="select-p1-char">
+                            <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
+                            <option value="1">🥷 Akali (Rapper - Melee)</option>
+                            <option value="2">🦋 Kai'Sa (Dancer - Gatling)</option>
+                            <option value="3">🥀 Evelynn (Visual - Sweeper)</option>
+                        </select>
+
+                        <div id="p2-selection-wrapper" class="hidden">
+                            <label>Player 2 Character:</label>
+                            <select id="select-p2-char">
+                                <option value="1" selected>🥷 Akali (Rapper - Melee)</option>
+                                <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
+                                <option value="2">🦋 Kai'Sa (Dancer - Gatling)</option>
+                                <option value="3">🥀 Evelynn (Visual - Sweeper)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 2: Multi-Stage Environments Map -->
+                <div class="lobby-pane">
+                    <div class="pane-title">2. Environmental Maps</div>
+                    <div id="maps-list-box">
+                        <div class="stage-node active" id="map-node-0" onclick="selectMapEnv(0)">
+                            <span>Act I: The Void Slums</span>
+                            <span style="color:var(--neon-pink)">Standard</span>
+                        </div>
+                        <div class="stage-node" id="map-node-1" onclick="selectMapEnv(1)">
+                            <span>Act II: Neon City Stage</span>
+                            <span style="color:var(--neon-blue)">Accelerated</span>
+                        </div>
+                        <div class="stage-node" id="map-node-2" onclick="selectMapEnv(2)">
+                            <span>Act III: Gwi-Ma Throne Room</span>
+                            <span style="color:var(--neon-gold)">Boss Grid</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pane 3: Sandbox Custom Enemy Wave Creator -->
+                <div class="lobby-pane" style="flex:1.3;">
+                    <div class="pane-title">3. Sandbox Wave Developer Tool</div>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                        <div class="creator-field">
+                            <label>Spawn Interval (ms):</label>
