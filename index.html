@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Legends - K-pop Demon Hunters Ultimate</title>
-    <!-- Tailwind CSS for high-fidelity UI alignment -->
+    <title>League of Legends Engine Core - K-pop Edition</title>
+    <!-- Tailwind CSS for high-fidelity UI emulation mapping -->
     <script src="https://jsdelivr.net"></script>
     <style>
         @import url('https://googleapis.com');
         
         body {
             font-family: 'Spiegel', sans-serif;
-            background-color: #010a13; /* Classic LoL Deep Indigo Charcoal */
+            background-color: #010a13; /* Official LoL Client Deep Navy Indigo Charcoal */
             background-image: radial-gradient(circle at center, #0a1428 0%, #010a13 100%);
         }
         .lol-title-font {
@@ -19,136 +19,131 @@
             letter-spacing: 0.08em;
         }
         /* Strict global override for clear absolute white typography readability constraints */
-        *, p, span, h1, h2, h3, div, input, button, select, option, label {
+        *, p, span, h1, h2, h3, div, input, button, select, option, label, textarea {
             color: #ffffff !important;
         }
     </style>
 </head>
 <body class="min-h-screen select-none pb-12">
 
-    <!-- Official LoL Global Navigation Bar -->
+    <!-- Official LoL Global Client Header Navbar Mockup -->
     <header class="bg-[#010a13] border-b border-[#785a28] px-6 py-2 flex justify-between items-center shadow-xl">
         <div class="flex items-center gap-8">
             <div class="border border-[#785a28] p-1.5 rounded-sm bg-[#0a1428] hover:border-[#c89b3c] transition cursor-pointer">
                 <span class="text-xl font-bold tracking-tighter">L</span>
             </div>
             <nav class="flex gap-6 text-xs font-bold uppercase tracking-wider h-full pt-1">
-                <span id="tab-play" onclick="switchMainTab('play')" class="border-b-2 border-[#c89b3c] pb-2 cursor-pointer transition">PLAY PVP</span>
-                <span id="tab-story" onclick="switchMainTab('story')" class="border-b-2 border-transparent hover:border-[#c89b3c] pb-2 cursor-pointer transition">STORY MODE / TUTORIAL</span>
+                <span id="tab-play" onclick="switchClientTab('play')" class="border-b-2 border-[#c89b3c] pb-2 cursor-pointer transition font-bold">PLAY PVP ARENA</span>
+                <span id="tab-story" onclick="switchClientTab('story')" class="border-b-2 border-transparent hover:border-[#c89b3c] pb-2 cursor-pointer transition font-bold">STORY LORE SCENARIOS</span>
             </nav>
         </div>
 
-        <!-- Summoner Card Info Block -->
+        <!-- Summoner Profile Account Status Module -->
         <div class="flex items-center gap-4 text-xs font-bold bg-[#010a13] border border-[#32281e] px-4 py-1.5 rounded">
             <div class="text-right">
                 <p id="sum-name" class="text-sm font-bold tracking-wide">Summoner</p>
-                <p id="sum-tier" class="font-mono text-[10px] tracking-widest opacity-80">UNRANKED — 0 LP</p>
+                <p id="sum-tier" class="font-mono text-[10px] tracking-widest opacity-80">DIAMOND I — 50 LP</p>
             </div>
             <div class="h-6 w-[1px] bg-[#32281e]"></div>
             <div class="flex items-center gap-1.5">
                 <span>🪙</span>
                 <div>
-                    <p class="text-[9px] uppercase font-mono opacity-60">Gold Coins</p>
+                    <p class="text-[9px] uppercase font-mono opacity-60">Hextech IP Gold</p>
                     <p id="sum-gold" class="font-mono font-bold text-sm">500</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Content Screen 1: Classic PVP Arena Hub View -->
+    <!-- UI Panel 1: Classic Matchmaking Rift Node View -->
     <div id="screen-play" class="max-w-7xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Left Side Control Panel: Assets Selection Map & Equipment Build Stores -->
+        <!-- Left Sidebar: Selection Hubs and Item Forge Shop -->
         <div class="lg:col-span-1 space-y-4">
             
-            <!-- Map Arena Deployer Dropdown -->
+            <!-- Map Vector Deployer Dropdown -->
             <div class="bg-[#091428] border border-[#785a28] p-4 rounded shadow-md">
-                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-1.5 mb-2.5 tracking-wide">Select Map Battleground</h2>
-                <label class="block text-[10px] uppercase font-mono opacity-60 mb-1">Target Rift Sector:</label>
-                <select id="map-selector" onchange="changeMapNode()" class="bg-[#010a13] border border-[#463d2e] rounded px-2 py-1.5 text-xs w-full focus:outline-none focus:border-[#785a28]">
-                    <option value="Seoul Dome Pit" selected>Seoul Dome Arena Pit</option>
-                    <option value="Incheon Neon Stage">Incheon Neon Flight Stage</option>
-                    <option value="Gangnam Crypt Vault">Gangnam Crypt Core Vault</option>
+                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-1.5 mb-2.5 tracking-wide">Deploy Rift Map</h2>
+                <label class="block text-[10px] uppercase font-mono opacity-60 mb-1">Rift Coordinate Sector:</label>
+                <select id="map-selector" onchange="updateActiveMap()" class="bg-[#010a13] border border-[#463d2e] rounded px-2 py-1.5 text-xs w-full focus:outline-none focus:border-[#785a28]">
+                    <option value="Seoul Dome Baron Pit" selected>Seoul Dome: Baron Nashor Pit</option>
+                    <option value="Incheon Dragon Bay">Incheon Runway: Dragon Pit</option>
+                    <option value="Gangnam Middle Lane">Gangnam: Mid-Lane Inhibitor</option>
                 </select>
             </div>
 
-            <!-- Champion Drafting Cell -->
+            <!-- Lock In Your Champion Champion Select Cell -->
             <div class="bg-[#091428] border border-[#785a28] p-4 rounded shadow-md">
-                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-2 mb-3 tracking-wide">Champion Select</h2>
+                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-2 mb-3 tracking-wide">Champion Draft Pool</h2>
                 <div class="space-y-2.5">
-                    <div id="champ-Rumi" onclick="lockChampion('Rumi')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
+                    <div id="champ-Rumi" onclick="draftChampion('Rumi')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-sm tracking-wide">Rumi</span>
                             <span class="text-[9px] bg-[#2b1a0a] border border-red-500/30 px-2 py-0.5 rounded font-black uppercase">Assassin</span>
                         </div>
-                        <p class="text-[11px] mt-1 font-mono opacity-70">Q: Phantom Drop (Execution Strike)</p>
+                        <p class="text-[11px] mt-1 font-mono opacity-70">Q Spell: Phantom Drop Execute</p>
                     </div>
 
-                    <div id="champ-Jinu" onclick="lockChampion('Jinu')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
+                    <div id="champ-Jinu" onclick="draftChampion('Jinu')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
                         <div class="flex justify-between items-center">
                             <span class="font-bold text-sm tracking-wide">Jinu</span>
-                            <span class="text-[9px] bg-[#0a1a2e] border border-cyan-500/30 px-2 py-0.5 rounded font-black uppercase">Mage</span>
+                            <span class="text-[9px] bg-[#0a1a2e] border border-cyan-500/30 px-2 py-0.5 rounded font-black uppercase">Battle Mage</span>
                         </div>
-                        <p class="text-[11px] mt-1 font-mono opacity-70">W: Encore Barrier (Shield Absorber)</p>
+                        <p class="text-[11px] mt-1 font-mono opacity-70">W Spell: Encore Barrier Deflect</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Summoner Battle Spells Configurator -->
+            <!-- Summoner Combat Spell Slots Matrix -->
             <div class="bg-[#091428] border border-[#1e2328] p-4 rounded shadow-md">
-                <h2 class="text-[10px] font-bold uppercase border-b border-[#32281e] pb-1.5 mb-2 font-mono tracking-wider opacity-70">Summoner Spells</h2>
+                <h2 class="text-[10px] font-bold uppercase border-b border-[#32281e] pb-1.5 mb-2 font-mono tracking-wider opacity-70">Summoner Active Spells</h2>
                 <div class="grid grid-cols-2 gap-2">
-                    <button id="spell-Flash" onclick="selectSpell('Flash')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🟡 Flash</button>
-                    <button id="spell-Ignite" onclick="selectSpell('Ignite')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🔥 Ignite</button>
+                    <button id="spell-Flash" onclick="configureSpell('Flash')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🟡 Flash</button>
+                    <button id="spell-Ignite" onclick="configureSpell('Ignite')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🔥 Ignite</button>
                 </div>
             </div>
 
-            <!-- Hextech Classic Shop Terminal -->
+            <!-- Hextech Classic Forge Item Shop -->
             <div class="bg-[#091428] border border-[#785a28] p-4 rounded shadow-md">
-                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-2 mb-3 tracking-wide">Item Shop</h2>
+                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-2 mb-3 tracking-wide">Hextech Inventory Forge</h2>
                 <div class="space-y-2">
-                    <button onclick="buyItem('DoransBlade', 450)" class="w-full text-left bg-[#010a13] border border-[#32281e] hover:border-[#c89b3c] p-2 rounded flex justify-between items-center text-xs cursor-pointer transition">
+                    <button onclick="purchaseGear('DoransBlade', 450)" class="w-full text-left bg-[#010a13] border border-[#32281e] hover:border-[#c89b3c] p-2 rounded flex justify-between items-center text-xs cursor-pointer transition">
                         <div>
                             <p class="font-bold">⚔️ Doran's Blade</p>
-                            <p class="font-mono text-[10px] opacity-60">+15 Attack Damage</p>
+                            <p class="font-mono text-[10px] opacity-60">+15 AD Damage (Scaling)</p>
                         </div>
                         <span class="font-bold font-mono text-yellow-500">450g</span>
                     </button>
                 </div>
                 <div class="mt-3 pt-2 border-t border-[#1e2328]">
-                    <p class="text-[10px] font-mono opacity-80">Inventory Slots: <span id="inventory-list" class="font-sans font-bold text-white">None</span></p>
+                    <p class="text-[10px] font-mono opacity-80">Equipped Items: <span id="inventory-list" class="font-sans font-bold text-white">None</span></p>
                 </div>
             </div>
 
         </div>
 
-        <!-- Center & Right Column: Summoner's Rift Map Core Monitor HUD -->
+        <!-- Right Side: Summoner's Rift Map HUD Monitor -->
         <div class="lg:col-span-3 space-y-6">
             
-            <!-- Summoner's Rift HUD Arena Interface -->
+            <!-- Summoner's Rift HUD Arena Interface Module Layout -->
             <div class="bg-[#091428] border-2 border-[#785a28] p-6 rounded shadow-2xl relative overflow-hidden">
                 <div class="flex justify-between items-center mb-6 border-b border-[#32281e] pb-3">
                     <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
-                        <h2 class="text-xs uppercase font-mono tracking-widest font-black">SUMMONER'S RIFT MATCHGROUND</h2>
+                        <span class="w-2 h-2 bg-green-500 rounded-full anonymity-pulse animate-ping"></span>
+                        <h2 class="text-xs uppercase font-mono tracking-widest font-black">SUMMONER'S RIFT ENGINE v16.2</h2>
                     </div>
-                    <button onclick="queueUpMatch()" class="bg-gradient-to-b from-[#1e2328] to-[#11b6cd] text-black font-black uppercase text-xs px-8 py-2.5 border border-[#785a28] rounded shadow-lg cursor-pointer tracking-widest">
-                        FIND MATCH
+                    <button onclick="launchMatchEngine()" class="bg-gradient-to-b from-[#1e2328] to-[#11b6cd] text-black font-black uppercase text-xs px-8 py-2.5 border border-[#785a28] rounded shadow-lg cursor-pointer tracking-widest transition transform hover:scale-105 active:scale-95">
+                        LAUNCH MATCH ENGINE
                     </button>
                 </div>
 
-                <!-- Tactical Grid Display -->
+                <!-- Live Unit Array Health Dashboard Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
                     
                     <!-- Allied Side Champion Unit Node -->
                     <div class="md:col-span-2 bg-[#010a13] border border-[#32281e] p-4 rounded text-center relative shadow-inner">
-                        <span class="absolute top-2 left-2 text-[9px] font-mono font-bold bg-blue-950 border border-blue-500/40 px-1.5 py-0.5 rounded">ALLIED</span>
+                        <span class="absolute top-2 left-2 text-[9px] font-mono font-bold bg-blue-950 border border-blue-500/40 px-1.5 py-0.5 rounded">ALLIED HERO</span>
                         <h3 id="hud-p1-name" class="text-lg font-bold uppercase lol-title-font mt-2">-</h3>
                         <p id="hud-p1-role" class="text-[10px] font-mono uppercase mb-2 opacity-60">Class</p>
                         
                         <div class="w-full bg-[#1e2328] h-3.5 border border-[#32281e] overflow-hidden">
-                            <div id="hud-p1-hp" class="bg-gradient-to-r from-[#248046] to-[#4cd137] h-full w-full transition-all duration-200"></div>
-                        </div>
-                        <p id="hud-p1-hp-text" class="text-xs font-mono mt-1">0 / 0 HP</p>
-                    </div>
-
