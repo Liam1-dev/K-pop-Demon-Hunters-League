@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Pop Demon Hunters: Deluxe Edition</title>
+    <title>K-Pop Demon Hunters: Tactical Fighting Edition</title>
     <style>
         :root {
             --neon-pink: #ff007f;
@@ -16,154 +16,119 @@
 
         body {
             margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            color: #fff;
+            background-color: var(--bg-dark); color: #fff;
             font-family: 'Segoe UI', Roboto, Arial, sans-serif;
-            overflow: hidden;
-            user-select: none;
-            display: flex; justify-content: center; align-items: center;
-            height: 100vh;
+            overflow: hidden; user-select: none;
+            display: flex; justify-content: center; align-items: center; height: 100vh;
         }
 
         #game-container {
             position: relative;
-            width: 950px; height: 600px;
+            width: 1050px; height: 600px;
             background: radial-gradient(circle at center, #100626 0%, #020105 100%);
-            border: 3px solid var(--neon-pink);
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(255, 0, 127, 0.4);
-            overflow: hidden;
+            border: 3px solid var(--neon-pink); border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 127, 0.4); overflow: hidden;
         }
 
         canvas { display: block; width: 100%; height: 100%; }
 
         .screen {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(4, 2, 10, 0.96);
-            z-index: 10;
-            overflow-y: auto;
-            padding: 20px 0;
-            box-sizing: border-box;
+            background: rgba(4, 2, 10, 0.96); z-index: 10; overflow-y: auto; padding: 20px 0; box-sizing: border-box;
         }
 
         h1 {
-            font-size: 2.6rem; margin: 0 0 5px 0;
-            text-transform: uppercase; letter-spacing: 4px;
+            font-size: 2.6rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 4px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-gold));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(255, 0, 127, 0.3);
-            text-align: center;
+            text-shadow: 0 0 25px rgba(255, 0, 127, 0.3); text-align: center;
         }
 
         .subtitle { font-size: 1rem; color: #a497c2; margin-bottom: 20px; text-align: center; max-width: 80%; }
 
         .btn {
             background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
-            padding: 10px 30px; font-size: 1rem; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 2px; border-radius: 40px;
-            cursor: pointer; transition: all 0.2s ease;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            padding: 10px 30px; font-size: 1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
+            border-radius: 40px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
         }
         .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); transform: scale(1.03); }
 
-        /* Multi-pane Layout for Selection, Shop & Leaderboard */
-        .lobby-layout {
-            display: flex; gap: 20px; width: 90%; max-height: 75%; justify-content: center; margin-bottom: 20px;
-        }
+        .lobby-layout { display: flex; gap: 15px; width: 96%; max-height: 75%; justify-content: center; margin-bottom: 20px; }
+        .lobby-pane { background: rgba(20, 10, 35, 0.6); border: 1px solid rgba(157, 78, 221, 0.2); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; }
+        .pane-title { font-size: 0.85rem; font-weight: bold; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;}
 
-        .lobby-pane {
-            background: rgba(20, 10, 35, 0.6);
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            border-radius: 12px; padding: 15px;
-            display: flex; flex-direction: column;
-        }
-
-        .pane-title { font-size: 0.9rem; font-weight: bold; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px;}
-
-        /* Character Grid */
-        .char-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 340px; }
-        .char-card {
-            background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(157, 78, 221, 0.3);
-            border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.2s ease;
-        }
+        .char-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 280px; }
+        .char-card { background: rgba(255, 255, 255, 0.02); border: 2px solid rgba(157, 78, 221, 0.3); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
         .char-card:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.05); }
         .char-card.selected { border-color: var(--neon-gold); background: rgba(255, 209, 102, 0.1); box-shadow: 0 0 15px rgba(255, 209, 102, 0.2); }
         .char-avatar { font-size: 1.8rem; margin-bottom: 5px; }
-        .char-name { font-weight: bold; font-size: 1rem; }
+        .char-name { font-weight: bold; font-size: 0.9rem; }
+        .char-desc-snippet { font-size: 0.6rem; color: #a497c2; margin-top: 4px; }
 
-        /* Item Shop Setup */
-        .shop-container { width: 280px; display: flex; flex-direction: column; gap: 8px; }
-        .shop-item {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 8px; padding: 8px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .shop-container { width: 230px; display: flex; flex-direction: column; gap: 8px; }
+        .shop-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; padding: 8px; display: flex; justify-content: space-between; align-items: center; }
         .shop-details { display: flex; flex-direction: column; gap: 2px; }
-        .shop-name { font-size: 0.85rem; font-weight: bold; }
-        .shop-desc { font-size: 0.7rem; color: #a497c2; }
-        .shop-cost { font-size: 0.75rem; color: var(--neon-gold); font-weight: bold; }
-        .btn-shop {
-            background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold);
-            padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 4px; cursor: pointer;
-        }
+        .shop-name { font-size: 0.75rem; font-weight: bold; }
+        .shop-desc { font-size: 0.6rem; color: #a497c2; }
+        .shop-cost { font-size: 0.65rem; color: var(--neon-gold); font-weight: bold; }
+        .btn-shop { background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 4px; cursor: pointer; }
         .btn-shop:hover:not(:disabled) { background: var(--neon-gold); color: #000; }
         .btn-shop:disabled { border-color: #555; color: #555; cursor: not-allowed; }
 
-        /* Leaderboard Panel */
-        .leaderboard-container { width: 220px; }
-        .leaderboard-list { display: flex; flex-direction: column; gap: 5px; font-size: 0.85rem; overflow-y: auto; }
-        .leaderboard-entry {
-            display: flex; justify-content: space-between; padding: 6px 10px;
-            background: rgba(255,255,255,0.02); border-radius: 4px; border-left: 3px solid var(--neon-purple);
-        }
+        .achievements-container { width: 230px; display: flex; flex-direction: column; gap: 6px; }
+        .achievement-row { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(157, 78, 221, 0.15); border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; gap: 10px; }
+        .achievement-row.locked { opacity: 0.45; filter: grayscale(1); }
+        .achievement-row.unlocked { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.05); }
+        .ach-icon { font-size: 1.3rem; }
+        .ach-info { display: flex; flex-direction: column; gap: 2px; }
+        .ach-title { font-size: 0.75rem; font-weight: bold; color: #fff; }
+        .achievement-row.unlocked .ach-title { color: var(--neon-blue); }
+        .ach-desc { font-size: 0.6rem; color: #a497c2; }
 
-        /* HUD overlays */
-        #hud {
-            position: absolute; top: 20px; left: 25px; right: 25px;
-            display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase;
-        }
+        .leaderboard-container { width: 120px; }
+        .leaderboard-list { display: flex; flex-direction: column; gap: 5px; font-size: 0.75rem; }
+        .leaderboard-entry { display: flex; justify-content: space-between; padding: 6px 10px; background: rgba(255,255,255,0.02); border-radius: 4px; border-left: 3px solid var(--neon-purple); }
+
+        #hud { position: absolute; top: 20px; left: 25px; right: 25px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
         .hud-panel { background: rgba(10, 5, 22, 0.85); padding: 10px 20px; border-radius: 10px; border-bottom: 3px solid var(--neon-purple); backdrop-filter: blur(5px); }
-        .ult-container { display: flex; flex-direction: column; gap: 5px; width: 180px; }
-        .ult-bar-bg { width: 100%; height: 10px; background: #221440; border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
-        .ult-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-gold)); }
-        .ult-ready { background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink)) !important; animation: pulse 1s infinite alternate; }
+        
+        .cd-container { display: flex; gap: 15px; }
+        .cd-box { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; min-width: 80px;}
+        .cd-bar-bg { width: 100%; height: 6px; background: #221440; border-radius: 3px; overflow: hidden; margin-top: 3px; }
+        .cd-bar-fill { height: 100%; width: 100%; background: var(--neon-blue); }
 
-        #boss-ui {
-            position: absolute; top: 90px; left: 50%; transform: translateX(-50%);
-            width: 400px; text-align: center; z-index: 5; pointer-events: none;
-        }
+        #boss-ui { position: absolute; top: 95px; left: 50%; transform: translateX(-50%); width: 400px; text-align: center; z-index: 5; pointer-events: none; }
         .boss-bar-bg { width: 100%; height: 14px; background: rgba(40, 10, 10, 0.8); border: 2px solid var(--boss-red); border-radius: 7px; overflow: hidden; box-shadow: 0 0 15px rgba(255, 51, 51, 0.4); margin-top: 5px; }
         .boss-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #990000, var(--boss-red)); transition: width 0.1s linear; }
 
-        .key-guides { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 30px; z-index: 5; pointer-events: none; }
-        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.7rem; color: #796c94; }
-        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 4px 10px; font-size: 1rem; font-weight: bold; color: #fff; }
-        .key-active { border-color: var(--neon-pink) !important; background: var(--neon-pink) !important; }
+        .key-guides { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 5; pointer-events: none; }
+        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.65rem; color: #796c94; }
+        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 4px 10px; font-size: 0.9rem; font-weight: bold; color: #fff; }
         .hidden { display: none !important; }
-        @keyframes pulse { from { box-shadow: 0 0 5px var(--neon-pink); } to { box-shadow: 0 0 15px var(--neon-blue); } }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <!-- Game Live HUD -->
+        <!-- Live HUD Interface -->
         <div id="hud" class="hidden">
             <div class="hud-panel" style="display:flex; align-items:center; gap:12px;">
                 <span id="hud-avatar">🦊</span>
                 <div>
                     <div id="hud-name" style="font-weight:bold;">Ahri</div>
-                    <div id="hud-hp" style="color:var(--neon-pink); font-size:0.85rem">HP: 100</div>
+                    <div id="hud-hp" style="color:var(--neon-pink); font-size:0.85rem">HP: 100/100</div>
                 </div>
             </div>
-            
-            <div class="hud-panel ult-container">
-                <div style="font-size:0.75rem; display:flex; justify-content:space-between;">
-                    <span>Ultimate (SPACE)</span>
-                    <span id="ult-status-text">Charging</span>
+
+            <div class="hud-panel cd-container">
+                <div class="cd-box">
+                    <div>Special (L)</div>
+                    <div class="cd-bar-bg"><div id="special-fill" class="cd-bar-fill" style="background:var(--neon-gold)"></div></div>
                 </div>
-                <div class="ult-bar-bg">
-                    <div id="ult-fill" class="ult-bar-fill"></div>
+                <div class="cd-box">
+                    <div>Ultimate (SPACE)</div>
+                    <div class="cd-bar-bg"><div id="ult-fill" class="cd-bar-fill" style="background:var(--neon-pink)"></div></div>
                 </div>
             </div>
 
@@ -173,22 +138,20 @@
             </div>
         </div>
 
-        <!-- Boss Health Bar -->
+        <!-- Boss Shield and Health Display -->
         <div id="boss-ui" class="hidden">
             <div style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px;">ELITE BOSS: GWI-MA</div>
-            <div class="boss-bar-bg">
-                <div id="boss-hp-fill" class="boss-bar-fill"></div>
-            </div>
+            <div class="boss-bar-bg"><div id="boss-hp-fill" class="boss-bar-fill"></div></div>
         </div>
 
         <div class="key-guides">
-            <div class="key-cap"><span id="key-A">A</span>Lane 1</div>
-            <div class="key-cap"><span id="key-S">S</span>Lane 2</div>
-            <div class="key-cap"><span id="key-K">K</span>Lane 3</div>
-            <div class="key-cap"><span id="key-L">L</span>Lane 4</div>
-            <div class="key-cap"><span id="key-Space" style="padding: 4px 18px;">Space</span>Ult</div>
+            <div class="key-cap"><span>W / S</span>Walk Track</div>
+            <div class="key-cap"><span>I / K</span>Dodge-Roll (I-Frames)</div>
+            <div class="key-cap"><span>J</span>Basic Strike</div>
+            <div class="key-cap"><span>L</span>Special Ability</div>
+            <div class="key-cap"><span>Space</span>Ultimate Matrix</div>
         </div>
 
-        <!-- Master Lobby Layout Dashboard Screen -->
+        <!-- Arena Selection Lobby Board -->
         <div id="lobby-screen" class="screen">
             <h1>Rift Hunter Symphony</h1>
