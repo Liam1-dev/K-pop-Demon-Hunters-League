@@ -3,141 +3,270 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>League of Legends Engine - Complete K-pop Edition</title>
-    <!-- Tailwind CSS for high-fidelity Client UI mapping -->
-    <script src="https://jsdelivr.net"></script>
+    <title>K-Pop Demon Hunters: Boss Edition</title>
     <style>
-        @import url('https://googleapis.com');
-        
+        :root {
+            --neon-pink: #ff007f;
+            --neon-blue: #00f0ff;
+            --neon-purple: #9d4edd;
+            --neon-gold: #ffd166;
+            --bg-dark: #05020c;
+            --boss-red: #ff3333;
+        }
+
         body {
-            font-family: 'Spiegel', sans-serif;
-            background-color: #010a13;
-            background-image: radial-gradient(circle at center, #0a1428 0%, #010a13 100%);
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            overflow: hidden;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        .lol-title-font {
-            font-family: 'Cinzel', serif;
-            letter-spacing: 0.08em;
+
+        #game-container {
+            position: relative;
+            width: 950px;
+            height: 600px;
+            background: radial-gradient(circle at center, #100626 0%, #020105 100%);
+            border: 3px solid var(--neon-pink);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 0, 127, 0.4);
+            overflow: hidden;
         }
-        /* Global typography override to enforce pure white text visibility constraints */
-        *, p, span, h1, h2, h3, div, input, button, select, option, label {
-            color: #ffffff !important;
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(4, 2, 10, 0.95);
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 25px rgba(255, 0, 127, 0.3);
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a497c2;
+            margin-bottom: 30px;
+            text-align: center;
+            max-width: 70%;
+        }
+
+        .btn {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 14px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn:hover {
+            background: var(--neon-blue);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 85%;
+            margin-bottom: 35px;
+        }
+
+        .char-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(157, 78, 221, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .char-card:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.08); }
+        .char-card.selected {
+            border-color: var(--neon-gold);
+            background: rgba(255, 209, 102, 0.12);
+            box-shadow: 0 0 20px rgba(255, 209, 102, 0.3);
+        }
+
+        .char-avatar { font-size: 2.5rem; margin-bottom: 10px; }
+        .char-name { font-weight: bold; font-size: 1.2rem; }
+        .char-ult { font-size: 0.75rem; color: var(--neon-gold); margin-top: 5px; text-transform: uppercase;}
+
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            right: 25px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 5;
+            text-transform: uppercase;
+        }
+
+        .hud-panel {
+            background: rgba(10, 5, 22, 0.85);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border-bottom: 3px solid var(--neon-purple);
+            backdrop-filter: blur(5px);
+        }
+
+        .ult-container { display: flex; flex-direction: column; gap: 5px; width: 180px; }
+        .ult-bar-bg { width: 100%; height: 10px; background: #221440; border-radius: 5px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
+        .ult-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--neon-purple), var(--neon-gold)); }
+        .ult-ready { background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink)) !important; animation: pulse 1s infinite alternate; }
+
+        /* Boss Alert Display Panel */
+        #boss-ui {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            text-align: center;
+            z-index: 5;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .boss-bar-bg {
+            width: 100%;
+            height: 14px;
+            background: rgba(40, 10, 10, 0.8);
+            border: 2px solid var(--boss-red);
+            border-radius: 7px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(255, 51, 51, 0.4);
+            margin-top: 5px;
+        }
+
+        .boss-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #990000, var(--boss-red));
+            transition: width 0.1s linear;
+        }
+
+        .key-guides {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 40px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.75rem; color: #796c94; }
+        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 5px 12px; font-size: 1.1rem; font-weight: bold; color: #fff; }
+        .key-active { border-color: var(--neon-pink) !important; background: var(--neon-pink) !important; }
+        .hidden { display: none !important; }
+        @keyframes pulse { from { box-shadow: 0 0 5px var(--neon-pink); } to { box-shadow: 0 0 15px var(--neon-blue); } }
     </style>
 </head>
-<body class="min-h-screen select-none pb-12">
+<body>
 
-    <!-- Official Client Navigation Header -->
-    <header class="bg-[#010a13] border-b border-[#785a28] px-6 py-2 flex justify-between items-center shadow-xl">
-        <div class="flex items-center gap-8">
-            <div class="border border-[#785a28] p-1.5 rounded-sm bg-[#0a1428] hover:border-[#c89b3c] transition cursor-pointer">
-                <span class="text-xl font-bold tracking-tighter">L</span>
-            </div>
-            <nav class="flex gap-6 text-xs font-bold uppercase tracking-wider h-full pt-1">
-                <span id="tab-play" onclick="switchClientTab('play')" class="border-b-2 border-[#c89b3c] pb-2 cursor-pointer transition font-bold">PLAY PVP ARENA</span>
-                <span id="tab-story" onclick="switchClientTab('story')" class="border-b-2 border-transparent hover:border-[#c89b3c] pb-2 cursor-pointer transition font-bold">STORY LORE SCENARIOS</span>
-                <span id="tab-loot" onclick="switchClientTab('loot')" class="border-b-2 border-transparent hover:border-[#c89b3c] pb-2 cursor-pointer transition font-bold">💎 HEXTECH LOOT</span>
-            </nav>
-        </div>
-
-        <!-- Summoner Profile Account Status Module with Lifetime KDA Tracker -->
-        <div class="flex items-center gap-4 text-xs font-bold bg-[#010a13] border border-[#32281e] px-4 py-1.5 rounded">
-            <div class="text-right">
-                <p id="sum-name" class="text-sm font-bold tracking-wide">Summoner</p>
-                <p id="sum-kda" class="font-mono text-[10px] tracking-widest text-emerald-400">LIFETIME KDA: 0 / 0 / 0</p>
-            </div>
-            <div class="h-6 w-[1px] bg-[#32281e]"></div>
-            <div class="flex items-center gap-1.5">
-                <span>🪙</span>
+    <div id="game-container">
+        <!-- Live HUD Context Layout -->
+        <div id="hud" class="hidden">
+            <div class="hud-panel" style="display:flex; align-items:center; gap:12px;">
+                <span id="hud-avatar">🦊</span>
                 <div>
-                    <p class="text-[9px] uppercase font-mono opacity-60">Gold Coins</p>
-                    <p id="sum-gold" class="font-mono font-bold text-sm">500</p>
+                    <div id="hud-name" style="font-weight:bold;">Ahri</div>
+                    <div id="hud-hp" style="color:var(--neon-pink); font-size:0.85rem">HP: 100</div>
                 </div>
             </div>
-        </div>
-    </header>
-
-    <!-- UI Panel 1: Classic Matchmaking Arena Hub -->
-    <div id="screen-play" class="max-w-7xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div class="lg:col-span-1 space-y-4">
-            <!-- Map Arena Selection -->
-            <div class="bg-[#091428] border border-[#785a28] p-4 rounded shadow-md">
-                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-1.5 mb-2.5 tracking-wide">Deploy Rift Map</h2>
-                <select id="map-selector" onchange="updateActiveMap()" class="bg-[#010a13] border border-[#463d2e] rounded px-2 py-1.5 text-xs w-full focus:outline-none focus:border-[#785a28]">
-                    <option value="Seoul Dome Baron Pit" selected>Seoul Dome: Baron Nashor Pit</option>
-                    <option value="Incheon Dragon Bay">Incheon Runway: Dragon Pit</option>
-                    <option value="Gangnam Middle Lane">Gangnam: Mid-Lane Inhibitor</option>
-                </select>
-            </div>
-
-            <!-- Champion Drafting Cell -->
-            <div class="bg-[#091428] border border-[#785a28] p-4 rounded shadow-md">
-                <h2 class="text-xs font-bold uppercase lol-title-font border-b border-[#32281e] pb-2 mb-3 tracking-wide">Champion Draft Pool</h2>
-                <div class="space-y-2.5">
-                    <div id="champ-Rumi" onclick="draftChampion('Rumi')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
-                        <span class="font-bold text-sm block">Rumi</span>
-                        <p class="text-[11px] mt-1 font-mono opacity-70">Q Spell: Phantom Drop Execute</p>
-                    </div>
-                    <div id="champ-Jinu" onclick="draftChampion('Jinu')" class="bg-[#010a13] border border-[#32281e] p-3 rounded cursor-pointer transition hover:border-[#c89b3c]">
-                        <span class="font-bold text-sm block">Jinu</span>
-                        <p class="text-[11px] mt-1 font-mono opacity-70">W Spell: Encore Barrier Deflect</p>
-                    </div>
+            
+            <div class="hud-panel ult-container">
+                <div style="font-size:0.75rem; display:flex; justify-content:space-between;">
+                    <span>Ultimate (SPACE)</span>
+                    <span id="ult-status-text">Charging</span>
+                </div>
+                <div class="ult-bar-bg">
+                    <div id="ult-fill" class="ult-bar-fill"></div>
                 </div>
             </div>
 
-            <!-- Summoner Active Spells Setup -->
-            <div class="bg-[#091428] border border-[#1e2328] p-4 rounded shadow-md">
-                <h2 class="text-[10px] font-bold uppercase border-b border-[#32281e] pb-1.5 mb-2 font-mono tracking-wider opacity-70">Summoner Active Spells</h2>
-                <div class="grid grid-cols-2 gap-2">
-                    <button id="spell-Flash" onclick="configureSpell('Flash')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🟡 Flash</button>
-                    <button id="spell-Ignite" onclick="configureSpell('Ignite')" class="bg-[#010a13] border border-[#32281e] p-2 rounded text-center text-xs font-bold hover:border-[#c89b3c] cursor-pointer">🔥 Ignite</button>
-                </div>
+            <div class="hud-panel" style="text-align:right;">
+                <div>Score: <span id="hud-score" style="color:var(--neon-blue)">0</span></div>
+                <div style="font-size:0.85rem">Combo: <span id="hud-combo" style="color:var(--neon-gold)">0</span></div>
             </div>
         </div>
 
-        <!-- Center Arena Arena Output Monitor -->
-        <div class="lg:col-span-3 space-y-6">
-            <div class="bg-[#091428] border-2 border-[#785a28] p-6 rounded shadow-2xl relative overflow-hidden">
-                <div class="flex justify-between items-center mb-6 border-b border-[#32281e] pb-3">
-                    <h2 class="text-xs uppercase font-mono tracking-widest font-black">SUMMONER'S RIFT ENGINE v16.5</h2>
-                    <button onclick="launchMatchEngine()" class="bg-gradient-to-b from-[#1e2328] to-[#11b6cd] text-black font-black uppercase text-xs px-8 py-2.5 border border-[#785a28] rounded shadow-lg cursor-pointer tracking-widest transition transform hover:scale-105 active:scale-95">LAUNCH MATCH ENGINE</button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-                    <div class="md:col-span-2 bg-[#010a13] border border-[#32281e] p-4 rounded text-center relative shadow-inner">
-                        <span class="absolute top-2 left-2 text-[9px] font-mono bg-blue-950 border border-blue-500/40 px-1.5 py-0.5 rounded">ALLIED HERO</span>
-                        <h3 id="hud-p1-name" class="text-lg font-bold uppercase lol-title-font mt-2">-</h3>
-                        <div class="w-full bg-[#1e2328] h-3.5 border border-[#32281e] overflow-hidden mt-3">
-                            <div id="hud-p1-hp" class="bg-gradient-to-r from-[#248046] to-[#4cd137] h-full w-full transition-all duration-200"></div>
-                        </div>
-                        <p id="hud-p1-hp-text" class="text-xs font-mono mt-1 font-bold">0 / 0 HP</p>
-                    </div>
-
-                    <div class="md:col-span-1 text-center">
-                        <span class="lol-title-font text-xl font-black opacity-40 block">VS</span>
-                        <span id="active-map-tag" class="text-[9px] font-mono tracking-widest block uppercase mt-1 bg-black/40 px-1.5 py-0.5 border border-[#32281e] rounded">Seoul Dome Pit</span>
-                    </div>
-
-                    <div class="md:col-span-2 bg-[#010a13] border border-[#32281e] p-4 rounded text-center relative shadow-inner">
-                        <span class="absolute top-2 right-2 text-[9px] font-mono bg-red-950 border border-red-500/40 px-1.5 py-0.5 rounded">VOID FIEND</span>
-                        <h3 id="hud-p2-name" class="text-lg font-bold uppercase lol-title-font mt-2">-</h3>
-                        <div class="w-full bg-[#1e2328] h-3.5 border border-[#32281e] overflow-hidden mt-3">
-                            <div id="hud-p2-hp" class="bg-gradient-to-r from-[#802424] to-[#ff4655] h-full w-full transition-all duration-200"></div>
-                        </div>
-                        <p id="hud-p2-hp-text" class="text-xs font-mono mt-1 font-bold">0 / 0 HP</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-[#010a13] border border-[#32281e] rounded p-4 h-64 flex flex-col shadow-inner">
-                <div class="border-b border-[#1e2328] pb-1.5 mb-2 text-xs font-mono opacity-70">CHAT CONSOLE BROADCAST [ALL]</div>
-                <div id="match-feed-box" class="overflow-y-auto space-y-1.5 flex-1 text-xs font-mono pr-2">
-                    <p class="opacity-50 italic">System ready. Select assets and invoke game engine calculations...</p>
-                </div>
+        <!-- Dynamic Boss Health UI Layer -->
+        <div id="boss-ui" class="hidden">
+            <div style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 8px #000;">ELITE DEMON: GWI-MA</div>
+            <div class="boss-bar-bg">
+                <div id="boss-hp-fill" class="boss-bar-fill"></div>
             </div>
         </div>
-    </div>
 
-    <!-- UI Panel 2: Interactive Story Lore Dialogue Options View -->
-    <div id="screen-story" class="max-w-4xl mx-auto px-4 mt-6 hidden">
-        <div class="bg-[#091428] border-2 border-[#785a28] p-6 rounded shadow-2xl">
-            <h2 class="text-xl font-bold uppercase lol-title-font border-b border-[#32281e] pb-3 mb-6 tracking-wide text-center">Interactive Lore Branching Scenarios</h2>
+        <div class="key-guides">
+            <div class="key-cap"><span id="key-A">A</span>Lane 1</div>
+            <div class="key-cap"><span id="key-S">S</span>Lane 2</div>
+            <div class="key-cap"><span id="key-K">K</span>Lane 3</div>
+            <div class="key-cap"><span id="key-L">L</span>Lane 4</div>
+            <div class="key-cap"><span id="key-Space" style="padding: 5px 25px;">Spacebar</span>Ultimate</div>
+        </div>
+
+        <!-- Character Selection Lobby Screen -->
+        <div id="lobby-screen" class="screen">
+            <h1>Rift Hunter Symphony</h1>
+            <div class="subtitle">Survive standard waves and defeat legendary elite demon <b>Gwi-Ma</b> at 2,500 points!</div>
+            
+            <div class="char-grid">
+                <div class="char-card selected" onclick="selectHunter(0)">
+                    <div class="char-avatar">🦊</div>
+                    <div class="char-name">Ahri</div>
+                    <div class="char-ult">Pop-Star Charm Flash</div>
+                </div>
+                <div class="char-card" onclick="selectHunter(1)">
+                    <div class="char-avatar">🥷</div>
+                    <div class="char-name">Akali</div>
+                    <div class="char-ult">Perfect Execution Grid</div>
+                </div>
+                <div class="char-card" onclick="selectHunter(2)">
+                    <div class="char-avatar">🦋</div>
+                    <div class="char-name">Kai'Sa</div>
+                    <div class="char-ult">Icathian Rain Rain</div>
+                </div>
