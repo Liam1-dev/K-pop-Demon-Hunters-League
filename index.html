@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rift Hunter Symphony: Advanced Pro Engine</title>
+    <title>Rift Hunter Symphony: Definitive Gold Edition</title>
     <style>
         :root {
             --neon-pink: #ff007f;
@@ -11,7 +11,7 @@
             --neon-purple: #9d4edd;
             --neon-gold: #ffd166;
             --bg-dark: #05020c;
-            --bg-panel: rgba(20, 10, 35, 0.85);
+            --bg-panel: rgba(20, 10, 35, 0.9);
             --boss-red: #ff3333;
         }
 
@@ -36,37 +36,46 @@
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(3, 1, 8, 0.98); z-index: 10; overflow-y: auto; padding: 25px 0; box-sizing: border-box;
+            background: rgba(3, 1, 8, 0.98); z-index: 10; padding: 20px; box-sizing: border-box;
         }
 
         h1 {
-            font-size: 2.8rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 5px;
+            font-size: 2.6rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 5px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-gold));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(255, 0, 127, 0.35); text-align: center;
         }
 
-        .subtitle { font-size: 0.95rem; color: #b4a8d8; margin-bottom: 20px; text-align: center; font-weight: 300; letter-spacing: 1px; }
+        .subtitle { font-size: 0.95rem; color: #b4a8d8; margin-bottom: 25px; text-align: center; font-weight: 300; letter-spacing: 1px; }
 
         .btn {
             background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
             padding: 12px 40px; font-size: 1.05rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
             border-radius: 50px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15); margin-top: 15px;
         }
         .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 35px rgba(0, 240, 255, 0.8); transform: scale(1.04); }
 
-        /* FIXED: Re-engineered layout grid structure to enforce clean flex box mapping wrap alignment */
-        .main-grid { display: flex; flex-direction: row; gap: 15px; width: 96%; max-height: 75%; justify-content: center; margin-bottom: 20px; box-sizing: border-box;}
-        .grid-pane { background: var(--bg-panel); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; flex: 1; backdrop-filter: blur(10px); box-sizing: border-box; }
+        /* FIXED: Re-engineered into an absolute explicit Grid CSS system to block column crushing */
+        .main-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+            width: 96%; 
+            height: 380px; 
+            margin-bottom: 15px; 
+            box-sizing: border-box;
+        }
+        .grid-pane { background: var(--bg-panel); border: 1px solid rgba(157, 78, 221, 0.4); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; backdrop-filter: blur(10px); box-sizing: border-box; overflow: hidden; }
         .pane-header { font-size: 0.85rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;}
 
         select, input[type="number"], input[type="text"] {
-            background: rgba(255, 255, 255, 0.04); border: 1px solid var(--neon-purple);
-            color: #fff; padding: 7px; border-radius: 8px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 10px; transition: border 0.2s;
+            background: rgba(255, 255, 255, 0.06); border: 1px solid var(--neon-purple);
+            color: #fff; padding: 8px; border-radius: 8px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 12px; transition: border 0.2s;
         }
+        label { font-size: 0.75rem; color: #aaa; margin-bottom: 4px; display: block; }
 
-        .pane-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 280px; }
+        .pane-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; height: 100%; }
         
         .list-item-node {
             background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.15);
@@ -74,13 +83,13 @@
         }
         .list-item-node.active { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 
-        .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; margin-bottom: 5px; }
+        .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; margin-bottom: 6px; }
         .shop-meta { display: flex; flex-direction: column; gap: 2px; }
         .btn-action-small { background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-action-small:hover:not(:disabled) { background: var(--neon-gold); color: #000; }
         .btn-action-small:disabled { border-color: #444; color: #666; cursor: not-allowed; }
 
-        .ach-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; margin-bottom: 5px; }
+        .ach-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; margin-bottom: 6px; }
         .ach-row.unlocked { border-color: var(--neon-blue); background: rgba(0,240,255,0.03); }
         .ach-row.locked { opacity: 0.4; filter: grayscale(1); }
 
@@ -96,7 +105,7 @@
         .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.65rem; color: #8d81b0; }
         .key-cap span { background: rgba(15, 8, 30, 0.95); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 8px; padding: 4px 12px; font-size: 0.9rem; font-weight: bold; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
         
-        .input-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .input-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
         .hidden { display: none !important; }
     </style>
 </head>
@@ -135,7 +144,7 @@
             <h1>Rift Hunter Symphony</h1>
             <div class="subtitle">AI Pathfinding Overhaul • Expanded Melee Hitboxes • Procedural K-Pop Synth Tracker</div>
             
-            <div style="color: var(--neon-gold); font-weight: 800; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; background: rgba(255,255,255,0.02); padding: 6px 20px; border-radius: 30px; border: 1px solid rgba(255,209,102,0.2);">
+            <div style="color: var(--neon-gold); font-weight: 800; margin-bottom: 20px; font-size: 1.1rem; letter-spacing: 1px; background: rgba(255,255,255,0.02); padding: 6px 20px; border-radius: 30px; border: 1px solid rgba(255,209,102,0.2);">
                 BANKED CONCERT POINTS: <span id="lobby-points">0</span>
             </div>
 
@@ -143,6 +152,4 @@
                 <!-- Pane 1: Systems Architecture Mode & Roster Selection -->
                 <div class="grid-pane">
                     <div class="pane-header">1. Operational Deployment</div>
-                    <label style="font-size:0.75rem; color:#aaa;">System Framework Mode</label>
-                    <select id="select-game-mode" onchange="toggleP2InterfaceSelector()">
-                        <option value="solo">Solo Queue Ranked Matchmaking</option>
+                    <label>System Framework Mode</label>
