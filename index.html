@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Pop Demon Hunters: Advanced Tactical Engine</title>
+    <title>Rift Hunter Symphony: Definitive Gold Edition</title>
     <style>
         :root {
             --neon-pink: #ff007f;
@@ -11,6 +11,7 @@
             --neon-purple: #9d4edd;
             --neon-gold: #ffd166;
             --bg-dark: #05020c;
+            --bg-panel: rgba(20, 10, 35, 0.85);
             --boss-red: #ff3333;
         }
 
@@ -24,10 +25,10 @@
 
         #game-container {
             position: relative;
-            width: 1150px; height: 650px;
-            background: radial-gradient(circle at center, #100626 0%, #020105 100%);
-            border: 3px solid var(--neon-pink); border-radius: 20px;
-            box-shadow: 0 0 40px rgba(255, 0, 127, 0.4); overflow: hidden;
+            width: 1200px; height: 700px;
+            background: radial-gradient(circle at center, #14073c 0%, #020106 100%);
+            border: 3px solid var(--neon-pink); border-radius: 24px;
+            box-shadow: 0 0 50px rgba(255, 0, 127, 0.45); overflow: hidden;
         }
 
         canvas { display: block; width: 100%; height: 100%; }
@@ -35,137 +36,114 @@
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: rgba(4, 2, 10, 0.97); z-index: 10; overflow-y: auto; padding: 15px 0; box-sizing: border-box;
+            background: rgba(3, 1, 8, 0.98); z-index: 10; overflow-y: auto; padding: 25px 0; box-sizing: border-box;
         }
 
         h1 {
-            font-size: 2.2rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 4px;
+            font-size: 2.8rem; margin: 0 0 5px 0; text-transform: uppercase; letter-spacing: 5px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-gold));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(255, 0, 127, 0.3); text-align: center;
+            text-shadow: 0 0 30px rgba(255, 0, 127, 0.35); text-align: center;
         }
 
-        .subtitle { font-size: 0.9rem; color: #a497c2; margin-bottom: 15px; text-align: center; }
+        .subtitle { font-size: 0.95rem; color: #b4a8d8; margin-bottom: 20px; text-align: center; font-weight: 300; letter-spacing: 1px; }
 
         .btn {
             background: transparent; border: 2px solid var(--neon-blue); color: var(--neon-blue);
-            padding: 10px 30px; font-size: 1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
-            border-radius: 40px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            padding: 12px 40px; font-size: 1.05rem; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
+            border-radius: 50px; cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
-        .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 30px rgba(0, 240, 255, 0.7); transform: scale(1.03); }
+        .btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 35px rgba(0, 240, 255, 0.8); transform: scale(1.04); }
 
-        .lobby-layout { display: flex; gap: 10px; width: 98%; max-height: 80%; justify-content: center; margin-bottom: 15px; }
-        .lobby-pane { background: rgba(20, 10, 35, 0.7); border: 1px solid rgba(157, 78, 221, 0.25); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; flex: 1; }
-        .pane-title { font-size: 0.8rem; font-weight: bold; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;}
+        .main-grid { display: flex; gap: 15px; width: 96%; max-height: 75%; justify-content: center; margin-bottom: 20px; }
+        .grid-pane { background: var(--bg-panel); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; flex: 1; backdrop-filter: blur(10px); }
+        .pane-header { font-size: 0.85rem; font-weight: 800; color: var(--neon-gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 6px;}
 
-        select, input[type="number"] {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--neon-purple);
-            color: #fff; padding: 5px; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 8px;
+        select, input[type="number"], input[type="text"] {
+            background: rgba(255, 255, 255, 0.04); border: 1px solid var(--neon-purple);
+            color: #fff; padding: 7px; border-radius: 8px; outline: none; width: 100%; box-sizing: border-box; font-size: 0.8rem; margin-bottom: 10px; transition: border 0.2s;
         }
+        select:focus { border-color: var(--neon-blue); }
 
-        .char-select-row { display: flex; gap: 5px; flex-direction: column; font-size: 0.75rem; }
+        .pane-list { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; max-height: 280px; }
         
-        .stage-node {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 6px; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-size: 0.75rem; display: flex; justify-content: space-between;
+        .list-item-node {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(0, 240, 255, 0.15);
+            padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;
         }
-        .stage-node.active { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.06); }
+        .list-item-node:hover { border-color: var(--neon-pink); background: rgba(255, 0, 127, 0.04); }
+        .list-item-node.active { border-color: var(--neon-blue); background: rgba(0, 240, 255, 0.08); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
 
-        .creator-field { display: flex; flex-direction: column; gap: 3px; font-size: 0.7rem; color: #a497c2; margin-bottom: 5px; }
+        .shop-item-card { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 8px; font-size: 0.75rem; }
+        .shop-meta { display: flex; flex-direction: column; gap: 2px; }
+        .btn-action-small { background: transparent; border: 1px solid var(--neon-gold); color: var(--neon-gold); padding: 4px 10px; font-size: 0.75rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .btn-action-small:hover:not(:disabled) { background: var(--neon-gold); color: #000; }
+        .btn-action-small:disabled { border-color: #444; color: #666; cursor: not-allowed; }
 
-        #hud { position: absolute; top: 15px; left: 20px; right: 20px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
-        .hud-panel { background: rgba(10, 5, 22, 0.85); padding: 8px 15px; border-radius: 8px; border-bottom: 3px solid var(--neon-purple); backdrop-filter: blur(5px); font-size: 0.8rem; }
+        .ach-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 8px; font-size: 0.75rem; }
+        .ach-row.unlocked { border-color: var(--neon-blue); background: rgba(0,240,255,0.03); }
+        .ach-row.locked { opacity: 0.4; filter: grayscale(1); }
 
-        .key-guides { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; z-index: 5; pointer-events: none; }
-        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.6rem; color: #796c94; }
-        .key-cap span { background: rgba(20, 10, 35, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 2px 8px; font-size: 0.8rem; font-weight: bold; color: #fff; }
+        #hud { position: absolute; top: 20px; left: 25px; right: 25px; display: flex; justify-content: space-between; pointer-events: none; z-index: 5; text-transform: uppercase; }
+        .hud-panel { background: rgba(8, 4, 18, 0.9); padding: 10px 20px; border-radius: 12px; border-bottom: 3px solid var(--neon-purple); backdrop-filter: blur(8px); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .hud-p-block { font-size: 0.85rem; font-weight: bold; line-height: 1.4; }
+
+        #boss-ui { position: absolute; top: 110px; left: 50%; transform: translateX(-50%); width: 450px; text-align: center; z-index: 5; pointer-events: none; }
+        .boss-bar-bg { width: 100%; height: 14px; background: rgba(30, 5, 5, 0.9); border: 2px solid var(--boss-red); border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(255, 51, 51, 0.3); margin-top: 6px; }
+        .boss-bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #b30000, var(--boss-red)); }
+
+        .key-guides { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 5; pointer-events: none; }
+        .key-cap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.65rem; color: #8d81b0; }
+        .key-cap span { background: rgba(15, 8, 30, 0.95); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 8px; padding: 4px 12px; font-size: 0.9rem; font-weight: bold; color: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+        
+        .input-group-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
         .hidden { display: none !important; }
+        @keyframes pulse-glow { from { box-shadow: 0 0 5px var(--neon-pink); } to { box-shadow: 0 0 20px var(--neon-blue); } }
     </style>
 </head>
 <body>
 
     <div id="game-container">
-        <!-- Core Real-Time Multi-HUD Overlay -->
+        <!-- Enterprise Game HUD Layer -->
         <div id="hud" class="hidden">
-            <div class="hud-panel" style="display:flex; flex-direction:column; gap:2px;">
-                <div style="font-weight:bold; color:var(--neon-pink)">P1: <span id="hud-p1-name">Ahri</span> <span id="hud-p1-hp">HP: 100</span></div>
-                <div style="font-size:0.7rem; color:#888;">Controls: W/S (Move) | J (Strike) | L (Special)</div>
+            <div class="hud-panel hud-p-block" style="color: var(--neon-pink);">
+                <div>P1: <span id="hud-p1-name">Ahri</span></div>
+                <div id="hud-p1-hp" style="font-size:0.75rem;">HP: 100/100</div>
+                <div style="font-size:0.65rem; color:#aaa; font-weight:400; text-transform:none; margin-top:2px;">W/S (Move) • J (Strike) • L (Special)</div>
             </div>
 
-            <div class="hud-panel" id="hud-p2-panel" style="display:flex; flex-direction:column; gap:2px;">
-                <div style="font-weight:bold; color:var(--neon-blue)">P2: <span id="hud-p2-name">Akali</span> <span id="hud-p2-hp">HP: 100</span></div>
-                <div style="font-size:0.7rem; color:#888;">Controls: Up/Down Arrows (Move) | Numpad 1 (Strike) | Numpad 3 (Special)</div>
+            <div class="hud-panel hud-p-block hidden" id="hud-p2-panel" style="color: var(--neon-blue);">
+                <div>P2: <span id="hud-p2-name">Akali</span></div>
+                <div id="hud-p2-hp" style="font-size:0.75rem;">HP: 100/100</div>
+                <div style="font-size:0.65rem; color:#aaa; font-weight:400; text-transform:none; margin-top:2px;">Arrows (Move) • Numpad 1 (Strike) • Numpad 3 (Special)</div>
             </div>
 
-            <div class="hud-panel" style="text-align:right; display:flex; flex-direction:column; justify-content:center;">
-                <div>Stage: <span id="hud-stage-name" style="color:var(--neon-gold)">Void Slums</span></div>
-                <div>Score: <span id="hud-score" style="color:var(--neon-blue)">0</span></div>
+            <div class="hud-panel" style="text-align:right; font-size:0.85rem; font-weight:bold;">
+                <div>League: <span id="hud-league-tag" style="color:var(--neon-gold)">Bronze</span></div>
+                <div>Points: <span id="hud-score" style="color:var(--neon-blue)">0</span></div>
+                <div style="font-size:0.65rem; color:#aaa; font-weight:400; text-transform:none; margin-top:2px;">Spacebar: Combined Screen-Wipe Ult</div>
             </div>
         </div>
 
-        <div class="key-guides">
-            <div class="key-cap"><span>Spacebar</span>Cast Screen Wipe Ultimate</div>
+        <!-- Epic Campaign Boss Target Overlay -->
+        <div id="boss-ui" class="hidden">
+            <div id="boss-title-tag" style="color: var(--boss-red); font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px #000;">LEAGUE CHALLENGER</div>
+            <div class="boss-bar-bg"><div id="boss-hp-fill" class="boss-bar-fill"></div></div>
         </div>
 
-        <!-- Master Lobby Config Dashboard -->
+        <!-- Production Master Dashboard Screen -->
         <div id="lobby-screen" class="screen">
-            <h1>Rift Hunter Advanced Engine</h1>
-            <div class="subtitle">Simulated Multiplayer • Sandbox Wave Modding Developer Tools • Multi-Stage Environmental Selectors</div>
+            <h1>Rift Hunter Symphony</h1>
+            <div class="subtitle">Definitive Release Edition • Real-Time Systems Framework Grid Integration</div>
             
-            <div class="lobby-layout">
-                <!-- Pane 1: Squad & Matchmaking -->
-                <div class="lobby-pane">
-                    <div class="pane-title">1. Multiplayer Setup</div>
-                    <div class="char-select-row">
-                        <label>Architecture Operational Mode:</label>
-                        <select id="select-game-mode" onchange="toggleP2Select()">
-                            <option value="solo">Solo Performance Battle</option>
-                            <option value="coop">Local Co-Op Arena (Player 1 + Player 2)</option>
-                        </select>
-                        
-                        <label>Player 1 Character Choice:</label>
-                        <select id="select-p1-char">
-                            <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
-                            <option value="1">🥷 Akali (Rapper - Melee)</option>
-                            <option value="2">🦋 Kai'Sa (Dancer - Gatling)</option>
-                            <option value="3">🥀 Evelynn (Visual - Sweeper)</option>
-                        </select>
+            <div style="color: var(--neon-gold); font-weight: 800; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; background: rgba(255,255,255,0.02); padding: 6px 20px; border-radius: 30px; border: 1px solid rgba(255,209,102,0.2);">
+                BANKED CONCERT POINTS: <span id="lobby-points">0</span>
+            </div>
 
-                        <div id="p2-selection-wrapper" class="hidden">
-                            <label>Player 2 Character Choice:</label>
-                            <select id="select-p2-char">
-                                <option value="1" selected>🥷 Akali (Rapper - Melee)</option>
-                                <option value="0">🦊 Ahri (Vocalist - Ranged)</option>
-                                <option value="2">🦋 Kai'Sa (Dancer - Gatling)</option>
-                                <option value="3">🥀 Evelynn (Visual - Sweeper)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pane 2: Multi-Stage Environments Map -->
-                <div class="lobby-pane">
-                    <div class="pane-title">2. Environmental Maps</div>
-                    <div id="maps-list-box">
-                        <div class="stage-node active" id="map-node-0" onclick="selectMapEnv(0)">
-                            <span>Act I: The Void Slums</span>
-                            <span style="color:var(--neon-pink)">Standard</span>
-                        </div>
-                        <div class="stage-node" id="map-node-1" onclick="selectMapEnv(1)">
-                            <span>Act II: Neon City Stage</span>
-                            <span style="color:var(--neon-blue)">Accelerated</span>
-                        </div>
-                        <div class="stage-node" id="map-node-2" onclick="selectMapEnv(2)">
-                            <span>Act III: Gwi-Ma Throne Room</span>
-                            <span style="color:var(--neon-gold)">Boss Grid</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Pane 3: Sandbox Custom Enemy Wave Creator -->
-                <div class="lobby-pane" style="flex:1.3;">
-                    <div class="pane-title">3. Sandbox Wave Developer Tool</div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                        <div class="creator-field">
-                            <label>Spawn Frequency (ms):</label>
-                            <input type="number" id="wave-spawn-speed" value="1400" min="200" max="4000">
+            <div class="main-grid">
+                <!-- Pane 1: Systems Architecture Mode & Roster Selection -->
+                <div class="grid-pane">
+                    <div class="pane-header">1. Operational Deployment</div>
+                    <label style="font-size:0.75rem; color:#aaa;">System Framework Mode</label>
+                    <select id="select-game-mode" onchange="toggleP2InterfaceSelector()">
